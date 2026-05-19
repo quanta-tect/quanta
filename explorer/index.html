@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QUANTA Explorer — Live Block & Agent Activity</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'SF Mono', Monaco, 'Cascadia Code', monospace;
+    background: #0a0a14;
+    color: #e8e8f0;
+    padding: 20px;
+  }
+  header {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 16px 24px; margin-bottom: 24px;
+    background: linear-gradient(135deg, rgba(124,58,237,0.15), rgba(6,182,212,0.10));
+    border: 1px solid rgba(124,58,237,0.3);
+    border-radius: 16px;
+  }
+  .logo {
+    font-size: 22px; font-weight: 800;
+    background: linear-gradient(135deg,#b794f4 0%,#4fd1c5 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .net-status {
+    display: flex; gap: 8px; align-items: center;
+    font-size: 13px; color: #4ade80;
+  }
+  .pulse {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: #4ade80;
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(1.5); }
+  }
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+  .stat {
+    padding: 16px;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 12px;
+  }
+  .stat-label { font-size: 11px; color: #888; text-transform: uppercase; letter-spacing: 1.5px; }
+  .stat-value {
+    font-size: 24px; font-weight: 700; margin-top: 6px;
+    background: linear-gradient(135deg,#b794f4,#4fd1c5);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .stat-sub { font-size: 11px; color: #666; margin-top: 4px; }
+
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+  @media (max-width: 900px) { .grid { grid-template-columns: 1fr; } }
+  .panel {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .panel-header {
+    padding: 14px 18px;
+    background: rgba(255,255,255,0.02);
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    font-size: 13px; font-weight: 600; color: #b794f4;
+    text-transform: uppercase; letter-spacing: 1px;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .panel-body { max-height: 400px; overflow-y: auto; }
+  .row {
+    padding: 12px 18px;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    font-size: 13px;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 12px;
+    align-items: center;
+    animation: slideIn 0.5s ease;
+  }
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .row:hover { background: rgba(255,255,255,0.03); }
+  .badge {
+    padding: 2px 8px; border-radius: 4px;
+    font-size: 10px; font-weight: 700; text-transform: uppercase;
+  }
+  .badge.tx { background: rgba(96,165,250,0.2); color: #60a5fa; }
+  .badge.agent { background: rgba(167,139,250,0.2); color: #a78bfa; }
+  .badge.ai { background: rgba(244,114,182,0.2); color: #f472b6; }
+  .badge.burn { background: rgba(248,113,113,0.2); color: #f87171; }
+  .badge.block { background: rgba(74,222,128,0.2); color: #4ade80; }
+  .badge.quantum { background: rgba(245,158,11,0.2); color: #fbbf24; }
+  .addr {
+    font-family: monospace; font-size: 12px; color: #aaa;
+    overflow: hidden; text-overflow: ellipsis;
+  }
+  .amount { font-weight: 700; color: #4fd1c5; white-space: nowrap; }
+  .neg { color: #f87171; }
+
+  .search {
+    width: 100%;
+    padding: 12px 18px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 10px;
+    color: #fff;
+    font-family: inherit;
+    font-size: 14px;
+    margin-bottom: 16px;
+  }
+  .search::placeholder { color: #555; }
+  .search:focus { outline: none; border-color: #b794f4; }
+
+  .ascii-block {
+    padding: 18px;
+    font-size: 11px;
+    color: #4fd1c5;
+    line-height: 1.4;
+    background: #050510;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">⚛ QUANTA Explorer</div>
+  <div class="net-status">
+    <span class="pulse"></span>
+    <span id="net-status">Connecting to mainnet...</span>
+  </div>
+</header>
+
+<input class="search" placeholder="🔍 Search by address, tx hash, agent ID, block number, model ID..." />
+
+<div class="stats">
+  <div class="stat">
+    <div class="stat-label">Block Height</div>
+    <div class="stat-value" id="block-height">—</div>
+    <div class="stat-sub">finalized in 2s</div>
+  </div>
+  <div class="stat">
+    <div class="stat-label">Total Supply</div>
+    <div class="stat-value" id="total-supply">—</div>
+    <div class="stat-sub">cap 1B QTA</div>
+  </div>
+  <div class="stat">
+    <div class="stat-label">Total Burned 🔥</div>
+    <div class="stat-value" id="total-burned">—</div>
+    <div class="stat-sub" id="burn-rate">live deflation</div>
+  </div>
+  <div class="stat">
+    <div class="stat-label">Active AI Agents</div>
+    <div class="stat-value" id="active-agents">—</div>
+    <div class="stat-sub" id="agent-pings">heartbeats/min</div>
+  </div>
+  <div class="stat">
+    <div class="stat-label">TPS (24h avg)</div>
+    <div class="stat-value" id="tps">—</div>
+    <div class="stat-sub">incl. off-chain channels</div>
+  </div>
+  <div class="stat">
+    <div class="stat-label">Q-Day Countdown</div>
+    <div class="stat-value" id="qday" style="font-size: 18px;">—</div>
+    <div class="stat-sub">est. quantum threat</div>
+  </div>
+</div>
+
+<div class="grid">
+  <div class="panel">
+    <div class="panel-header">
+      <span>🟢 Recent Blocks</span>
+      <span style="font-size: 11px; color: #666;">PoUW validated</span>
+    </div>
+    <div class="panel-body" id="blocks"></div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-header">
+      <span>💸 Live Transactions</span>
+      <span style="font-size: 11px; color: #666;" id="tx-counter">0 tx today</span>
+    </div>
+    <div class="panel-body" id="txs"></div>
+  </div>
+</div>
+
+<div class="grid">
+  <div class="panel">
+    <div class="panel-header">
+      <span>🤖 AI Agent Activity</span>
+      <span style="font-size: 11px; color: #666;">last 5 min</span>
+    </div>
+    <div class="panel-body" id="agents"></div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-header">
+      <span>🛒 AI Inferences Purchased</span>
+      <span style="font-size: 11px; color: #666;">marketplace</span>
+    </div>
+    <div class="panel-body" id="inferences"></div>
+  </div>
+</div>
+
+<script>
+// ========================================================================
+// Mock data generator — in production this connects to JSON-RPC + WebSocket
+// ========================================================================
+
+const AGENT_NAMES = [
+  "ResearchBot-001", "TradingBuddy-7", "CodeReviewer-x", "SummaryAI-42",
+  "ContentBot-9", "DataMiner-3", "VisionBot-Pro", "NewsScraper-Alpha",
+  "TranslateAI-7", "ChartBot-Master", "MemeGen-5000", "QuantBot-Phi",
+];
+
+const MODELS = [
+  { id: "Llama-3-70B-quantized", price: 0.0012 },
+  { id: "Stable-Diffusion-XL", price: 0.0050 },
+  { id: "Whisper-Large-v3", price: 0.0008 },
+  { id: "GPT-OSS-13B", price: 0.0015 },
+  { id: "ProtBERT-Folding", price: 0.0250 },
+];
+
+const randAddr = () =>
+  "qta1" + Array.from(crypto.getRandomValues(new Uint8Array(19)))
+    .map(b => b.toString(16).padStart(2, "0")).join("").slice(0, 38);
+
+const shortAddr = a => a.slice(0, 8) + "..." + a.slice(-4);
+
+let stats = {
+  height: 8_413_672,
+  supply: 298_456_234,
+  burned: 1_543_766,
+  agents: 0,
+  agentPings: 0,
+  tps: 0,
+  txToday: 0,
+};
+
+let blockTx = []; // for tps calc
+
+function addRow(panelId, html) {
+  const panel = document.getElementById(panelId);
+  panel.insertAdjacentHTML("afterbegin", html);
+  while (panel.children.length > 20) panel.removeChild(panel.lastChild);
+}
+
+function tickBlock() {
+  stats.height++;
+  const proposer = randAddr();
+  const txCount = Math.floor(Math.random() * 12) + 1;
+  const burned = (Math.random() * 0.05 + 0.001).toFixed(4);
+  const useful = ["llm_inference", "image_gen", "protein_fold", "scientific"][Math.floor(Math.random() * 4)];
+
+  addRow("blocks", `
+    <div class="row">
+      <span class="badge block">#${stats.height.toLocaleString()}</span>
+      <div>
+        <div class="addr">proposer ${shortAddr(proposer)}</div>
+        <div style="font-size: 11px; color: #666;">PoUW: ${useful} • ${txCount} tx</div>
+      </div>
+      <span class="amount neg">-${burned} QTA</span>
+    </div>
+  `);
+
+  stats.burned += parseFloat(burned);
+  stats.supply -= parseFloat(burned);
+  blockTx.push({ ts: Date.now(), n: txCount });
+  blockTx = blockTx.filter(b => Date.now() - b.ts < 60_000);
+  updateStats();
+}
+
+function tickTx() {
+  const types = [
+    { badge: "tx", label: "transfer", amount: () => (Math.random() * 100).toFixed(3) },
+    { badge: "ai", label: "ai_call", amount: () => (Math.random() * 0.5).toFixed(4) },
+    { badge: "burn", label: "burn", amount: () => (Math.random() * 0.01).toFixed(5), neg: true },
+    { badge: "quantum", label: "DSig", amount: () => (Math.random() * 10).toFixed(3) },
+  ];
+  const t = types[Math.floor(Math.random() * types.length)];
+  const from = randAddr();
+  const to = randAddr();
+  const amt = t.amount();
+  stats.txToday++;
+
+  addRow("txs", `
+    <div class="row">
+      <span class="badge ${t.badge}">${t.label}</span>
+      <div>
+        <div class="addr">${shortAddr(from)} → ${shortAddr(to)}</div>
+        <div style="font-size: 11px; color: #666;">block #${stats.height.toLocaleString()} • verified</div>
+      </div>
+      <span class="amount ${t.neg ? "neg" : ""}">${t.neg ? "-" : ""}${amt} QTA</span>
+    </div>
+  `);
+}
+
+function tickAgent() {
+  const name = AGENT_NAMES[Math.floor(Math.random() * AGENT_NAMES.length)];
+  const actions = [
+    { verb: "pinged", note: "heartbeat OK", amt: null },
+    { verb: "earned from task", note: "research summary", amt: (Math.random() * 0.5).toFixed(3) },
+    { verb: "paid for inference", note: "Llama-3 call", amt: "-" + (Math.random() * 0.05).toFixed(4) },
+    { verb: "opened channel", note: "to AI provider", amt: "-" + (Math.random() * 1).toFixed(3) },
+    { verb: "policy block", note: "exceeded max_per_tx", amt: null },
+  ];
+  const a = actions[Math.floor(Math.random() * actions.length)];
+  stats.agentPings++;
+
+  addRow("agents", `
+    <div class="row">
+      <span class="badge agent">${name.split("-")[0]}</span>
+      <div>
+        <div style="color: #c0c0d0; font-size: 13px;">${name} ${a.verb}</div>
+        <div style="font-size: 11px; color: #666;">${a.note}</div>
+      </div>
+      <span class="amount ${a.amt && a.amt.startsWith("-") ? "neg" : ""}">${a.amt || "—"} ${a.amt ? "QTA" : ""}</span>
+    </div>
+  `);
+}
+
+function tickInference() {
+  const model = MODELS[Math.floor(Math.random() * MODELS.length)];
+  const buyer = randAddr();
+  const creator = randAddr();
+  const callsTotal = Math.floor(Math.random() * 50000) + 100;
+
+  addRow("inferences", `
+    <div class="row">
+      <span class="badge ai">${model.id.split("-")[0]}</span>
+      <div>
+        <div style="color: #c0c0d0; font-size: 13px;">${model.id}</div>
+        <div style="font-size: 11px; color: #666;">creator ${shortAddr(creator)} • ${callsTotal.toLocaleString()} total calls</div>
+      </div>
+      <span class="amount">${model.price} QTA</span>
+    </div>
+  `);
+}
+
+function updateStats() {
+  document.getElementById("block-height").textContent = stats.height.toLocaleString();
+  document.getElementById("total-supply").textContent = (stats.supply / 1e6).toFixed(2) + "M QTA";
+  document.getElementById("total-burned").textContent = (stats.burned / 1e6).toFixed(3) + "M QTA";
+  document.getElementById("active-agents").textContent = (542 + Math.floor(Math.random() * 50)).toLocaleString();
+  document.getElementById("agent-pings").textContent = stats.agentPings + " heartbeats since load";
+  const recentTx = blockTx.reduce((s, b) => s + b.n, 0);
+  document.getElementById("tps").textContent = (recentTx / 60).toFixed(1);
+  document.getElementById("tx-counter").textContent = stats.txToday.toLocaleString() + " tx since load";
+
+  const qday = new Date("2033-01-01T00:00:00Z");
+  const days = Math.floor((qday - Date.now()) / 86400000);
+  document.getElementById("qday").textContent = days.toLocaleString() + " days";
+
+  document.getElementById("net-status").textContent =
+    "Mainnet • height " + stats.height.toLocaleString();
+}
+
+// === Start the simulated stream ===
+updateStats();
+setInterval(tickBlock, 2000);
+setInterval(tickTx, 700);
+setInterval(tickAgent, 1500);
+setInterval(tickInference, 2500);
+
+// Seed initial rows
+for (let i = 0; i < 5; i++) { tickBlock(); tickTx(); tickAgent(); tickInference(); }
+</script>
+</body>
+</html>

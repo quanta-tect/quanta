@@ -1,0 +1,133 @@
+name: 🔐 Security CI
+
+on:
+  push:
+    branches: [main]
+    paths: ['contracts/**']
+  pull_request:
+    paths: ['contracts/**']
+  schedule:
+    # Re-run weekly to catch new detector versions
+    - cron: '0 3 * * 1'
+
+jobs:
+  # ===================================================================
+  # 1. Foundry tests + coverage
+  # ===================================================================
+  forge-test:
+    name: Forge tests + coverage
+    runs-on: ubuntu-latest
+    defaults: { run: { working-directory: contracts } }
+    steps:
+      - uses: actions/checkout@v4
+        with: { submodules: recursive }
+
+      - name: Install Foundry
+        uses: foundry-rs/foundry-toolchain@v1
+        with: { version: stable }
+
+      - name: Install deps
+        run: |
+          forge install OpenZeppelin/openzeppelin-contracts --no-commit
+          forge install foundry-rs/forge-std --no-commit
+
+      - name: Build
+        run: forge build --sizes
+
+      - name: Test (v1.1 security regression)
+        run: forge test --match-path "test-v1.1/**" -vv
+
+      - name: Coverage
+        run: forge coverage --report summary --report lcov
+
+      - name: Upload coverage
+        uses: codecov/codecov-action@v4
+        with:
+          files: contracts/lcov.info
+          fail_ci_if_error: false
+
+  # ===================================================================
+  # 2. Slither static analysis
+  # ===================================================================
+  slither:
+    name: Slither analysis
+    runs-on: ubuntu-latest
+    defaults: { run: { working-directory: contracts } }
+    steps:
+      - uses: actions/checkout@v4
+        with: { submodules: recursive }
+
+      - name: Install Foundry
+        uses: foundry-rs/foundry-toolchain@v1
+
+      - name: Install deps
+        run: |
+          forge install OpenZeppelin/openzeppelin-contracts --no-commit
+          forge install foundry-rs/forge-std --no-commit
+
+      - uses: crytic/slither-action@v0.4.0
+        id: slither
+        with:
+          target: contracts/
+          slither-config: contracts/slither.config.json
+          sarif: results.sarif
+          fail-on: high
+
+      - name: Upload SARIF to GitHub Security
+        if: always()
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: ${{ steps.slither.outputs.sarif }}
+
+  # ===================================================================
+  # 3. Mythril symbolic execution (slower, only on PR)
+  # ===================================================================
+  mythril:
+    name: Mythril symbolic execution
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    steps:
+      - uses: actions/checkout@v4
+        with: { submodules: recursive }
+
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.11' }
+
+      - name: Install mythril
+        run: pip install mythril
+
+      - name: Analyze QuantaToken
+        run: |
+          cd contracts
+          myth analyze src-v1.1/QuantaToken.sol \
+            --solv 0.8.24 \
+            --execution-timeout 120 \
+            --max-depth 12 || true
+
+  # ===================================================================
+  # 4. Secret scanning (prevent .env / private key leaks)
+  # ===================================================================
+  secrets:
+    name: Secret scan (gitleaks)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 0 }
+
+      - uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  # ===================================================================
+  # 5. npm audit on SDK
+  # ===================================================================
+  sdk-audit:
+    name: SDK dependency audit
+    runs-on: ubuntu-latest
+    defaults: { run: { working-directory: sdk } }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 20 }
+      - run: npm install
+      - run: npm audit --audit-level=high

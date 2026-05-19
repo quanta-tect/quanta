@@ -1,0 +1,10 @@
+{
+  "detectors_to_exclude": "naming-convention,solc-version,pragma",
+  "exclude_informational": false,
+  "exclude_low": false,
+  "exclude_medium": false,
+  "exclude_high": false,
+  "filter_paths": "lib/,test/,test-v1.1/,script/",
+  "compile_force_framework": "foundry",
+  "json": "slither-report.json"
+}

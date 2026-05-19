@@ -1,0 +1,23 @@
+# Halmos configuration for formal verification
+# Docs: https://github.com/a16z/halmos
+
+[global]
+# Solver: z3 (default) or yices2
+solver = "z3"
+
+# Per-assertion timeout (ms). Production audits use 300_000 (5 min).
+solver-timeout-assertion = 60000
+
+# Loop unrolling bound (deeper = slower but finds more bugs)
+loop = 3
+
+# Symbolic storage for thorough analysis
+symbolic-storage = false
+
+# Parallel solving
+solver-parallel = true
+solver-threads = 4
+
+# Output
+verbose = 1
+statistics = true

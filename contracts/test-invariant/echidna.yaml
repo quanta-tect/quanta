@@ -1,0 +1,40 @@
+# Echidna configuration for QUANTA fuzz testing
+# Docs: https://github.com/crytic/echidna/wiki/Configuration
+
+# Test mode: assertion (revert on broken invariant) or property (echidna_*)
+testMode: property
+
+# Number of test sequences to run (more = better coverage, slower)
+# Quick scan: 50_000  |  Thorough: 1_000_000  |  Production audit: 10_000_000+
+testLimit: 100000
+
+# Max sequence length (longer = finds deeper bugs)
+seqLen: 100
+
+# Sender addresses Echidna will randomize from
+sender:
+  - "0x10000"
+  - "0x20000"
+  - "0x30000"
+  - "0x40000"
+
+# Shrink failing sequences to minimal repro
+shrinkLimit: 5000
+
+# Coverage-guided fuzzing (highly recommended)
+coverage: true
+corpusDir: "echidna-corpus"
+
+# Don't crash on out-of-gas (some legitimate paths)
+allContracts: false
+
+# Time budget (seconds). Comment out for unlimited.
+# timeout: 3600  # 1 hour
+
+# Compilation
+cryticArgs:
+  - "--foundry-out-directory"
+  - "out"
+
+# Format
+format: text  # or "json" for CI parsing

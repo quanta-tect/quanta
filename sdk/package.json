@@ -1,0 +1,22 @@
+{
+  "name": "@quanta/sdk",
+  "version": "0.1.0",
+  "description": "QUANTA SDK — quantum-safe + AI-native blockchain client",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "demo:agent": "tsx examples/autonomous-agent.ts",
+    "demo:micropay": "tsx examples/micropayment.ts",
+    "demo:marketplace": "tsx examples/buy-inference.ts"
+  },
+  "dependencies": {
+    "viem": "^2.21.0",
+    "openai": "^4.70.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.5.0",
+    "tsx": "^4.19.0",
+    "@types/node": "^22.0.0"
+  }
+}

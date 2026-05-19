@@ -1,0 +1,39 @@
+{
+  "name": "quanta-forta-bot",
+  "version": "1.0.0",
+  "description": "QUANTA real-time security monitoring bot for Forta Network",
+  "main": "src/agent.js",
+  "scripts": {
+    "start": "forta-agent run",
+    "tx": "forta-agent run --tx",
+    "block": "forta-agent run --block",
+    "range": "forta-agent run --range",
+    "alert": "forta-agent run --alert",
+    "sequence": "forta-agent run --sequence",
+    "file": "forta-agent run --file",
+    "publish": "forta-agent publish",
+    "info": "forta-agent info",
+    "logs": "forta-agent logs",
+    "push": "forta-agent push",
+    "disable": "forta-agent disable",
+    "enable": "forta-agent enable",
+    "keyfile": "forta-agent keyfile",
+    "test": "jest",
+    "lint": "eslint src/"
+  },
+  "dependencies": {
+    "forta-agent": "^0.1.48",
+    "ethers": "^5.7.2"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "eslint": "^8.57.0"
+  },
+  "chainIds": [8453, 84532, 1, 11155111],
+  "chainSettings": {
+    "8453":   { "shards": 2, "target": 3 },
+    "84532":  { "shards": 1, "target": 3 },
+    "1":      { "shards": 2, "target": 3 },
+    "11155111": { "shards": 1, "target": 3 }
+  }
+}

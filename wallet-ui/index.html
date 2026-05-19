@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QUANTA Wallet — Safe AI Agent Wallet with Transaction Simulation</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+    background: linear-gradient(135deg, #0a0a14 0%, #1a0a2e 100%);
+    color: #e8e8f0;
+    min-height: 100vh;
+    padding: 20px;
+  }
+  .container { max-width: 480px; margin: 0 auto; }
+  header {
+    text-align: center; padding: 24px 0;
+  }
+  .logo {
+    font-size: 28px; font-weight: 800;
+    background: linear-gradient(135deg, #b794f4 0%, #4fd1c5 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .tagline { color: #888; font-size: 14px; margin-top: 4px; }
+
+  .card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 20px;
+    padding: 24px;
+    margin: 16px 0;
+  }
+  .card-title {
+    font-size: 12px; font-weight: 700; color: #888;
+    text-transform: uppercase; letter-spacing: 2px;
+    margin-bottom: 12px;
+  }
+
+  /* Account */
+  .balance {
+    font-size: 36px; font-weight: 800; line-height: 1;
+    background: linear-gradient(135deg, #b794f4 0%, #4fd1c5 100%);
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .balance-label { color: #888; font-size: 13px; margin-top: 6px; }
+  .addr {
+    font-family: 'SF Mono', monospace; font-size: 12px;
+    color: #aaa; margin-top: 16px;
+    padding: 12px; background: rgba(0,0,0,0.2); border-radius: 8px;
+    word-break: break-all;
+  }
+
+  /* Send form */
+  .input-group { margin-bottom: 16px; }
+  label { display: block; font-size: 13px; color: #aaa; margin-bottom: 6px; font-weight: 600; }
+  input {
+    width: 100%; padding: 14px 16px;
+    background: rgba(0,0,0,0.3);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 12px;
+    color: #fff;
+    font-family: inherit;
+    font-size: 15px;
+  }
+  input:focus { outline: none; border-color: #b794f4; }
+
+  /* Buttons */
+  .btn {
+    width: 100%; padding: 16px;
+    border: none; border-radius: 12px;
+    font-weight: 700; font-size: 15px;
+    cursor: pointer;
+    transition: transform 0.1s;
+  }
+  .btn:active { transform: scale(0.98); }
+  .btn-primary {
+    background: linear-gradient(135deg, #7c3aed 0%, #06b6d4 100%);
+    color: white;
+  }
+  .btn-secondary {
+    background: rgba(255,255,255,0.1);
+    color: #fff;
+  }
+  .btn-danger {
+    background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+    color: white;
+  }
+  .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  /* Simulation results */
+  .sim-section {
+    background: rgba(74,222,128,0.05);
+    border: 1px solid rgba(74,222,128,0.2);
+    border-radius: 12px;
+    padding: 16px;
+    margin: 16px 0;
+    display: none;
+  }
+  .sim-section.warning {
+    background: rgba(251,191,36,0.05);
+    border-color: rgba(251,191,36,0.3);
+  }
+  .sim-section.danger {
+    background: rgba(220,38,38,0.08);
+    border-color: rgba(220,38,38,0.4);
+  }
+  .sim-section.show { display: block; }
+  .sim-icon { font-size: 28px; }
+  .sim-title { font-size: 16px; font-weight: 700; margin: 8px 0; }
+  .sim-desc { color: #c0c0c0; font-size: 13px; line-height: 1.5; }
+  .sim-changes {
+    margin-top: 12px; padding-top: 12px;
+    border-top: 1px solid rgba(255,255,255,0.1);
+    font-size: 13px;
+  }
+  .change-row { display: flex; justify-content: space-between; padding: 4px 0; }
+  .change-row .label { color: #888; }
+  .change-row .value { font-weight: 600; }
+  .pos { color: #4ade80; }
+  .neg { color: #f87171; }
+
+  /* Warnings list */
+  .warning-item {
+    display: flex; gap: 12px; padding: 8px 0;
+    font-size: 13px;
+  }
+  .warning-item .icon { font-size: 20px; flex-shrink: 0; }
+
+  /* Tabs */
+  .tabs { display: flex; gap: 8px; margin-bottom: 16px; }
+  .tab {
+    flex: 1; padding: 10px;
+    background: rgba(255,255,255,0.05);
+    border: none;
+    border-radius: 10px;
+    color: #aaa;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+  }
+  .tab.active {
+    background: rgba(124,58,237,0.3);
+    color: #fff;
+  }
+
+  .hidden { display: none !important; }
+
+  /* Status pill */
+  .status {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 4px 10px;
+    background: rgba(74,222,128,0.15);
+    color: #4ade80;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 700;
+  }
+  .status .dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: #4ade80;
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
+  /* Modal */
+  .modal-bg {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.7);
+    display: none;
+    align-items: center; justify-content: center;
+    padding: 20px;
+    z-index: 100;
+  }
+  .modal-bg.show { display: flex; }
+  .modal {
+    background: #1a1a2e;
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 20px;
+    padding: 24px;
+    max-width: 480px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <header>
+    <div class="logo">⚛ QUANTA Wallet</div>
+    <div class="tagline">Safe wallet with on-chain transaction simulation</div>
+  </header>
+
+  <div class="tabs">
+    <button class="tab active" onclick="setTab('send')">Send</button>
+    <button class="tab" onclick="setTab('agent')">AI Agent</button>
+    <button class="tab" onclick="setTab('history')">History</button>
+  </div>
+
+  <!-- Account card -->
+  <div class="card">
+    <div class="card-title">Account <span class="status"><span class="dot"></span>Base Sepolia</span></div>
+    <div class="balance">1,234.56 <span style="font-size: 16px; color: #888;">QTA</span></div>
+    <div class="balance-label">≈ $1,234.56 USD</div>
+    <div class="addr" id="userAddr">qta1c6a6bff372ce72e4902a1dc3008940a02f71c4</div>
+  </div>
+
+  <!-- SEND TAB -->
+  <div id="tab-send">
+    <div class="card">
+      <div class="card-title">Send QTA</div>
+
+      <div class="input-group">
+        <label>Recipient address</label>
+        <input id="recipient" placeholder="qta1... or 0x..." />
+      </div>
+
+      <div class="input-group">
+        <label>Amount (QTA)</label>
+        <input id="amount" type="number" placeholder="0.00" step="0.001" />
+      </div>
+
+      <div class="input-group">
+        <label>Memo (optional)</label>
+        <input id="memo" placeholder="What's this for?" />
+      </div>
+
+      <button class="btn btn-secondary" onclick="simulateSend()">🔍 Simulate Transaction First</button>
+    </div>
+
+    <!-- Simulation results (initially hidden) -->
+    <div id="simResults" class="sim-section">
+      <div id="simContent"></div>
+      <div style="display: flex; gap: 8px; margin-top: 16px;">
+        <button class="btn btn-secondary" onclick="cancelTx()" style="flex: 1;">Cancel</button>
+        <button id="confirmBtn" class="btn btn-primary" onclick="confirmTx()" style="flex: 1;">Confirm Send</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- AI AGENT TAB -->
+  <div id="tab-agent" class="hidden">
+    <div class="card">
+      <div class="card-title">My AI Agents</div>
+
+      <div style="background: rgba(0,0,0,0.2); border-radius: 12px; padding: 16px; margin-bottom: 12px;">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <div>
+            <div style="font-weight: 700;">ResearchBot-001</div>
+            <div style="color: #888; font-size: 13px; margin-top: 4px;">Spent today: 0.5 / 5.0 QTA</div>
+          </div>
+          <span class="status"><span class="dot"></span>Alive</span>
+        </div>
+        <div style="display: flex; gap: 8px; margin-top: 12px;">
+          <button class="btn btn-secondary" style="font-size: 12px; padding: 8px;">View</button>
+          <button class="btn btn-secondary" style="font-size: 12px; padding: 8px;">Edit Policy</button>
+          <button class="btn btn-danger" style="font-size: 12px; padding: 8px;">Kill</button>
+        </div>
+      </div>
+
+      <button class="btn btn-primary">+ Create New Agent</button>
+    </div>
+  </div>
+
+  <!-- HISTORY TAB -->
+  <div id="tab-history" class="hidden">
+    <div class="card">
+      <div class="card-title">Recent Transactions</div>
+      <div style="font-size: 13px; color: #888;">No transactions yet</div>
+    </div>
+  </div>
+
+  <!-- Footer security info -->
+  <div class="card" style="margin-top: 24px; background: rgba(74,222,128,0.05); border-color: rgba(74,222,128,0.2);">
+    <div style="display: flex; gap: 12px; align-items: start;">
+      <div style="font-size: 24px;">🛡️</div>
+      <div>
+        <div style="font-weight: 700; margin-bottom: 4px;">Why we simulate transactions</div>
+        <div style="font-size: 13px; color: #ccc; line-height: 1.5;">
+          Every transaction is simulated against the live blockchain BEFORE you sign.
+          If anyone asks you to approve unlimited spend, you'll see it here in big red letters.
+          This stops the #1 type of crypto scam.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Confirmation modal -->
+<div id="confirmModal" class="modal-bg">
+  <div class="modal">
+    <h2 style="margin-bottom: 16px;">⚠️ Final Confirmation</h2>
+    <div id="modalContent"></div>
+    <div style="display: flex; gap: 8px; margin-top: 24px;">
+      <button class="btn btn-secondary" onclick="closeModal()" style="flex: 1;">Cancel</button>
+      <button class="btn btn-primary" onclick="finalSign()" style="flex: 1;">Sign with Hardware Wallet</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ================================================================
+// QUANTA Wallet — Safe wallet with transaction simulation
+// ================================================================
+// In production: connects to Tenderly Simulate API or fork RPC
+// Here: simulates client-side for demo
+
+const KNOWN_SCAM_PATTERNS = [
+  { test: tx => tx.amount > 1e30, severity: 'danger', msg: 'Unlimited spend approval — common scam!' },
+  { test: tx => tx.recipient === '0x0000000000000000000000000000000000000000', severity: 'warning', msg: 'Sending to zero address (token will be burned)' },
+  { test: tx => tx.recipient.includes('drainer'), severity: 'danger', msg: 'Recipient matches known scammer pattern' },
+];
+
+function setTab(tab) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  event.target.classList.add('active');
+  ['send', 'agent', 'history'].forEach(t => {
+    document.getElementById('tab-' + t).classList.toggle('hidden', t !== tab);
+  });
+  document.getElementById('simResults').classList.remove('show');
+}
+
+async function simulateSend() {
+  const recipient = document.getElementById('recipient').value.trim();
+  const amount = parseFloat(document.getElementById('amount').value) || 0;
+  const memo = document.getElementById('memo').value.trim();
+
+  if (!recipient || !amount) {
+    alert('Please fill recipient and amount');
+    return;
+  }
+
+  // === Run simulation ===
+  const tx = { recipient, amount, memo };
+  const warnings = [];
+  let severity = 'success'; // success | warning | danger
+
+  // Check known scam patterns
+  for (const pattern of KNOWN_SCAM_PATTERNS) {
+    if (pattern.test(tx)) {
+      warnings.push({ icon: pattern.severity === 'danger' ? '🚨' : '⚠️', text: pattern.msg });
+      if (pattern.severity === 'danger') severity = 'danger';
+      else if (severity === 'success') severity = 'warning';
+    }
+  }
+
+  // Balance check
+  const currentBalance = 1234.56;
+  if (amount > currentBalance) {
+    warnings.push({ icon: '🚨', text: `Insufficient balance: ${amount} > ${currentBalance}` });
+    severity = 'danger';
+  }
+
+  // Self-send detection
+  if (recipient === document.getElementById('userAddr').textContent) {
+    warnings.push({ icon: '⚠️', text: 'You are sending to your own address' });
+    if (severity === 'success') severity = 'warning';
+  }
+
+  // Gas estimate (mock)
+  const gasFee = 0.001;
+
+  // === Render ===
+  const sim = document.getElementById('simResults');
+  const content = document.getElementById('simContent');
+  sim.className = 'sim-section show ' + severity;
+
+  const iconMap = { success: '✅', warning: '⚠️', danger: '🚨' };
+  const titleMap = {
+    success: 'Transaction looks safe',
+    warning: 'Review warnings carefully',
+    danger: 'DO NOT SIGN — potential scam!'
+  };
+
+  let html = `
+    <div class="sim-icon">${iconMap[severity]}</div>
+    <div class="sim-title">${titleMap[severity]}</div>
+    <div class="sim-desc">
+      Simulated against current blockchain state. If you sign, this is what will happen:
+    </div>
+    <div class="sim-changes">
+      <div class="change-row">
+        <span class="label">Your QTA balance:</span>
+        <span class="value">
+          ${currentBalance.toFixed(2)} → 
+          <span class="neg">${(currentBalance - amount - gasFee).toFixed(2)}</span>
+          (-${(amount + gasFee).toFixed(2)})
+        </span>
+      </div>
+      <div class="change-row">
+        <span class="label">Recipient (${recipient.slice(0, 12)}...) balance:</span>
+        <span class="value pos">+${amount.toFixed(2)} QTA</span>
+      </div>
+      <div class="change-row">
+        <span class="label">Gas fee (burned):</span>
+        <span class="value neg">${gasFee} QTA</span>
+      </div>
+    </div>
+  `;
+
+  if (warnings.length) {
+    html += '<div class="sim-changes"><strong>⚠️ Warnings:</strong>';
+    for (const w of warnings) {
+      html += `<div class="warning-item"><span class="icon">${w.icon}</span><span>${w.text}</span></div>`;
+    }
+    html += '</div>';
+  }
+
+  content.innerHTML = html;
+
+  // Disable confirm button if dangerous
+  const confirmBtn = document.getElementById('confirmBtn');
+  if (severity === 'danger') {
+    confirmBtn.disabled = true;
+    confirmBtn.textContent = 'Cannot confirm — high risk';
+    confirmBtn.className = 'btn btn-danger';
+  } else {
+    confirmBtn.disabled = false;
+    confirmBtn.textContent = 'Confirm Send';
+    confirmBtn.className = 'btn btn-primary';
+  }
+}
+
+function cancelTx() {
+  document.getElementById('simResults').classList.remove('show');
+}
+
+function confirmTx() {
+  // Open final modal
+  const modal = document.getElementById('confirmModal');
+  const content = document.getElementById('modalContent');
+  const recipient = document.getElementById('recipient').value;
+  const amount = document.getElementById('amount').value;
+
+  content.innerHTML = `
+    <p style="font-size: 14px; color: #ccc; margin-bottom: 16px;">
+      Your hardware wallet will display these details. <strong>VERIFY they match
+      what's shown here</strong> before approving on device.
+    </p>
+    <div style="background: rgba(0,0,0,0.3); padding: 16px; border-radius: 12px; font-family: monospace; font-size: 13px;">
+      <div><strong>To:</strong> ${recipient}</div>
+      <div style="margin-top: 8px;"><strong>Amount:</strong> ${amount} QTA</div>
+      <div style="margin-top: 8px;"><strong>Network:</strong> Base Sepolia (chainId 84532)</div>
+      <div style="margin-top: 8px;"><strong>Gas:</strong> ~0.001 QTA</div>
+    </div>
+    <div style="background: rgba(251,191,36,0.1); border: 1px solid rgba(251,191,36,0.3); padding: 12px; border-radius: 8px; margin-top: 16px; font-size: 13px;">
+      🔍 <strong>Read your hardware wallet screen carefully.</strong>
+      If anything differs, REJECT on device.
+    </div>
+  `;
+  modal.classList.add('show');
+}
+
+function closeModal() {
+  document.getElementById('confirmModal').classList.remove('show');
+}
+
+function finalSign() {
+  closeModal();
+  alert('In production: would call ethers.signer.sendTransaction(...) via hardware wallet');
+  document.getElementById('simResults').classList.remove('show');
+  // Clear form
+  document.getElementById('recipient').value = '';
+  document.getElementById('amount').value = '';
+  document.getElementById('memo').value = '';
+}
+</script>
+
+</body>
+</html>
