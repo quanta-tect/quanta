@@ -172,14 +172,6 @@ Not investment advice. Audit before deploying to mainnet with real value.
 
 MIT © QUANTA Foundation
 
-
-## 💰 Support QUANTA
-
-If you'd like to support development:
-
-- **EVM** (Ethereum/Base/Arbitrum/Optimism/Polygon): `0x1cB0F5e315f783651E8dDbB2Fe37c69c1236D8f9`
-- **GitHub Sponsors**: github.com/sponsors/quanta-tect (coming soon)
-
 All funds go toward:
 - 🔐 Smart contract audits
 - 🛠️ Developer grants
