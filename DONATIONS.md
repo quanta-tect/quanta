@@ -14,8 +14,8 @@ QUANTA is an open-source project (MIT licensed). Your support helps us:
 🪙 Crypto Donations
 Same address works across all EVM chains. Choose the cheapest one to save on fees.
 EVM Chains (recommended)
-Address: 0x1cB0F5e315f783651E8dDbB2Fe37c69c1236D8f9
 
+Address: 0x1cB0F5e315f783651E8dDbB2Fe37c69c1236D8f9
 Accepts:
 ✅ ETH (Ethereum, Base, Arbitrum, Optimism, zkSync)
 ✅ USDC, USDT (any EVM chain)
