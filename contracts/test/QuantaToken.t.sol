@@ -48,7 +48,7 @@ contract QuantaTokenTest is Test {
         vm.prank(alice);
         bytes32 agentId = registry.registerAgent("ResearchBot", alice, "ipfs://meta", policy);
 
-        (address owner,,,, , , , , , ) = registry.agents(agentId);
+        (address owner,,,, , , , , , , ) = registry.agents(agentId);
         // Note: returning all fields would need a getter — simplified check
         assertEq(owner, alice);
         assertTrue(registry.isAlive(agentId));
