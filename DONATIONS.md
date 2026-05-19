@@ -10,6 +10,7 @@ QUANTA is an open-source project (MIT licensed). Your support helps us:
 Same address works across all EVM chains. Choose the cheapest one to save on fees.
 EVM Chains (recommended)
 Address: 0x1cB0F5e315f783651E8dDbB2Fe37c69c1236D8f9
+
 Accepts:
 ✅ ETH (Ethereum, Base, Arbitrum, Optimism, zkSync)
 ✅ USDC, USDT (any EVM chain)
@@ -19,10 +20,13 @@ Cheapest options:
 🥈 Arbitrum — ~$0.10 per transaction
 🥉 Polygon — ~$0.001 per transaction
 ❌ Ethereum mainnet — $5-50 per transaction (avoid for small donations)
+
 Bitcoin
 Address: bc1q6ca9sp3a90k5kdafk76zg8wntqw4r076hwndnr
+
 Solana
 Address: 5y1D8RmVWBvrDYriqxbj8zK2evwEYxMqyhMM7N7X12Co
+
 ---
 🏛️ Other Ways to Support
 GitHub Sponsors
