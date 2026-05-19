@@ -126,11 +126,12 @@ contract QuantaTokenInvariantTest is StdInvariant, Test {
         assertLe(token.aiUsageTaxBps(), token.MAX_TAX_BPS());
     }
 
-    /// @notice totalBurned matches sum of burns in handler
+    /// @notice Supply + ALL burns >= genesis
+    /// @dev Includes user burns (handler.ghost_totalBurned) + protocol burns (token.totalBurned)
     function invariant_burnedAccounting() public view {
-        // Allow some slack because token has its own burn tracking
-        assertGe(token.totalSupply() + token.totalBurned(),
-                 token.GENESIS_SUPPLY() - 1 ether);
+        // totalSupply + (all burns ever) should equal GENESIS_SUPPLY
+        uint256 allBurns = token.totalBurned() + handler.ghost_totalBurned();
+        assertGe(token.totalSupply() + allBurns + 1 ether, token.GENESIS_SUPPLY());
     }
 }
 

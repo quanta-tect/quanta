@@ -22,7 +22,7 @@ contract SecurityFixesTest is Test {
     address alice = address(0xA11CE);
     address bob = address(0xB0B);
     address attacker = address(0xBAD);
-    address oracle = address(0x0RACLE);
+    address oracle = address(0x04AC1E);
 
     uint256 alicePk = uint256(keccak256("alice"));
     address aliceSigner;

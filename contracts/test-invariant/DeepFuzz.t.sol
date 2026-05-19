@@ -124,8 +124,8 @@ contract DeepHandler is Test {
         address buyer = _user(buyerIdx);
         modelId = bound(modelId, 0, market.modelCount() - 1);
 
-        (, , , uint256 price, , , , bool _active) = market.models(modelId);
-        if (!_active || token.balanceOf(buyer) < price) return;
+        (, , , uint256 price, , , , uint64 _deactivatedAt) = market.models(modelId);
+        if (_deactivatedAt != 0 || token.balanceOf(buyer) < price) return;
 
         uint256 supplyBefore = token.totalSupply();
         vm.startPrank(buyer);
@@ -234,7 +234,7 @@ contract DeepFuzzTest is StdInvariant, Test {
     DeepHandler handler;
 
     address constant OWNER = address(0xA11);
-    address constant ORACLE = address(0x0RACLE);
+    address constant ORACLE = address(0x04AC1E);
     address[] users;
     address[] attackers;
 
