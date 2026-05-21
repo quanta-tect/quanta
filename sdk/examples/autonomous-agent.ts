@@ -1,3 +1,4 @@
+import 'dotenv/config';
 /**
  * 🤖 VIRAL DEMO: AI Agent earns money + pays for services
  * =====================================================
