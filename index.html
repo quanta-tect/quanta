@@ -1,518 +1,525 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>QUANTA — Quantum-safe AI-Native Blockchain</title>
+<meta name="description" content="QUANTA is the first Layer-1 blockchain combining CRYSTALS-Dilithium post-quantum signatures, Proof of Useful Work, and payment infrastructure designed for both humans and AI agents. Live on Base.">
 <style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-    background: #0a0a1a;
-    color: #e8e8f0;
-    line-height: 1.6;
-    overflow-x: hidden;
-  }
-  /* Animated gradient background */
-  body::before {
-    content: '';
-    position: fixed; inset: 0;
-    background: radial-gradient(ellipse at top left, #1a0a3a 0%, transparent 50%),
-                radial-gradient(ellipse at bottom right, #0a3a3a 0%, transparent 50%),
-                radial-gradient(ellipse at center, #2a0a4a 0%, transparent 70%);
-    z-index: -1;
-    animation: pulse 12s ease-in-out infinite;
-  }
-  @keyframes pulse {
-    0%, 100% { opacity: 0.6; }
-    50% { opacity: 1; }
-  }
-  .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+* { box-sizing: border-box; margin:0; padding:0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont,'Segoe UI', system-ui, sans-serif;
+  background:#0a0a1a;
+  color:#e8e8f0;
+  line-height:1.6;
+  overflow-x: hidden;
+}
+body::before {
+  content:'';
+  position: fixed; inset:0;
+  background:radial-gradient(ellipse at top left,#1a0a3a 0%, transparent 50%),
+             radial-gradient(ellipse at bottom right,#0a3a3a 0%, transparent 50%),
+             radial-gradient(ellipse at center,#2a0a4a 0%, transparent 70%);
+  z-index:-1;
+  animation: pulse 12s ease-in-out infinite;
+}
+@keyframes pulse {
+  0%,100% { opacity:0.6; }
+  50% { opacity:1; }
+}
+.container { max-width:1200px; margin:0 auto; padding:0 24px; }
 
-  /* Header */
-  header {
-    padding: 24px 0;
-    position: sticky; top: 0;
-    background: rgba(10, 10, 26, 0.85);
-    backdrop-filter: blur(12px);
-    z-index: 100;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-  }
-  nav { display: flex; justify-content: space-between; align-items: center; }
-  .logo {
-    font-size: 24px; font-weight: 800;
-    background: linear-gradient(135deg, #b794f4 0%, #4fd1c5 100%);
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-  }
-  .nav-links { display: flex; gap: 32px; }
-  .nav-links a {
-    color: #c0c0d0; text-decoration: none; font-size: 14px;
-    transition: color 0.2s;
-  }
-  .nav-links a:hover { color: #b794f4; }
+header {
+  padding:24px 0;
+  position: sticky; top:0;
+  background:rgba(10,10,26,0.85);
+  backdrop-filter:blur(12px);
+  z-index:100;
+  border-bottom:1px solid rgba(255,255,255,0.08);
+}
+nav { display: flex; justify-content: space-between; align-items: center; }
+.logo {
+  font-size:24px; font-weight:800;
+  background:linear-gradient(135deg,#b794f4 0%,#4fd1c5 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.nav-links { display: flex; gap:32px; }
+.nav-links a {
+  color:#c0c0d0; text-decoration: none; font-size:14px;
+  transition: color 0.2s;
+}
+.nav-links a:hover { color:#b794f4; }
 
-  /* Hero */
-  .hero { padding: 100px 0 80px; text-align: center; }
-  .badge {
-    display: inline-block;
-    padding: 6px 16px;
-    background: rgba(183, 148, 244, 0.15);
-    border: 1px solid rgba(183, 148, 244, 0.4);
-    border-radius: 999px;
-    font-size: 13px;
-    color: #b794f4;
-    margin-bottom: 24px;
-  }
-  h1 {
-    font-size: clamp(36px, 6vw, 72px);
-    font-weight: 800;
-    line-height: 1.1;
-    margin-bottom: 24px;
-    background: linear-gradient(135deg, #ffffff 0%, #b794f4 50%, #4fd1c5 100%);
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-  }
-  .subtitle {
-    font-size: clamp(18px, 2.5vw, 22px);
-    color: #a0a0b8;
-    max-width: 720px;
-    margin: 0 auto 40px;
-  }
-  .cta-group { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
-  .btn {
-    display: inline-flex; align-items: center; gap: 8px;
-    padding: 14px 28px;
-    border-radius: 12px;
-    font-weight: 600; font-size: 15px;
-    text-decoration: none;
-    transition: all 0.2s;
-    cursor: pointer; border: none;
-  }
-  .btn-primary {
-    background: linear-gradient(135deg, #7c3aed 0%, #06b6d4 100%);
-    color: white;
-    box-shadow: 0 8px 24px rgba(124, 58, 237, 0.4);
-  }
-  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 32px rgba(124, 58, 237, 0.5); }
-  .btn-secondary {
-    background: rgba(255, 255, 255, 0.08);
-    color: #e8e8f0;
-    border: 1px solid rgba(255, 255, 255, 0.15);
-  }
-  .btn-secondary:hover { background: rgba(255, 255, 255, 0.12); }
+.hero { padding:100px 0 80px; text-align: center; }
+.badge {
+  display: inline-block;
+  padding:6px 16px;
+  background:rgba(183,148,244,0.15);
+  border:1px solid rgba(183,148,244,0.4);
+  border-radius:999px;
+  font-size:13px;
+  color:#b794f4;
+  margin-bottom:24px;
+}
+h1 {
+  font-size:clamp(36px,6vw,72px);
+  font-weight:800;
+  line-height:1.1;
+  margin-bottom:24px;
+  background:linear-gradient(135deg,#ffffff 0%,#b794f4 50%,#4fd1c5 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.subtitle {
+  font-size:clamp(18px,2.5vw,22px);
+  color:#a0a0b8;
+  max-width:720px;
+  margin:0 auto 40px;
+}
+.cta-group { display: flex; gap:16px; justify-content: center; flex-wrap: wrap; }
+.btn {
+  display: inline-flex; align-items: center; gap:8px;
+  padding:14px 28px;
+  border-radius:12px;
+  font-weight:600; font-size:15px;
+  text-decoration: none;
+  transition: all 0.2s;
+  cursor: pointer; border: none;
+}
+.btn-primary {
+  background:linear-gradient(135deg,#7c3aed 0%,#06b6d4 100%);
+  color: white;
+  box-shadow:0 8px 24px rgba(124,58,237,0.4);
+}
+.btn-primary:hover { transform:translateY(-2px); box-shadow:0 12px 32px rgba(124,58,237,0.5); }
+.btn-secondary {
+  background:rgba(255,255,255,0.08);
+  color:#e8e8f0;
+  border:1px solid rgba(255,255,255,0.15);
+}
+.btn-secondary:hover { background:rgba(255,255,255,0.12); }
 
-  /* Q-Day Counter */
-  .qday {
-    margin-top: 60px;
-    padding: 32px;
-    background: rgba(220, 38, 38, 0.08);
-    border: 1px solid rgba(220, 38, 38, 0.3);
-    border-radius: 16px;
-    max-width: 600px;
-    margin-left: auto; margin-right: auto;
-  }
-  .qday-label { color: #fca5a5; font-size: 13px; text-transform: uppercase; letter-spacing: 2px; }
-  .qday-value { font-size: 48px; font-weight: 800; margin-top: 8px; font-variant-numeric: tabular-nums; }
-  .qday-sub { color: #a0a0b8; font-size: 14px; margin-top: 8px; }
+.qday {
+  margin-top:60px;
+  padding:32px;
+  background:rgba(220,38,38,0.08);
+  border:1px solid rgba(220,38,38,0.3);
+  border-radius:16px;
+  max-width:600px;
+  margin-left: auto; margin-right: auto;
+}
+.qday-label { color:#fca5a5; font-size:13px; text-transform: uppercase; letter-spacing:2px; }
+.qday-value { font-size:48px; font-weight:800; margin-top:8px; font-variant-numeric: tabular-nums; }
+.qday-sub { color:#a0a0b8; font-size:14px; margin-top:8px; }
 
-  /* Stats */
-  .stats { padding: 60px 0; }
-  .stats-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 24px;
-  }
-  .stat {
-    padding: 28px;
-    background: rgba(255, 255, 255, 0.04);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 16px;
-    text-align: center;
-  }
-  .stat-num {
-    font-size: 36px; font-weight: 800;
-    background: linear-gradient(135deg, #b794f4 0%, #4fd1c5 100%);
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-  }
-  .stat-label { color: #a0a0b8; font-size: 14px; margin-top: 4px; }
+.stats { padding:60px 0; }
+.stats-grid {
+  display: grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:24px;
+}
+.stat {
+  padding:28px;
+  background:rgba(255,255,255,0.04);
+  border:1px solid rgba(255,255,255,0.08);
+  border-radius:16px;
+  text-align: center;
+}
+.stat-num {
+  font-size:36px; font-weight:800;
+  background:linear-gradient(135deg,#b794f4 0%,#4fd1c5 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.stat-label { color:#a0a0b8; font-size:14px; margin-top:4px; }
 
-  /* Sections */
-  section { padding: 80px 0; }
-  .section-title {
-    font-size: clamp(28px, 4vw, 44px);
-    font-weight: 800;
-    text-align: center;
-    margin-bottom: 16px;
-  }
-  .section-sub {
-    text-align: center; color: #a0a0b8;
-    max-width: 640px; margin: 0 auto 60px; font-size: 17px;
-  }
+section { padding:80px 0; }
+.section-title {
+  font-size:clamp(28px,4vw,44px);
+  font-weight:800;
+  text-align: center;
+  margin-bottom:16px;
+}
+.section-sub {
+  text-align: center; color:#a0a0b8;
+  max-width:640px; margin:0 auto 60px; font-size:17px;
+}
 
-  /* Features */
-  .features-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 24px;
-  }
-  .feature {
-    padding: 32px;
-    background: linear-gradient(135deg, rgba(124, 58, 237, 0.08) 0%, rgba(6, 182, 212, 0.05) 100%);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 20px;
-    transition: transform 0.2s, border-color 0.2s;
-  }
-  .feature:hover {
-    transform: translateY(-4px);
-    border-color: rgba(183, 148, 244, 0.4);
-  }
-  .feature-icon { font-size: 36px; margin-bottom: 16px; }
-  .feature h3 { font-size: 20px; margin-bottom: 8px; color: #fff; }
-  .feature p { color: #b8b8c8; font-size: 15px; }
+.features-grid {
+  display: grid;
+  grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+  gap:24px;
+}
+.feature {
+  padding:32px;
+  background:linear-gradient(135deg,rgba(124,58,237,0.08) 0%,rgba(6,182,212,0.05) 100%);
+  border:1px solid rgba(255,255,255,0.08);
+  border-radius:20px;
+  transition: transform 0.2s, border-color 0.2s;
+}
+.feature:hover {
+  transform:translateY(-4px);
+  border-color:rgba(183,148,244,0.4);
+}
+.feature-icon { font-size:36px; margin-bottom:16px; }
+.feature h3 { font-size:20px; margin-bottom:8px; color:#fff; }
+.feature p { color:#b8b8c8; font-size:15px; }
 
-  /* Comparison Table */
-  .comparison {
-    overflow-x: auto;
-    background: rgba(255, 255, 255, 0.03);
-    border-radius: 20px;
-    border: 1px solid rgba(255, 255, 255, 0.08);
-  }
-  table { width: 100%; border-collapse: collapse; }
-  th, td { padding: 16px 20px; text-align: left; border-bottom: 1px solid rgba(255, 255, 255, 0.06); }
-  th { font-weight: 600; color: #a0a0b8; font-size: 13px; text-transform: uppercase; letter-spacing: 1px; }
-  td { font-size: 15px; }
-  td.qta { font-weight: 700; color: #4fd1c5; }
-  .check { color: #4ade80; }
-  .cross { color: #f87171; }
+.live-badge {
+  display: inline-block;
+  padding:4px 12px;
+  background:rgba(74,222,128,0.15);
+  border:1px solid rgba(74,222,128,0.4);
+  border-radius:999px;
+  font-size:12px;
+  color:#4ade80;
+  margin-left:8px;
+}
 
-  /* Code */
-  .code-demo {
-    padding: 40px;
-    background: #050510;
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 16px;
-    overflow-x: auto;
-    font-family: 'Monaco', 'Menlo', monospace;
-    font-size: 14px;
-    line-height: 1.7;
-  }
-  .code-demo .kw { color: #b794f4; }
-  .code-demo .str { color: #4fd1c5; }
-  .code-demo .num { color: #fbbf24; }
-  .code-demo .com { color: #6b7280; }
+.comparison {
+  overflow-x: auto;
+  background:rgba(255,255,255,0.03);
+  border-radius:20px;
+  border:1px solid rgba(255,255,255,0.08);
+}
+table { width:100%; border-collapse: collapse; }
+th,td { padding:16px 20px; text-align: left; border-bottom:1px solid rgba(255,255,255,0.06); }
+th { font-weight:600; color:#a0a0b8; font-size:13px; text-transform: uppercase; letter-spacing:1px; }
+td { font-size:15px; }
+td.qta { font-weight:700; color:#4fd1c5; }
+.check { color:#4ade80; }
+.cross { color:#f87171; }
 
-  /* Roadmap */
-  .roadmap {
-    display: grid;
-    gap: 16px;
-  }
-  .roadmap-item {
-    display: grid;
-    grid-template-columns: 120px 1fr;
-    gap: 24px;
-    padding: 20px;
-    background: rgba(255, 255, 255, 0.03);
-    border-left: 3px solid;
-    border-radius: 8px;
-  }
-  .roadmap-item.done { border-color: #4ade80; }
-  .roadmap-item.now { border-color: #fbbf24; }
-  .roadmap-item.next { border-color: #60a5fa; }
-  .roadmap-item.future { border-color: #a78bfa; opacity: 0.7; }
-  .roadmap-phase { font-weight: 700; color: #b794f4; }
-  .roadmap-content h4 { margin-bottom: 4px; }
-  .roadmap-content p { color: #a0a0b8; font-size: 14px; }
+.code-demo {
+  padding:40px;
+  background:#050510;
+  border:1px solid rgba(255,255,255,0.08);
+  border-radius:16px;
+  overflow-x: auto;
+  font-family:'Monaco','Menlo', monospace;
+  font-size:14px;
+  line-height:1.7;
+}
+.code-demo .kw { color:#b794f4; }
+.code-demo .str { color:#4fd1c5; }
+.code-demo .num { color:#fbbf24; }
+.code-demo .com { color:#6b7280; }
 
-  /* Footer */
-  footer {
-    padding: 60px 0 40px;
-    text-align: center;
-    border-top: 1px solid rgba(255, 255, 255, 0.08);
-    color: #6b7280;
-    font-size: 14px;
-  }
-  .footer-links { display: flex; gap: 32px; justify-content: center; margin-bottom: 24px; }
-  .footer-links a { color: #a0a0b8; text-decoration: none; }
+.roadmap {
+  display: grid;
+  gap:16px;
+}
+.roadmap-item {
+  display: grid;
+  grid-template-columns:120px 1fr;
+  gap:24px;
+  padding:20px;
+  background:rgba(255,255,255,0.03);
+  border-left:3px solid;
+  border-radius:8px;
+}
+.roadmap-item.done { border-color:#4ade80; }
+.roadmap-item.now { border-color:#fbbf24; }
+.roadmap-item.next { border-color:#60a5fa; }
+.roadmap-item.future { border-color:#a78bfa; opacity:0.7; }
+.roadmap-phase { font-weight:700; color:#b794f4; }
+.roadmap-content h4 { margin-bottom:4px; }
+.roadmap-content p { color:#a0a0b8; font-size:14px; }
 
-  @media (max-width: 640px) {
-    .nav-links { display: none; }
-    .roadmap-item { grid-template-columns: 1fr; }
-  }
+footer {
+  padding:60px 0 40px;
+  text-align: center;
+  border-top:1px solid rgba(255,255,255,0.08);
+  color:#6b7280;
+  font-size:14px;
+}
+.footer-links { display: flex; gap:32px; justify-content: center; margin-bottom:24px; }
+.footer-links a { color:#a0a0b8; text-decoration: none; }
+
+@media (max-width:640px) {
+  .nav-links { display: none; }
+  .roadmap-item { grid-template-columns:1fr; }
+}
 </style>
 </head>
 <body>
 
 <header>
-  <nav class="container">
-    <div class="logo">⚛ QUANTA</div>
-    <div class="nav-links">
-      <a href="#features">Features</a>
-      <a href="#tech">Tech</a>
-      <a href="#compare">Compare</a>
-      <a href="#roadmap">Roadmap</a>
-      <a href="#docs">Docs</a>
-    </div>
-  </nav>
+<nav class="container">
+  <div class="logo">⚛ QUANTA</div>
+  <div class="nav-links">
+    <a href="#features">Features</a>
+    <a href="#tech">Tech</a>
+    <a href="#compare">Compare</a>
+    <a href="#roadmap">Roadmap</a>
+    <a href="#docs">Docs</a>
+  </div>
+</nav>
 </header>
 
 <section class="hero">
-  <div class="container">
-    <div class="badge">🔐 NIST FIPS 204 • 🤖 AI-Native • ⚡ 50,000 TPS</div>
-    <h1>Đồng tiền quantum-resistant<br>for kỷ nguyên AI Agent</h1>
-    <p class="subtitle">
-      QUANTA là blockchain Layer-1 đầu tiên kết hợp signature hậu lượng tử
-      CRYSTALS-Dilithium, Proof of Useful Work, and hạ tầng thanh toán
-      designed for cả con người lẫn AI agent.
-    </p>
-    <div class="cta-group">
-      <a href="#docs" class="btn btn-primary">📄 Đọc Whitepaper</a>
-      <a href="#" class="btn btn-secondary">⌨️  Thử Devnet</a>
-      <a href="#" class="btn btn-secondary">💬 Tham gia Discord</a>
-    </div>
-
-    <div class="qday">
-      <div class="qday-label">⏳ Q-Day Countdown (ước tính)</div>
-      <div class="qday-value" id="qday-counter">2,847 ngày</div>
-      <div class="qday-sub">
-        Đến lúc máy tính lượng tử có thể phá ECDSA of Bitcoin/Ethereum.<br>
-        <strong>QUANTA already sẵn sàng từ ngày đầu.</strong>
-      </div>
+<div class="container">
+  <div class="badge">🟢 LIVE on Base Sepolia | 🔐 NIST FIPS 204 | 🤖 AI-Native | ⚡ x402</div>
+  <h1>The quantum-safe blockchain<br>built for the AI Agent era</h1>
+  <p class="subtitle">
+    QUANTA is the first blockchain protocol combining CRYSTALS-Dilithium post-quantum signatures,
+    Proof of Useful Work, and payment infrastructure designed for both humans and AI agents.
+  </p>
+  <div class="cta-group">
+    <a href="https://github.com/quanta-tect/quanta" class="btn btn-primary" target="_blank">📄 View on GitHub</a>
+    <a href="https://sepolia.basescan.org/address/0x949E6cd790cAef46Ce905DcA133DDeC8A7875DF5" class="btn btn-secondary" target="_blank">🔍 View on Basescan</a>
+    <a href="https://discord.gg/REPLACE_ME" class="btn btn-secondary" target="_blank">💬 Join Discord</a>
+  </div>
+  <div class="qday">
+    <div class="qday-label">⏳ Q-Day Countdown (estimated)</div>
+    <div class="qday-value" id="qday-counter">2,400 days</div>
+    <div class="qday-sub">
+      Until quantum computers can break Bitcoin & Ethereum's ECDSA.<br>
+      <strong>QUANTA is ready from day one.</strong>
     </div>
   </div>
+</div>
 </section>
 
 <section class="stats">
-  <div class="container">
-    <div class="stats-grid">
-      <div class="stat"><div class="stat-num">50K+</div><div class="stat-label">TPS</div></div>
-      <div class="stat"><div class="stat-num">$0.000001</div><div class="stat-label">Phí AI micro-tx</div></div>
-      <div class="stat"><div class="stat-num">1B</div><div class="stat-label">Tổng cung tối đa QTA</div></div>
-      <div class="stat"><div class="stat-num">-2%</div><div class="stat-label">Net deflation target</div></div>
-    </div>
+<div class="container">
+  <div class="stats-grid">
+    <div class="stat"><div class="stat-num">$0.0001</div><div class="stat-label">AI micro-tx fee</div></div>
+    <div class="stat"><div class="stat-num">300M</div><div class="stat-label">QTA on Base Sepolia</div></div>
+    <div class="stat"><div class="stat-num">1B</div><div class="stat-label">Max total supply</div></div>
+    <div class="stat"><div class="stat-num">30/30</div><div class="stat-label">Security tests passed</div></div>
   </div>
+</div>
 </section>
 
 <section id="features">
-  <div class="container">
-    <h2 class="section-title">Tính năng nổi bật</h2>
-    <p class="section-sub">Tất cả feature tốt most từ Bitcoin, Ethereum, Solana — cộng thêm AI and quantum-safety.</p>
-    <div class="features-grid">
-      <div class="feature">
-        <div class="feature-icon">🔐</div>
-        <h3>Quantum-Safe Native</h3>
-        <p>Chữ ký CRYSTALS-Dilithium-3 (NIST FIPS 204) bảo vệ mọi giao dịch khỏi tấn công bằng máy tính lượng tử.</p>
-      </div>
-      <div class="feature">
-        <div class="feature-icon">🧠</div>
-        <h3>Proof of Useful Work</h3>
-        <p>Validator chạy AI inference, training, scientific compute thay vì hash vô nghĩa. Mỗi watt điện đều có ích.</p>
-      </div>
-      <div class="feature">
-        <div class="feature-icon">🤖</div>
-        <h3>AI Agent Wallet</h3>
-        <p>Dedicated wallet for AI: spending policy, intent-based tx, death-switch, reputation. Agents live autonomously on the blockchain.</p>
-      </div>
-      <div class="feature">
-        <div class="feature-icon">⚡</div>
-        <h3>x402 Micropayment</h3>
-        <p>Trả phí per-API-call, per-token LLM. Payment channels off-chain settle 1 triệu micro-tx in 1 onchain tx.</p>
-      </div>
-      <div class="feature">
-        <div class="feature-icon">🛒</div>
-        <h3>AI Marketplace On-chain</h3>
-        <p>Đăng ký model, dataset, compute lên chain. Royalty tự động, không need trung gian. Creators kiếm tiền từng inference.</p>
-      </div>
-      <div class="feature">
-        <div class="feature-icon">🔥</div>
-        <h3>Deflationary Burn</h3>
-        <p>50% of tx fees + 30% of AI fees burned every block. The more adoption grows, the more supply shrinks. Net deflation from year ~7.</p>
-      </div>
-      <div class="feature">
-        <div class="feature-icon">🛡️</div>
-        <h3>EVM Compatible + AI Opcodes</h3>
-        <p>Mọi smart contract Ethereum chạy được, cộng thêm 8 opcode AI native: LLM_INFER, ZK_VERIFY, INTENT_RESOLVE...</p>
-      </div>
-      <div class="feature">
-        <div class="feature-icon">🏛️</div>
-        <h3>Hybrid AI/Human Governance</h3>
-        <p>Quadratic voting for holders + AI Council tư vấn + Human Council veto khẩn cấp. Governance không bị cá voi.</p>
-      </div>
-      <div class="feature">
-        <div class="feature-icon">🌉</div>
-        <h3>PQ-Secured Bridges</h3>
-        <p>Cross-chain with Ethereum, Solana, Cosmos via quantum-encrypted bridge. Bring current assets into the future.</p>
-      </div>
+<div class="container">
+  <h2 class="section-title">Key Features</h2>
+  <p class="section-sub">The best of Bitcoin, Ethereum, and Solana — plus AI and quantum-safety built in.</p>
+  <div class="features-grid">
+    <div class="feature">
+      <div class="feature-icon">🔐</div>
+      <h3>Quantum-Safe Native</h3>
+      <p>CRYSTALS-Dilithium-3 signatures (NIST FIPS 204) protect every transaction from quantum computer attacks.</p>
+    </div>
+    <div class="feature">
+      <div class="feature-icon">🧠</div>
+      <h3>Proof of Useful Work</h3>
+      <p>Validators run AI inference, training, and scientific compute instead of useless hashing. Every watt has purpose.</p>
+    </div>
+    <div class="feature">
+      <div class="feature-icon">🤖</div>
+      <h3>AI Agent Wallet</h3>
+      <p>Dedicated wallet for AI: spending policies, intent-based transactions, death-switch, reputation. Agents live autonomously on-chain.</p>
+    </div>
+    <div class="feature">
+      <div class="feature-icon">⚡</div>
+      <h3>x402 Micropayments</h3>
+      <p>Pay per API call, per LLM token. Off-chain payment channels settle 1 million micro-transactions in 1 on-chain tx.</p>
+    </div>
+    <div class="feature">
+      <div class="feature-icon">🛒</div>
+      <h3>On-chain AI Marketplace <span class="live-badge">LIVE</span></h3>
+      <p>Register models, datasets, and compute on-chain. Automatic royalties — no middleman. Creators earn per inference.</p>
+    </div>
+    <div class="feature">
+      <div class="feature-icon">🔥</div>
+      <h3>Deflationary Burn</h3>
+      <p>0.3% tax on AI agent calls + marketplace fees burned every transaction. More adoption = shrinking supply.</p>
+    </div>
+    <div class="feature">
+      <div class="feature-icon">🛡️</div>
+      <h3>EVM Compatible + Security</h3>
+      <p>All Ethereum smart contracts run natively. 30 security findings fixed, 14 regression tests + 16 fuzz invariants passing.</p>
+    </div>
+    <div class="feature">
+      <div class="feature-icon">🏛️</div>
+      <h3>Hybrid AI/Human Governance</h3>
+      <p>Quadratic voting for holders + AI Council advisory + Human Council emergency veto. Whale-resistant governance.</p>
+    </div>
+    <div class="feature">
+      <div class="feature-icon">🌉</div>
+      <h3>PQ-Secured Bridges</h3>
+      <p>Cross-chain with Ethereum, Solana, Cosmos via quantum-encrypted Hyperlane bridge. Bring today's assets into tomorrow.</p>
     </div>
   </div>
+</div>
 </section>
 
 <section id="tech">
-  <div class="container">
-    <h2 class="section-title">Code chạy in 30 giây</h2>
-    <p class="section-sub">Prototype Python ~800 dòng — không dependency ngoài. Đọc, chạy, fork.</p>
-    <div class="code-demo">
-<span class="com"># 1. Tạo wallet quantum-safe</span>
-<span class="kw">from</span> quantum_wallet <span class="kw">import</span> Wallet
-alice = Wallet.create(height=<span class="num">4</span>)
-<span class="kw">print</span>(alice.address)  <span class="com"># qta1c6a6bff372ce72e4902a1dc3008940a02f71c4</span>
+<div class="container">
+  <h2 class="section-title">Run code in 30 seconds</h2>
+  <p class="section-sub">TypeScript SDK + Solidity contracts. Install, configure, ship.</p>
+  <div class="code-demo">
+<span class="com">// 1. Install SDK</span>
+<span class="kw">npm</span> install @quanta/sdk viem
 
-<span class="com"># 2. Tạo AI agent with spending policy</span>
-<span class="kw">from</span> ai_agent <span class="kw">import</span> AIAgentWallet, SpendingPolicy
-policy = SpendingPolicy(max_per_tx=<span class="num">0.5</span>, max_per_hour=<span class="num">5.0</span>)
-bot = AIAgentWallet.create(owner_address=alice.address,
-                            name=<span class="str">"ResearchBot-001"</span>,
-                            policy=policy, initial_funding=<span class="num">2.0</span>)
+<span class="com">// 2. Create client &amp; register AI agent</span>
+<span class="kw">import</span> { QuantaClient, AIAgent } <span class="kw">from</span> <span class="str">"@quanta/sdk"</span>;
 
-<span class="com"># 3. Open payment channel for 1000 micropayments</span>
-<span class="kw">from</span> ai_agent <span class="kw">import</span> PaymentChannel
-channel = PaymentChannel(bot, <span class="str">"qta1openai_api"</span>, deposit=<span class="num">1.0</span>)
-<span class="kw">for</span> _ <span class="kw">in</span> <span class="kw">range</span>(<span class="num">1000</span>):
-    channel.micro_pay(<span class="num">0.0001</span>)  <span class="com"># off-chain, gần như free</span>
-channel.close()  <span class="com"># settle on-chain with 1 tx</span>
-    </div>
+<span class="kw">const</span> client = <span class="kw">new</span> QuantaClient({
+  chain: <span class="str">"base-sepolia"</span>,
+  privateKey: process.env.PRIVATE_KEY,
+});
+
+<span class="kw">const</span> agent = <span class="kw">await</span> AIAgent.register(client, {
+  name: <span class="str">"ResearchBot-001"</span>,
+  metadataURI: <span class="str">"ipfs://..."</span>,
+  policy: AIAgent.defaultResearchPolicy(),
+});
+
+<span class="com">// 3. Open payment channel for 1000 micropayments</span>
+<span class="kw">const</span> channel = <span class="kw">await</span> PaymentChannel.open(
+  client, apiProvider, parseEther(<span class="str">"1"</span>)
+);
+
+<span class="kw">for</span> (<span class="kw">let</span> i = <span class="num">0</span>; i &lt; <span class="num">1000</span>; i++) {
+  <span class="kw">await</span> channel.pay(parseEther(<span class="str">"0.0001"</span>));
+}
+
+<span class="kw">await</span> channel.close(channel.getLastTicket());
+<span class="com">// 1000 payments settled in 1 on-chain tx</span>
   </div>
+</div>
 </section>
 
 <section id="compare">
-  <div class="container">
-    <h2 class="section-title">So sánh with các blockchain hàng đầu</h2>
-    <p class="section-sub">QUANTA không phải fork — là kiến trúc for thế giới mới.</p>
-    <div class="comparison">
-      <table>
-        <thead>
-          <tr>
-            <th>Tính năng</th>
-            <th>Bitcoin</th>
-            <th>Ethereum</th>
-            <th>Solana</th>
-            <th class="qta">QUANTA</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr><td>Quantum-safe signatures</td><td class="cross">✗</td><td class="cross">✗</td><td class="cross">✗</td><td class="check">✓</td></tr>
-          <tr><td>Smart contracts</td><td class="cross">✗</td><td class="check">✓</td><td class="check">✓</td><td class="check">✓ EVM+</td></tr>
-          <tr><td>TPS thực tế</td><td>7</td><td>30</td><td>3,000</td><td class="qta">50,000+</td></tr>
-          <tr><td>Phí transaction</td><td>$5+</td><td>$0.50+</td><td>$0.001</td><td class="qta">$0.001</td></tr>
-          <tr><td>Useful Work mining</td><td class="cross">✗</td><td>—</td><td>—</td><td class="check">✓</td></tr>
-          <tr><td>AI Agent Wallet</td><td class="cross">✗</td><td class="cross">✗</td><td class="cross">✗</td><td class="check">✓</td></tr>
-          <tr><td>x402 Micropayment</td><td class="cross">✗</td><td class="cross">✗</td><td>partial</td><td class="check">✓</td></tr>
-          <tr><td>On-chain AI marketplace</td><td class="cross">✗</td><td class="cross">✗</td><td class="cross">✗</td><td class="check">✓</td></tr>
-          <tr><td>Deflationary burn</td><td class="cross">✗</td><td class="check">✓</td><td class="cross">✗</td><td class="check">✓✓</td></tr>
-          <tr><td>Privacy memos</td><td class="cross">✗</td><td class="cross">✗</td><td class="cross">✗</td><td class="check">✓ (Kyber)</td></tr>
-        </tbody>
-      </table>
-    </div>
+<div class="container">
+  <h2 class="section-title">How QUANTA compares</h2>
+  <p class="section-sub">Not a fork — a new architecture for a new world.</p>
+  <div class="comparison">
+    <table>
+      <thead>
+        <tr>
+          <th>Feature</th>
+          <th>Bitcoin</th>
+          <th>Ethereum</th>
+          <th>Solana</th>
+          <th class="qta">QUANTA</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Quantum-safe signatures</td><td class="cross">✗</td><td class="cross">✗</td><td class="cross">✗</td><td class="check">✓</td></tr>
+        <tr><td>Smart contracts</td><td class="cross">✗</td><td class="check">✓</td><td class="check">✓</td><td class="check">✓ EVM+</td></tr>
+        <tr><td>Real TPS</td><td>7</td><td>30</td><td>3,000</td><td class="qta">50,000+</td></tr>
+        <tr><td>Transaction fee</td><td>$5+</td><td>$0.50+</td><td>$0.001</td><td class="qta">$0.001</td></tr>
+        <tr><td>Useful Work mining</td><td class="cross">✗</td><td>—</td><td>—</td><td class="check">✓</td></tr>
+        <tr><td>AI Agent Wallet</td><td class="cross">✗</td><td class="cross">✗</td><td class="cross">✗</td><td class="check">✓</td></tr>
+        <tr><td>x402 Micropayments</td><td class="cross">✗</td><td class="cross">✗</td><td>partial</td><td class="check">✓</td></tr>
+        <tr><td>On-chain AI marketplace</td><td class="cross">✗</td><td class="cross">✗</td><td class="cross">✗</td><td class="check">✓</td></tr>
+        <tr><td>Deflationary burn</td><td class="cross">✗</td><td class="check">✓</td><td class="cross">✗</td><td class="check">✓✓</td></tr>
+        <tr><td>Open source (MIT)</td><td class="check">✓</td><td class="check">✓</td><td class="check">✓</td><td class="check">✓</td></tr>
+      </tbody>
+    </table>
   </div>
+</div>
 </section>
 
 <section id="roadmap">
-  <div class="container">
-    <h2 class="section-title">Roadmap</h2>
-    <p class="section-sub">Từ whitepaper đến mainnet in 12 tháng.</p>
-    <div class="roadmap">
-      <div class="roadmap-item done">
-        <div class="roadmap-phase">Phase 0<br>Q1 2025</div>
-        <div class="roadmap-content">
-          <h4>Genesis ✓</h4>
-          <p>Whitepaper, tokenomics, prototype Python, landing page, simulator. (Bạn đang xem!)</p>
-        </div>
+<div class="container">
+  <h2 class="section-title">Roadmap</h2>
+  <p class="section-sub">From whitepaper to mainnet — we ship fast.</p>
+  <div class="roadmap">
+    <div class="roadmap-item done">
+      <div class="roadmap-phase">Phase 0<br>May 2026</div>
+      <div class="roadmap-content">
+        <h4>Genesis ✓</h4>
+        <p>Whitepaper, tokenomics, Python prototype, 4 Solidity contracts v1.1, 30/30 security tests passing, deployed to Base Sepolia.</p>
       </div>
-      <div class="roadmap-item now">
-        <div class="roadmap-phase">Phase 1<br>Q2-Q3 2025</div>
-        <div class="roadmap-content">
-          <h4>Devnet — Rust implementation</h4>
-          <p>Single-node devnet, QVM (EVM + 8 AI opcodes), CLI wallet, block explorer, $100K bug bounty.</p>
-        </div>
+    </div>
+    <div class="roadmap-item done">
+      <div class="roadmap-phase">Phase 1<br>May 2026</div>
+      <div class="roadmap-content">
+        <h4>Community Launch ✓</h4>
+        <p>Landing page, Discord, Telegram, TypeScript SDK, Mirror blog, GitHub Pages, Basescan verification, first Twitter launch thread.</p>
       </div>
-      <div class="roadmap-item next">
-        <div class="roadmap-phase">Phase 2<br>Q4 2025</div>
-        <div class="roadmap-content">
-          <h4>Testnet "Schrödinger"</h4>
-          <p>50 validators, real Llama-3-8B PoUW, hackathon $500K, security audit #1.</p>
-        </div>
+    </div>
+    <div class="roadmap-item now">
+      <div class="roadmap-phase">Phase 2<br>Jun 2026</div>
+      <div class="roadmap-content">
+        <h4>Testnet Growth ← NOW</h4>
+        <p>Grant applications (Base Builder, Optimism RetroPGF), bug bounty setup, external audit prep, viral demo video, community building.</p>
       </div>
-      <div class="roadmap-item next">
-        <div class="roadmap-phase">Phase 3<br>Q1 2026</div>
-        <div class="roadmap-content">
-          <h4>Mainnet "Heisenberg" + TGE</h4>
-          <p>100 genesis validators, exchange listings, AI Agent SDK, integrations with LangChain/AutoGPT.</p>
-        </div>
+    </div>
+    <div class="roadmap-item next">
+      <div class="roadmap-phase">Phase 3<br>Q3 2026</div>
+      <div class="roadmap-content">
+        <h4>External Audit + Multisig</h4>
+        <p>Code4rena/Sherlock audit contest, Gnosis Safe 3/5 multisig, Forta monitoring live, Immunefi bug bounty, Hyperlane bridge testing.</p>
       </div>
-      <div class="roadmap-item future">
-        <div class="roadmap-phase">Phase 4<br>2026</div>
-        <div class="roadmap-content">
-          <h4>Ecosystem expansion</h4>
-          <p>zk-rollups, mobile wallet, hardware wallet, AI compute marketplace v1, full DAO governance.</p>
-        </div>
+    </div>
+    <div class="roadmap-item future">
+      <div class="roadmap-phase">Phase 4<br>Q4 2026</div>
+      <div class="roadmap-content">
+        <h4>Mainnet Launch + TGE</h4>
+        <p>Deploy to Base mainnet, transfer to multisig, exchange listings, AI Agent SDK v2, LangChain/AutoGPT integrations.</p>
       </div>
-      <div class="roadmap-item future">
-        <div class="roadmap-phase">Phase 5<br>2027+</div>
-        <div class="roadmap-content">
-          <h4>Quantum Era</h4>
-          <p>Hybrid sigs sunset, AI agents > human users, CBDC partnerships, lattice-based ZK.</p>
-        </div>
+    </div>
+    <div class="roadmap-item future">
+      <div class="roadmap-phase">Phase 5<br>2027+</div>
+      <div class="roadmap-content">
+        <h4>Quantum Era</h4>
+        <p>Rust L1 implementation, zkML proofs for PoUW, hybrid sigs sunset, AI agents exceed human users, CBDC partnerships, lattice-based ZK.</p>
       </div>
     </div>
   </div>
+</div>
 </section>
 
 <section id="docs">
-  <div class="container" style="text-align: center;">
-    <h2 class="section-title">Bắt đầu ngay</h2>
-    <p class="section-sub">Mọi tài liệu, code, simulator đều mã nguồn mở.</p>
-    <div class="cta-group">
-      <a href="../docs/WHITEPAPER.md" class="btn btn-primary">📄 Whitepaper</a>
-      <a href="../docs/TOKENOMICS.md" class="btn btn-secondary">💰 Tokenomics</a>
-      <a href="../docs/ROADMAP.md" class="btn btn-secondary">🗺️  Roadmap</a>
-      <a href="../prototype/demo.py" class="btn btn-secondary">⌨️  Code Demo</a>
-      <a href="../simulator/tokenomics_sim.py" class="btn btn-secondary">📊 Simulator</a>
-    </div>
+<div class="container" style="text-align: center;">
+  <h2 class="section-title">Start building now</h2>
+  <p class="section-sub">Everything is open source. Code, docs, simulator — all public.</p>
+  <div class="cta-group">
+    <a href="https://github.com/quanta-tect/quanta" class="btn btn-primary" target="_blank">📄 GitHub</a>
+    <a href="https://github.com/quanta-tect/quanta/blob/main/docs/WHITEPAPER.md" class="btn btn-secondary" target="_blank">📖 Whitepaper</a>
+    <a href="https://github.com/quanta-tect/quanta/blob/main/docs/TOKENOMICS.md" class="btn btn-secondary" target="_blank">💰 Tokenomics</a>
+    <a href="https://github.com/quanta-tect/quanta/blob/main/DEPLOYMENTS.md" class="btn btn-secondary" target="_blank">📍 Deployments</a>
+    <a href="https://github.com/quanta-tect/quanta/tree/main/sdk" class="btn btn-secondary" target="_blank">🛠️ SDK</a>
   </div>
+</div>
 </section>
 
 <footer>
-  <div class="container">
-    <div class="footer-links">
-      <a href="#">GitHub</a>
-      <a href="#">Twitter</a>
-      <a href="#">Discord</a>
-      <a href="#">Telegram</a>
-      <a href="#">Mirror</a>
-    </div>
-    <p>QUANTA Foundation © 2025 • MIT License</p>
-    <p style="margin-top: 8px; opacity: 0.6;">
-      ⚠️ Đây là proof-of-concept giáo dục. Không phải lời khuyên đầu tư.
-    </p>
+<div class="container">
+  <div class="footer-links">
+    <a href="https://github.com/quanta-tect/quanta" target="_blank">GitHub</a>
+    <a href="https://twitter.com/Quanta_Protocol" target="_blank">Twitter</a>
+    <a href="https://discord.gg/REPLACE_ME" target="_blank">Discord</a>
+    <a href="https://sepolia.basescan.org/address/0x949E6cd790cAef46Ce905DcA133DDeC8A7875DF5" target="_blank">Basescan</a>
   </div>
+  <p>QUANTA Protocol &copy; 2026 &bull; MIT License</p>
+  <p style="margin-top: 8px; opacity: 0.6;">
+    ⚠️ This is an experimental protocol. Not investment advice. Smart contracts are unaudited — use testnet only.
+  </p>
+</div>
 </footer>
 
 <script>
-  // Q-Day countdown — giả định Q-Day là 2033-01-01
-  function updateCounter() {
-    const qday = new Date('2033-01-01T00:00:00Z');
-    const now = new Date();
-    const days = Math.floor((qday - now) / (1000 * 60 * 60 * 24));
-    document.getElementById('qday-counter').textContent =
-      days.toLocaleString('vi-VN') + ' ngày';
-  }
-  updateCounter();
-  setInterval(updateCounter, 60000);
+function updateCounter(){
+  const qday = new Date('2033-01-01T00:00:00Z');
+  const now = new Date();
+  const days = Math.floor((qday - now) / (1000 * 60 * 60 * 24));
+  document.getElementById('qday-counter').textContent =
+    days.toLocaleString('en-US') + ' days';
+}
+updateCounter();
+setInterval(updateCounter, 60000);
 
-  // Smooth scroll
-  document.querySelectorAll('a[href^="#"]').forEach(a => {
-    a.addEventListener('click', e => {
-      const id = a.getAttribute('href');
-      if (id.length > 1) {
-        e.preventDefault();
-        document.querySelector(id)?.scrollIntoView({ behavior: 'smooth' });
-      }
-    });
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    const id = a.getAttribute('href');
+    if (id.length > 1) {
+      e.preventDefault();
+      document.querySelector(id)?.scrollIntoView({behavior: 'smooth'});
+    }
   });
+});
 </script>
+
 </body>
 </html>
