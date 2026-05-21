@@ -1,7 +1,7 @@
 import type { Address, Hex } from "viem";
 
 export interface SpendingPolicy {
-  maxPerTx: bigint;          // wei
+  maxPerTx: bigint;
   maxPerDay: bigint;
   deathSwitchSec: number;
   requireIntent: boolean;
@@ -9,7 +9,7 @@ export interface SpendingPolicy {
 
 export interface AgentConfig {
   name: string;
-  metadataURI: string;       // IPFS URI to model card
+  metadataURI: string;
   policy: SpendingPolicy;
   initialFunding?: bigint;
 }
@@ -42,13 +42,12 @@ export interface QuantaContracts {
   marketplace: Address;
 }
 
-// Default deployments (placeholders — update after deploy)
 export const QUANTA_CONTRACTS: Record<string, QuantaContracts> = {
   "base-sepolia": {
-    token: "0x0000000000000000000000000000000000000000",
-    registry: "0x0000000000000000000000000000000000000000",
-    channel: "0x0000000000000000000000000000000000000000",
-    marketplace: "0x0000000000000000000000000000000000000000",
+    token: "0x949E6cd790cAef46Ce905DcA133DDeC8A7875DF5",
+    registry: "0x28Fc0f450705a23BA1F27473C94ECF4FAa237514",
+    channel: "0x436c1D23118f288f0F4d5533A64521a68bf1435d",
+    marketplace: "0x5C97e1feDe8b4E66787E8f3f58F264C2eA12b14f",
   },
   base: {
     token: "0x0000000000000000000000000000000000000000",
