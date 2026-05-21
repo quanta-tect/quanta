@@ -1,5 +1,5 @@
 import type { Address, Hex } from "viem";
-import { encodeAbiParameters, keccak256, hashMessage } from "viem";
+import { encodeAbiParameters, keccak256 } from "viem";
 import type { QuantaClient } from "./client.js";
 import type { ChannelState } from "./types.js";
 
@@ -8,9 +8,7 @@ const CHANNEL_ABI = [
     inputs: [
       { name: "payee", type: "address" },
       { name: "nonce", type: "uint64" },
-      { name: "deposit", type: "uint128" },
-      { name: "challengePeriod", type: "uint64" },
-      { name: "forceCloseAfter", type: "uint64" },
+      { name: "deposit", type: "uint256" },
     ],
     name: "openChannel",
     outputs: [{ type: "bytes32" }],
@@ -30,9 +28,6 @@ const CHANNEL_ABI = [
   },
 ] as const;
 
-/**
- * PaymentChannel — x402-style micropayments off-chain.
- */
 export class PaymentChannel {
   private spent = 0n;
   private nonce = 0;
@@ -56,18 +51,16 @@ export class PaymentChannel {
     nonce?: bigint,
   ): Promise<PaymentChannel> {
     const openNonce = nonce ?? BigInt(Math.floor(Date.now() / 1000));
-    const challengePeriod = 86400n; // 1 day
-    const forceCloseAfter = 604800n; // 7 days
 
     // 1. Approve token spend
     await client.approve(client.contracts.channel, deposit);
 
-    // 2. Open channel (5 params matching contract)
+    // 2. Open channel (v1.0: 3 params)
     const txHash = await client.walletClient.writeContract({
       address: client.contracts.channel,
       abi: CHANNEL_ABI,
       functionName: "openChannel",
-      args: [payee, openNonce, deposit, challengePeriod, forceCloseAfter],
+      args: [payee, openNonce, deposit],
       chain: client.walletClient.chain,
       account: client.walletClient.account!,
     });
