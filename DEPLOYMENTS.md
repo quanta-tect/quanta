@@ -19,3 +19,35 @@
 ### Treasury (holds 300M QTA)
 
 `0x1d6a9512fF4A98C192A99Adea934ac3f83035953`
+
+---
+
+## 📊 Token Statistics
+
+| Metric | Value |
+|--------|-------|
+| **Token Name** | Quanta |
+| **Symbol** | QTA |
+| **Decimals** | 18 |
+| **Total Supply** | 1,000,000,000 QTA (1B) |
+| **Treasury Allocation** | 300,000,000 QTA (30%) |
+| **Token Contract** | `0x949E6cd790cAef46Ce905DcA133DDeC8A7875DF5` |
+
+---
+
+## 🦊 Add QTA to MetaMask
+
+To view your QTA tokens in MetaMask:
+
+1. **Open MetaMask** and ensure you're on **Base Sepolia** network
+2. Click **"Import tokens"** at the bottom
+3. Paste the token contract address: `0x949E6cd790cAef46Ce905DcA133DDeC8A7875DF5`
+4. The token symbol (QTA) and decimals (18) should auto-populate
+5. Click **"Import"**
+
+Alternatively, add the network manually:
+- **Network Name**: Base Sepolia
+- **RPC URL**: `https://sepolia.base.org`
+- **Chain ID**: `84532`
+- **Currency Symbol**: ETH
+- **Block Explorer**: `https://sepolia.basescan.org/`
