@@ -134,8 +134,8 @@ Adoption ↑ → supply ↓ → value ↑
 **Tweet 10/12**
 
 Roadmap:
-✅ Whitepaper + prototype (live now)
-🔨 Q1-Q2: Smart contracts on Base + Ethereum
+✅ Smart contracts deployed on Base Sepolia
+✅ 5 AI agents already registered on-chain
 🔨 Q3: Devnet Rust impl
 🔨 Q4: Testnet + $500K hackathon
 🚀 Q1 2027: Mainnet + TGE
@@ -153,8 +153,8 @@ We need:
 • Community builders
 • Memers (yes, srsly)
 
-Apply: quanta.foundation/jobs
-Discord: discord.gg/quanta
+GitHub: github.com/quanta-tect/quanta
+Discord: discord.gg/quanta (coming soon)
 
 ---
 
@@ -163,9 +163,9 @@ Discord: discord.gg/quanta
 The best time to migrate to post-quantum was yesterday.
 The second best time is QUANTA.
 
-📄 Whitepaper: quanta.foundation/wp
-💻 Code: github.com/quanta-foundation
-🐦 Follow @QuantaCoin
+📄 Whitepaper: github.com/quanta-tect/quanta/blob/main/docs/WHITEPAPER.md
+💻 Code: github.com/quanta-tect/quanta
+🐦 Follow @Quanta_Protocol
 
 Like + RT if you think AI needs its own bank 🤖💸
 
@@ -173,7 +173,7 @@ Like + RT if you think AI needs its own bank 🤖💸
 
 ## 📊 Distribution checklist
 
-- [ ] Post primary thread on @QuantaCoin
+- [ ] Post primary thread on @Quanta_Protocol
 - [ ] Cross-post on Farcaster (/quanta channel)
 - [ ] Mirror.xyz long-form version with diagrams
 - [ ] HackerNews "Show HN: QUANTA — quantum-safe AI-native blockchain"
