@@ -88,7 +88,7 @@ Multi-sig wallet (3/5 signers) controls all donations once we reach $10K thresho
 The official donation addresses are:
 
 * Only listed in this file in the [quanta-tect/quanta repo](https://github.com/quanta-tect/quanta)
-* Or via official Twitter @QUANTA777999 (only when stating "official donation address")
+* Or via official Twitter/X @Quanta_Protocol (only when stating "official donation address")
 
 If anyone DMs you a different address claiming to be QUANTA — it's a SCAM.
 
