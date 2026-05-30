@@ -1,6 +1,6 @@
 # @quanta/sdk
 
-TypeScript SDK for QUANTA blockchain — dùng was for cả developer (con người) and AI agents.
+TypeScript SDK for QUANTA blockchain — built for both human developers and AI agents.
 
 ## 📦 Install
 

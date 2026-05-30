@@ -8,7 +8,9 @@ const CHANNEL_ABI = [
     inputs: [
       { name: "payee", type: "address" },
       { name: "nonce", type: "uint64" },
-      { name: "deposit", type: "uint256" },
+      { name: "deposit", type: "uint128" },
+      { name: "challengePeriod", type: "uint64" },
+      { name: "forceCloseAfter", type: "uint64" },
     ],
     name: "openChannel",
     outputs: [{ type: "bytes32" }],
@@ -19,6 +21,7 @@ const CHANNEL_ABI = [
     inputs: [
       { name: "channelId", type: "bytes32" },
       { name: "amount", type: "uint256" },
+      { name: "ticketNonce", type: "uint256" },
       { name: "signature", type: "bytes" },
     ],
     name: "closeChannel",
@@ -48,19 +51,21 @@ export class PaymentChannel {
     client: QuantaClient,
     payee: Address,
     deposit: bigint,
-    nonce?: bigint,
+    opts?: { nonce?: bigint; challengePeriod?: bigint; forceCloseAfter?: bigint },
   ): Promise<PaymentChannel> {
-    const openNonce = nonce ?? BigInt(Math.floor(Date.now() / 1000));
+    const openNonce = opts?.nonce ?? BigInt(Math.floor(Date.now() / 1000));
+    const challengePeriod = opts?.challengePeriod ?? 0n; // 0 = contract default (1 day)
+    const forceCloseAfter = opts?.forceCloseAfter ?? 0n; // 0 = contract default (7 days)
 
     // 1. Approve token spend
     await client.approve(client.contracts.channel, deposit);
 
-    // 2. Open channel (v1.0: 3 params)
+    // 2. Open channel (v1.1: 5 params)
     const txHash = await client.walletClient.writeContract({
       address: client.contracts.channel,
       abi: CHANNEL_ABI,
       functionName: "openChannel",
-      args: [payee, openNonce, deposit],
+      args: [payee, openNonce, deposit, challengePeriod, forceCloseAfter],
       chain: client.walletClient.chain,
       account: client.walletClient.account!,
     });
@@ -121,7 +126,7 @@ export class PaymentChannel {
       address: this.client.contracts.channel,
       abi: CHANNEL_ABI,
       functionName: "closeChannel",
-      args: [ticket.channelId, ticket.spent, ticket.signature],
+      args: [ticket.channelId, ticket.spent, BigInt(ticket.nonce), ticket.signature],
       chain: this.client.walletClient.chain,
       account: this.client.walletClient.account!,
     });
