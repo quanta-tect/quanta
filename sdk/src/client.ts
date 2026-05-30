@@ -58,6 +58,17 @@ export class QuantaClient {
     this.contracts = {
       ...QUANTA_CONTRACTS[opts.chain],
       ...opts.contracts,
+
+    // Guard: warn if using mainnet with placeholder zero addresses
+    const zeroAddr = "0x0000000000000000000000000000000000000000";
+    if (
+      this.contracts.token === zeroAddr ||
+      this.contracts.registry === zeroAddr
+    ) {
+      console.warn(
+        `[QUANTA] Chain "${opts.chain}" has placeholder addresses. Contracts not deployed to mainnet yet.`
+      );
+    }
     };
   }
 

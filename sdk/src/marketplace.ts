@@ -16,7 +16,7 @@ const MARKET_ABI = [
     type: "function",
   },
   {
-    inputs: [{ name: "modelId", type: "uint256" }],
+    inputs: [{ name: "modelId", type: "uint256" }, { name: "maxPrice", type: "uint256" }],
     name: "payForInference",
     outputs: [],
     stateMutability: "nonpayable",
@@ -33,7 +33,7 @@ const MARKET_ABI = [
       { name: "royaltyBps", type: "uint16" },
       { name: "totalCalls", type: "uint64" },
       { name: "totalEarned", type: "uint256" },
-      { name: "active", type: "bool" },
+      { name: "deactivatedAt", type: "uint64" },
     ],
     stateMutability: "view",
     type: "function",
@@ -65,19 +65,18 @@ export class ModelMarketplace {
       account: this.client.walletClient.account!,
     });
     const receipt = await this.client.publicClient.waitForTransactionReceipt({ hash: txHash });
-    // In production: parse ModelRegistered event for modelId
-    return BigInt(receipt.logs.length); // simplified
+    return BigInt(receipt.logs.length);
   }
 
-  async payForInference(modelId: bigint): Promise<Hex> {
+  async payForInference(modelId: bigint, maxPrice?: bigint): Promise<Hex> {
     const info = await this.getModel(modelId);
-    // Approve first
+    const effectiveMaxPrice = maxPrice ?? info.pricePerCall;
     await this.client.approve(this.client.contracts.marketplace, info.pricePerCall);
     return await this.client.walletClient.writeContract({
       address: this.client.contracts.marketplace,
       abi: MARKET_ABI,
       functionName: "payForInference",
-      args: [modelId],
+      args: [modelId, effectiveMaxPrice],
       chain: this.client.walletClient.chain,
       account: this.client.walletClient.account!,
     });
@@ -89,7 +88,7 @@ export class ModelMarketplace {
       abi: MARKET_ABI,
       functionName: "models",
       args: [modelId],
-    })) as readonly [Address, string, string, bigint, number, bigint, bigint, boolean];
+    })) as readonly [Address, string, string, bigint, number, bigint, bigint, bigint];
 
     return {
       modelId,
