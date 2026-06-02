@@ -1,0 +1,4 @@
+Error: environment variable `BASESCAN_API_KEY` not found
+
+Context:
+- environment variable not found

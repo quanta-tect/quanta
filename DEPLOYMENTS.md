@@ -2,22 +2,20 @@
 
 ## 🟢 Base Sepolia (Testnet) — LIVE
 
-**Deployed**: May 21, 2026
+**Deployed**: June 2, 2026
 **Network**: Base Sepolia (chainId 84532)
 **Block Explorer**: https://sepolia.basescan.org/
-**Deploy cost**: ~0.000034 ETH
 
 ### Contract Addresses
 
-| Contract | Address |
-|---|---|
-| **QuantaToken (QTA)** | [`0x949E6cd790cAef46Ce905DcA133DDeC8A7875DF5`](https://sepolia.basescan.org/address/0x949E6cd790cAef46Ce905DcA133DDeC8A7875DF5) |
-| **AIAgentRegistry** | [`0x436c1D23118f288f0F4d5533A64521a68bf1435d`](https://sepolia.basescan.org/address/0x436c1D23118f288f0F4d5533A64521a68bf1435d) |
-| **AIPaymentChannel** | [`0x5C97e1feDe8b4E66787E8f3f58F264C2eA12b14f`](https://sepolia.basescan.org/address/0x5C97e1feDe8b4E66787E8f3f58F264C2eA12b14f) |
-| **AIModelMarketplace** | [`0x28Fc0f450705a23BA1F27473C94ECF4FAa237514`](https://sepolia.basescan.org/address/0x28Fc0f450705a23BA1F27473C94ECF4FAa237514) |
+| Contract | Address | Verified |
+|---|---|---|
+| **QuantaToken (QTA)** | [`0x4e2B5dE8d3fE3a6C84D34FFf5E673f47010eEc9e`](https://sepolia.basescan.org/address/0x4e2B5dE8d3fE3a6C84D34FFf5E673f47010eEc9e#code) | ✅ |
+| **AIAgentRegistry** | [`0x9D6d634D4C4D7fF1b920e980793f07c87CD45908`](https://sepolia.basescan.org/address/0x9D6d634D4C4D7fF1b920e980793f07c87CD45908#code) | ✅ |
+| **AIPaymentChannel** | [`0xE68dad3095B93476AaeB718E0A4ed3CC5B342272`](https://sepolia.basescan.org/address/0xE68dad3095B93476AaeB718E0A4ed3CC5B342272#code) | ✅ |
+| **AIModelMarketplace** | [`0xd545F870Dc1d62E7bF6681CC0984e526a74b6785`](https://sepolia.basescan.org/address/0xd545F870Dc1d62E7bF6681CC0984e526a74b6785#code) | ✅ |
 
 ### Treasury (holds 300M QTA)
-
 `0x1d6a9512fF4A98C192A99Adea934ac3f83035953`
 
 ---
@@ -25,29 +23,18 @@
 ## 📊 Token Statistics
 
 | Metric | Value |
-|--------|-------|
+|---|---|
 | **Token Name** | Quanta |
 | **Symbol** | QTA |
 | **Decimals** | 18 |
 | **Total Supply** | 1,000,000,000 QTA (1B) |
-| **Treasury Allocation** | 300,000,000 QTA (30%) |
-| **Token Contract** | `0x949E6cd790cAef46Ce905DcA133DDeC8A7875DF5` |
+| **Genesis Supply** | 300,000,000 QTA (30%) |
+| **Treasury** | 300,000,000 QTA |
 
 ---
 
 ## 🦊 Add QTA to MetaMask
 
-To view your QTA tokens in MetaMask:
-
-1. **Open MetaMask** and ensure you're on **Base Sepolia** network
-2. Click **"Import tokens"** at the bottom
-3. Paste the token contract address: `0x949E6cd790cAef46Ce905DcA133DDeC8A7875DF5`
-4. The token symbol (QTA) and decimals (18) should auto-populate
-5. Click **"Import"**
-
-Alternatively, add the network manually:
-- **Network Name**: Base Sepolia
-- **RPC URL**: `https://sepolia.base.org`
-- **Chain ID**: `84532`
-- **Currency Symbol**: ETH
-- **Block Explorer**: `https://sepolia.basescan.org/`
+1. Open MetaMask → Base Sepolia network
+2. Import tokens → Paste: `0x4e2B5dE8d3fE3a6C84D34FFf5E673f47010eEc9e`
+3. Symbol: QTA, Decimals: 18
