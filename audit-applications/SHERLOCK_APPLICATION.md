@@ -19,7 +19,7 @@ QUANTA
 QUANTA is an EVM contract suite for AI agent economic agency: quantum-safe wrapped token (ERC-20 with burn), on-chain AI agent registry with spending policies, x402-style payment channels for micropayments, and AI model marketplace with auto-royalty distribution. Designed for the AI agent economy on Base.
 
 ### GitHub repository
-https://github.com/[YOUR-ORG]/quanta
+https://github.com/quanta-tect/quanta
 
 ### Branch/commit for audit
 `main` (latest commit hash to be frozen 1 week before contest)

@@ -20,7 +20,7 @@ I'm reaching out about hosting an audit contest for QUANTA, an EVM contract suit
 **Quick facts:**
 - 4 contracts, ~860 SLoC total (manageable scope)
 - Pure Solidity 0.8.24, no proxies, no upgradeability
-- Open source MIT from day 1: https://github.com/[YOUR-ORG]/quanta
+- Open source MIT from day 1: https://github.com/quanta-tect/quanta
 - Pre-audit complete: 30 internal findings already fixed (see SECURITY_AUDIT.md)
 - Foundry-based: tests, fuzz, invariants, Halmos all included
 - Documentation: whitepaper, NatSpec, threat model, incident runbook
@@ -32,20 +32,20 @@ We chose C4 over single-firm audits because:
 3. We've prepared the codebase to maximize warden ROI (good docs = good findings)
 
 **Budget**: $50,000 USD prize pool (flexible based on contest length/scope discussion)
-**Timeline**: Flexible. Ideally 7-day contest in [TARGET MONTH 2026]
+**Timeline**: Flexible. Ideally 7-day contest in July 2026
 
 **Available materials for diligence:**
 - GitHub repo (link above)
-- Whitepaper: [link]
+- Whitepaper: https://github.com/quanta-tect/quanta
 - Internal audit: SECURITY_AUDIT.md
-- Demo on Base Sepolia: [link]
+- Demo on Base Sepolia: https://github.com/quanta-tect/quanta
 
 Can we schedule a 30-min intro call?
 
 Best,
-[YOUR NAME]
+QUANTA Foundation
 Founder, QUANTA Foundation
-[email] | [twitter] | [telegram]
+team@quanta.network | @Quanta_Protocol | @quanta_protocol
 
 ---
 
