@@ -58,7 +58,8 @@ export class PaymentChannel {
     const forceCloseAfter = opts?.forceCloseAfter ?? 0n; // 0 = contract default (7 days)
 
     // 1. Approve token spend
-    await client.approve(client.contracts.channel, deposit);
+    const approveHash = await client.approve(client.contracts.channel, deposit);
+    await client.publicClient.waitForTransactionReceipt({ hash: approveHash });
 
     // 2. Open channel (v1.1: 5 params)
     const txHash = await client.walletClient.writeContract({

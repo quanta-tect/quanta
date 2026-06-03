@@ -16,16 +16,6 @@ const CHAINS = { base, "base-sepolia": baseSepolia };
 
 export type ChainName = keyof typeof CHAINS;
 
-/**
- * QuantaClient — entry point for interacting with QUANTA.
- *
- * @example
- *   const client = new QuantaClient({
- *     chain: "base-sepolia",
- *     privateKey: process.env.PRIVATE_KEY,
- *   });
- *   const balance = await client.balanceOf(client.address);
- */
 export class QuantaClient {
   public readonly chainName: ChainName;
   public readonly contracts: QuantaContracts;
@@ -58,6 +48,7 @@ export class QuantaClient {
     this.contracts = {
       ...QUANTA_CONTRACTS[opts.chain],
       ...opts.contracts,
+    };
 
     // Guard: warn if using mainnet with placeholder zero addresses
     const zeroAddr = "0x0000000000000000000000000000000000000000";
@@ -69,12 +60,7 @@ export class QuantaClient {
         `[QUANTA] Chain "${opts.chain}" has placeholder addresses. Contracts not deployed to mainnet yet.`
       );
     }
-    };
   }
-
-  // -----------------------------------------------------------------
-  // Token operations
-  // -----------------------------------------------------------------
 
   async balanceOf(address: Address): Promise<bigint> {
     return (await this.publicClient.readContract({
