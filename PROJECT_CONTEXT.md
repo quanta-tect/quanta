@@ -1,8 +1,8 @@
 # QUANTA PROJECT - Full Context Summary
 
-Last updated: June 2, 2026
+Last updated: June 5, 2026
 
-Smart Contracts (v1.1 - All Verified):
+## Smart Contracts (v1.1 - All Verified)
 - QuantaToken: 0x4e2B5dE8d3fE3a6C84D34FFf5E673f47010eEc9e
 - AIAgentRegistry: 0x9D6d634D4C4D7fF1b920e980793f07c87CD45908
 - AIPaymentChannel: 0xE68dad3095B93476AaeB718E0A4ed3CC5B342272
@@ -10,6 +10,25 @@ Smart Contracts (v1.1 - All Verified):
 - Treasury: 0x1d6a9512fF4A98C192A99Adea934ac3f83035953
 - Network: Base Sepolia (chainId 84532)
 
-Done: Contracts deployed+verified, SDK updated, Security audit, Twitter/Discord/Mirror, Launch thread posted
+## Done
+- Contracts deployed and verified
+- SDK working (demo end-to-end)
+- Security audit complete
+- Twitter/Discord/Mirror created
+- Launch thread posted
+- Audit applications ready
+- Funding contacts compiled (25+ emails)
 
-Remaining: Test SDK, Cross-post, Audit applications, Demo video, Mainnet prep
+## Remaining
+- Send funding emails
+- Cross-post content (HN, Reddit, LinkedIn)
+- Submit audit applications
+- Record demo video
+- Mainnet preparation
+
+## Key Files
+- contracts/src-v1.1/ - Production contracts
+- sdk/src/types.ts - Contract addresses
+- DEPLOYMENTS.md - Deployment info
+- FUNDING_CONTACTS.md - Email list for funding
+- PROJECT_CONTEXT.md - This file
