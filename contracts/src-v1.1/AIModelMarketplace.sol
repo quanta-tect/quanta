@@ -166,8 +166,8 @@ contract AIModelMarketplace is ReentrancyGuard, Pausable, Ownable2Step {
         // Pull funds in
         token.safeTransferFrom(msg.sender, address(this), price);
 
-        // Burn AI tax (now from contract's own balance per C-06 fix in token)
-        uint256 taxed = quantaToken.collectAITax(address(this), price);
+        // Burn AI tax (from contract's own balance per C-06 fix, M-DEAD-01 cleanup)
+        uint256 taxed = quantaToken.collectAITax(price);
         uint256 net = price - taxed;
 
         uint256 creatorShare = (net * m.royaltyBps) / 10_000;

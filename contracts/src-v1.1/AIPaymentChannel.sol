@@ -19,6 +19,7 @@ import {Ownable2Step, Ownable} from "@openzeppelin/contracts/access/Ownable2Step
  *  - C-04: EIP-712 signatures (chainId + verifyingContract) prevent cross-chain replay
  *  - H-04: Pausable for emergency stop
  *  - H-06: MIN_DEPOSIT to prevent dust DoS
+ *  - M-NONCE: Ticket nonce tracking to prevent stale nonce reuse
  *  - M-05: Per-channel configurable timeout
  *  - L-05: address(0) checks
  *
@@ -58,6 +59,7 @@ contract AIPaymentChannel is EIP712, ReentrancyGuard, Pausable, Ownable2Step {
     uint64  public constant MAX_CHALLENGE_PERIOD = 30 days;
 
     mapping(bytes32 => Channel) public channels;
+    mapping(bytes32 => uint256) public highestTicketNonce;  // M-NONCE
 
     event ChannelOpened(bytes32 indexed channelId, address indexed payer, address indexed payee, uint256 deposit);
     event CloseRequested(bytes32 indexed channelId, uint256 amount, uint64 finalizeAt);
@@ -76,6 +78,7 @@ contract AIPaymentChannel is EIP712, ReentrancyGuard, Pausable, Ownable2Step {
     error AmountNotIncreasing();
     error ZeroAddress();
     error InvalidPeriod();
+    error StaleNonce();
 
     constructor(IERC20 _token, IQuantaToken _quantaToken, address initialOwner)
         EIP712("QUANTA Payment Channel", "1")
@@ -151,6 +154,10 @@ contract AIPaymentChannel is EIP712, ReentrancyGuard, Pausable, Ownable2Step {
         if (amount > c.deposit) revert AmountExceedsDeposit();
         if (amount <= c.claimedAmount) revert AmountNotIncreasing(); // C-03: monotonic
 
+        // M-NONCE: reject stale or reused nonces
+        if (ticketNonce <= highestTicketNonce[channelId]) revert StaleNonce();
+        highestTicketNonce[channelId] = ticketNonce;
+
         // Verify EIP-712 signature (C-04 fix)
         bytes32 digest = hashTicket(channelId, amount, ticketNonce);
         address signer = digest.recover(signature);
@@ -204,7 +211,7 @@ contract AIPaymentChannel is EIP712, ReentrancyGuard, Pausable, Ownable2Step {
         // (v1.1) requires from == msg.sender, channel burns from its own holdings.
         uint256 taxed = 0;
         if (toPayee > 0) {
-            taxed = quantaToken.collectAITax(address(this), toPayee);
+            taxed = quantaToken.collectAITax(toPayee);
             token.safeTransfer(c.payee, toPayee - taxed);
         }
         if (refund > 0) {

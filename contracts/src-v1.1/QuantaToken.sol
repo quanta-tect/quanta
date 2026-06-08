@@ -22,6 +22,11 @@ import {Pausable} from "@openzeppelin/contracts/utils/Pausable.sol";
  *  - L-01: Solidity version pinned
  *  - L-05: address(0) checks on all setters
  *  - I-05: Hard cap on tax rate (max 1%) to prevent governance abuse
+ *
+ * Security improvements over v1.1 (v1.2 hardening):
+ *  - H-BRIDGE-01: bridgeMint rate-limited (max 1M QTA/day) to prevent rapid supply inflation
+ *  - H-BRIDGE-02: bridgeBurn requires allowance — cannot burn from arbitrary holders
+ *  - M-DEAD-01: Removed dead `from` parameter from collectAITax (Zcash-type code smell)
  */
 contract QuantaToken is ERC20, ERC20Burnable, ERC20Pausable, ERC20Permit, ERC20Votes, Ownable2Step {
     uint256 public constant MAX_SUPPLY = 1_000_000_000 * 1e18;
@@ -39,10 +44,15 @@ contract QuantaToken is ERC20, ERC20Burnable, ERC20Pausable, ERC20Permit, ERC20V
     mapping(address => bool) public aiTaxCollectors;
     uint256 public totalBurned;
 
+    // H-BRIDGE-01: Rate limit bridge minting to prevent rapid supply inflation
+    uint256 public constant MAX_BRIDGE_MINT_PER_DAY = 1_000_000 * 1e18; // 1M QTA/day
+    uint256 public bridgeMintedToday;
+    uint256 public bridgeMintDayStart;
+
     event BridgeChangeProposed(address indexed newBridge, uint256 activatesAt);
     event BridgeChangeExecuted(address indexed bridge);
     event AITaxCollectorSet(address indexed collector, bool allowed);  // M-01
-    event AITaxCollected(address indexed collector, address indexed from, uint256 amount);
+    event AITaxCollected(address indexed collector, uint256 amount);
     event AITaxRateUpdated(uint16 newBps);
     event BridgeMinted(address indexed to, uint256 amount);  // M-01
     event BridgeBurned(address indexed from, uint256 amount);
@@ -53,7 +63,8 @@ contract QuantaToken is ERC20, ERC20Burnable, ERC20Pausable, ERC20Permit, ERC20V
     error ZeroAddress();
     error BridgeTimelockActive();
     error NoBridgeChangePending();
-    error MustBurnFromSelf();
+    error BridgeMintRateExceeded();
+    error InsufficientBridgeBurnAllowance();
 
     constructor(address initialOwner)
         ERC20("QUANTA", "QTA")
@@ -93,12 +104,23 @@ contract QuantaToken is ERC20, ERC20Burnable, ERC20Pausable, ERC20Permit, ERC20V
         if (msg.sender != bridge) revert OnlyBridge();
         if (to == address(0)) revert ZeroAddress();
         if (totalSupply() + amount > MAX_SUPPLY) revert CapExceeded();
+
+        // H-BRIDGE-01: Rate limit — max 1M QTA per day
+        if (block.timestamp >= bridgeMintDayStart + 1 days) {
+            bridgeMintedToday = 0;
+            bridgeMintDayStart = block.timestamp;
+        }
+        if (bridgeMintedToday + amount > MAX_BRIDGE_MINT_PER_DAY) revert BridgeMintRateExceeded();
+        bridgeMintedToday += amount;
         _mint(to, amount);
         emit BridgeMinted(to, amount);
     }
 
     function bridgeBurn(address from, uint256 amount) external whenNotPaused {
         if (msg.sender != bridge) revert OnlyBridge();
+        // H-BRIDGE-02: Cannot burn from arbitrary holders — requires allowance
+        uint256 currentAllowance = allowance(from, msg.sender);
+        if (currentAllowance < amount) revert InsufficientBridgeBurnAllowance();
         _burn(from, amount);
         totalBurned += amount;
         emit BridgeBurned(from, amount);
@@ -123,19 +145,18 @@ contract QuantaToken is ERC20, ERC20Burnable, ERC20Pausable, ERC20Permit, ERC20V
     /**
      * @notice Burns AI usage tax from CALLER'S balance.
      *         Caller (Marketplace/Channel) must hold the tokens being taxed.
-     *         FIX C-06: previously allowed burning from arbitrary `from`.
+     *         FIX M-DEAD-01: removed dead `from` parameter (Zcash-type code smell).
      * @param amount Amount to compute tax against
      * @return taxed Actual amount burned
      */
-    function collectAITax(address from, uint256 amount) external returns (uint256 taxed) {
+    function collectAITax(uint256 amount) external returns (uint256 taxed) {
         require(aiTaxCollectors[msg.sender], "not collector");
-        if (from != msg.sender) revert MustBurnFromSelf();  // C-06: enforce self-burn
 
         taxed = (amount * aiUsageTaxBps) / 10_000;
         if (taxed > 0) {
             _burn(msg.sender, taxed);
             totalBurned += taxed;
-            emit AITaxCollected(msg.sender, msg.sender, taxed);
+            emit AITaxCollected(msg.sender, taxed);
         }
     }
 
