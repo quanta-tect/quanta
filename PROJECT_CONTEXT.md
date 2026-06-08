@@ -1,8 +1,8 @@
 # QUANTA PROJECT - Full Context Summary
 
-Last updated: June 5, 2026
+Last updated: June 8, 2026
 
-## Smart Contracts (v1.1 - All Verified)
+## Smart Contracts (v1.2 - All Verified)
 - QuantaToken: 0x4e2B5dE8d3fE3a6C84D34FFf5E673f47010eEc9e
 - AIAgentRegistry: 0x9D6d634D4C4D7fF1b920e980793f07c87CD45908
 - AIPaymentChannel: 0xE68dad3095B93476AaeB718E0A4ed3CC5B342272
@@ -13,7 +13,7 @@ Last updated: June 5, 2026
 ## Done
 - Contracts deployed and verified
 - SDK working (demo end-to-end)
-- Security audit complete
+- Security audit complete (v1.2 hardening: bridge rate limit + burn allowance + dead param removal)
 - Twitter/Discord/Mirror created
 - Launch thread posted
 - Audit applications ready

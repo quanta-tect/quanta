@@ -129,15 +129,15 @@ contract SecurityFixesTest is Test {
         vm.prank(owner);
         token.setAITaxCollector(attacker, true);
 
-        uint256 victimBalanceBefore = token.balanceOf(alice);
+        uint256 aliceBalBefore = token.balanceOf(alice);
 
         // Attacker tries to burn from victim
         vm.prank(attacker);
-        vm.expectRevert(QuantaToken.MustBurnFromSelf.selector);
-        token.collectAITax(alice, 1_000_000 ether);
+        uint256 taxed = token.collectAITax(1000 ether);
 
         // Victim's balance unchanged
-        assertEq(token.balanceOf(alice), victimBalanceBefore);
+        assertGt(taxed, 0);
+        assertEq(token.balanceOf(alice), aliceBalBefore);
     }
 
     function test_C06_CollectorCanBurnFromSelf() public {
@@ -148,7 +148,7 @@ contract SecurityFixesTest is Test {
         token.setAITaxCollector(attacker, true);
 
         vm.prank(attacker);
-        uint256 taxed = token.collectAITax(attacker, 1000 ether);
+        uint256 taxed = token.collectAITax(1000 ether);
 
         assertEq(taxed, 3 ether); // 0.3% of 1000
         assertEq(token.balanceOf(attacker), attackerBalBefore - 3 ether);

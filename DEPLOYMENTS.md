@@ -3,7 +3,7 @@
 ## 🟢 Base Sepolia (Testnet) — LIVE
 
 **Deployed**: June 2, 2026
-**Network**: Base Sepolia (chainId 84532)
+**Network**: Base Sepolia (chainId 84532) — NEEDS REDEPLOY v1.2
 **Block Explorer**: https://sepolia.basescan.org/
 
 ### Contract Addresses
