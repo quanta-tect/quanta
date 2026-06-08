@@ -18,7 +18,7 @@ contract DeployV11Script is Script {
         console.log("Deployer:", deployer);
         console.log("Treasury:", treasury);
 
-        vm.startBroadcast();
+        vm.startBroadcast(vm.envUint("DEPLOYER_KEY"));
 
         QuantaToken token = new QuantaToken(deployer);
         console.log("QuantaToken:", address(token));
