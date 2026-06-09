@@ -44,10 +44,10 @@ export interface QuantaContracts {
 
 export const QUANTA_CONTRACTS: Record<string, QuantaContracts> = {
   "base-sepolia": {
-    token: "0x627088b570F6873c0D8f05607b12682b4D2f5fC8",
-    registry: "0x4d25dD8bB2ccb67bdBd3Af4e7ff0016b919cFd2A",
-    channel: "0xdA1C842Beb6872Cf3322447b70787773c1a64D32",
-    marketplace: "0x5c4d27207D6b22AE7Ea91C1097f50c168d2a59b5",
+    token: "0x312137fb6943F8f89F5eF0f221aA102035a16625",
+    registry: "0x10aE5f83F1CF20331186Ea1aD089D8fd3EbA5EEB",
+    channel: "0xF146e95b97fce1d1800F5F922AE99155711A4314",
+    marketplace: "0xFf584b30b2D00Bf0aB694683F06dC7E701fdfd49",
   },
   base: {
     token: "0x0000000000000000000000000000000000000000",

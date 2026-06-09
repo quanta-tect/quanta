@@ -31,3 +31,4 @@ arbitrum = "${ARBITRUM_RPC_URL}"
 [etherscan]
 base_sepolia = { key = "${BASESCAN_API_KEY}", url = "https://api-sepolia.basescan.org/api" }
 base = { key = "${BASESCAN_API_KEY}", url = "https://api.basescan.org/api" }
+
