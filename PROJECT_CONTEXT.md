@@ -1,38 +1,95 @@
 # QUANTA PROJECT - Full Context Summary
 
-Last updated: June 8, 2026
+Last updated: June 9, 2026 (Session 3)
 
-## Smart Contracts (v1.2 - All Deployed)
-- QuantaToken: 0x312137fb6943F8f89F5eF0f221aA102035a16625
-- AIAgentRegistry: 0x10aE5f83F1CF20331186Ea1aD089D8fd3EbA5EEB
-- AIPaymentChannel: 0xF146e95b97fce1d1800F5F922AE99155711A4314
-- AIModelMarketplace: 0xFf584b30b2D00Bf0aB694683F06dC7E701fdfd49
-- Treasury: 0x1d6a9512fF4A98C192A99Adea934ac3f83035953
-- Network: Base Sepolia (chainId 84532)
+## Smart Contracts (v1.2 Final — Deployed + Verified on Base Sepolia)
+
+| Contract | Address |
+|---|---|
+| QuantaToken (QTA) | 0x312137fb6943F8f89F5eF0f221aA102035a16625 |
+| AIAgentRegistry | 0x10aE5f83F1CF20331186Ea1aD089D8fd3EbA5EEB |
+| AIPaymentChannel | 0xF146e95b97fce1d1800F5F922AE99155711A4314 |
+| AIModelMarketplace | 0xFf584b30b2D00Bf0aB694683F06dC7E701fdfd49 |
+| Treasury/Deployer | 0x1d6a9512fF4A98C192A99Adea934ac3f83035953 |
+| Network | Base Sepolia (chainId 84532) |
+| Compiler | Solidity 0.8.24, OpenZeppelin |
+
+## Verification
+- Sourcify: All 4 contracts exact_match
+- Blockscout: All 4 contracts Pass - Verified
+- BaseScan: Failed (V1 deprecated, V2 not available for Base Sepolia)
+- Sourcify URLs:
+  - https://sourcify.dev/#/lookup/84532/0x312137fb6943F8f89F5eF0f221aA102035a16625
+  - https://sourcify.dev/#/lookup/84532/0x10aE5f83F1CF20331186Ea1aD089D8fd3EbA5EEB
+  - https://sourcify.dev/#/lookup/84532/0xF146e95b97fce1d1800F5F922AE99155711A4314
+  - https://sourcify.dev/#/lookup/84532/0xFf584b30b2D00Bf0aB694683F06dC7E701fdfd49
 
 ## Done
-- Contracts deployed (v1.2 with security hardening)
-- 14/14 tests passing
-- Security audit complete (v1.2: bridge rate limit + burn allowance + dead param removal + nonce tracking)
-- SDK working (needs address update)
-- Twitter/Discord/Mirror created
-- Launch thread posted
-- Audit applications ready
-- Funding contacts compiled (25+ emails)
 
-## Remaining
-- Verify contracts on BaseScan (need BASESCAN_API_KEY)
-- Update SDK with new addresses
-- Send funding emails (see emails/ folder)
-- Cross-post content (HN, Reddit, LinkedIn)
-- Record demo video
-- Mainnet preparation
+### Session 1-2:
+- Contracts designed, coded, deployed
+- Security audit: H-BRIDGE-01, H-BRIDGE-02, M-DEAD-01, M-NONCE
+- KYC-01 in AIAgentRegistry, TAX-01 in AIModelMarketplace
+- 14/14 security tests passing
+- Multi-agent pipeline + tax reporting demos
+- Twitter/Discord/Mirror created, launch thread posted
+- Funding contacts (25+ emails), email drafts, cross-post content, grant applications
+
+### Session 3 (June 9):
+- Contract verification 4/4 SUCCESS (Sourcify + Blockscout)
+- SDK demo 7/7 steps SUCCESS (agent registered, 50 micropayments, 1.5 QTA profit, heartbeat)
+- SDK addresses updated to v1.2 final
+- LinkedIn posts written (crosspost/linkedin-sdk-demo.md recommended)
+- DEPLOYMENTS.md updated with verification details
+- Added AGENTS.md, MEMORY.md, SKILLS.md, Makefile for AI session continuity
+- All changes committed and pushed to GitHub
+
+## Remaining (Next Session)
+1. Post LinkedIn (content ready at crosspost/linkedin-sdk-demo.md)
+2. Send funding emails (drafts in emails/, contacts in FUNDING_CONTACTS.md)
+3. Cross-post content (HN, Reddit, LinkedIn, Dev.to)
+4. Record demo video
+5. Mainnet preparation (see SKILLS.md for checklist)
+6. Submit grant applications (drafts in grants/)
+7. Fix SDK approve timing (waitForTransactionReceipt in channel.ts)
+
+## Environment Variables (set per session)
+export DEPLOYER_KEY="0x..."       # 66 chars
+export BASE_SEPOLIA_RPC=https://sepolia.base.org
+export BASESCAN_API_KEY="..."     # Unset before verify with sourcify!
 
 ## Key Files
-- contracts/src-v1.1/ - Production contracts (v1.2)
-- contracts/script/DeployV11.s.sol - Deploy script
-- sdk/src/types.ts - Contract addresses (NEEDS UPDATE)
-- DEPLOYMENTS.md - Deployment info
-- FUNDING_CONTACTS.md - Email list for funding
-- PROJECT_CONTEXT.md - This file
-- SECURITY_CHANGELOG.md - Security fixes log
+- AGENTS.md — AI agent conventions (read at session start)
+- MEMORY.md — Decision log (append-only across sessions)
+- SKILLS.md — Task-specific workflows (deploy, verify, demo, etc.)
+- Makefile — Quick commands: make test, make demo, make push, etc.
+- contracts/src-v1.1/ — Production contracts (v1.2)
+- contracts/script/DeployV11.s.sol — Deploy script (DEPLOYER_KEY env)
+- contracts/foundry.toml — NO etherscan section (removed for Sourcify)
+- contracts/test-v1.1/SecurityFixes.t.sol — 14 security tests
+- sdk/src/types.ts — Contract addresses (v1.2 final)
+- sdk/examples/autonomous-agent.ts — Main demo (TESTED WORKING)
+- DEPLOYMENTS.md — Full deployment + verification info
+- SECURITY_CHANGELOG.md — Security fixes log
+- FUNDING_CONTACTS.md — 25+ investor emails
+- emails/ — Funding email drafts
+- crosspost/ — HN, Reddit, LinkedIn, Dev.to content
+- grants/ — Grant applications (Base, Optimism, NEAR, Arbitrum)
+
+## Social
+- Twitter: @Quanta_Protocol
+- Discord: created
+- Mirror.xyz: created
+- GitHub: https://github.com/quanta-tect/quanta
+
+## Git State
+- Branch: main
+- Remote: https://github.com/quanta-tect/quanta.git
+- Pushed to GitHub
+
+## Deployment History
+| Version | Date | QuantaToken | Notes |
+|---|---|---|---|
+| v1.0 | June 2 | 0x4e2B5dE8d3fE3a6C84D34FFf5E673f47010eEc9e | Initial |
+| v1.1 | ~June 5 | 0x627088b570F6873c0D8f05607b12682b4D2f5fC8 | Security |
+| v1.2 final | June 9 | 0x312137fb6943F8f89F5eF0f221aA102035a16625 | KYC+Tax+Verified |
