@@ -45,14 +45,36 @@ Last updated: June 9, 2026 (Session 3)
 - All changes committed and pushed to GitHub
 
 ## Remaining (Next Session)
-1. Post LinkedIn (content ready at crosspost/linkedin-sdk-demo.md)
-2. Send funding emails (drafts in emails/, contacts in FUNDING_CONTACTS.md)
-3. Cross-post content (HN, Reddit, LinkedIn, Dev.to)
-4. Record demo video
-5. Mainnet preparation (see SKILLS.md for checklist)
-6. Submit grant applications (drafts in grants/)
-7. Fix SDK approve timing (waitForTransactionReceipt in channel.ts)
+1. Post LinkedIn (content at crosspost/linkedin-sdk-demo.md)
+2. Record demo video (see SKILLS.md for script)
+3. Apply for grants — Base, Optimism, Arbitrum (drafts in grants/)
+4. Enter hackathons — ETHGlobal, Devfolio (AI × Web3 track)
+5. Build QUANTA Dashboard MVP (React + SDK)
+6. Find 2-3 VN enterprise pilot clients
+7. Send funding emails (drafts in emails/)
+8. Cross-post content (HN, Reddit, Dev.to)
+9. Fix SDK approve timing (waitForTransactionReceipt in channel.ts)
 
+## Business Strategy
+### Revenue Model (priority order)
+1. Grants + Hackathons — $5-50K each (short term)
+2. FDE services — deploy QUANTA for enterprises, $2-10K/deployment
+3. Enterprise SaaS — Dashboard $99/mo, Manager $299/mo, API $999/mo
+4. Token appreciation — Treasury holds 300M QTA (30% supply)
+5. Protocol fees — 0.3% AI tax burn + potential protocol fee
+6. Marketplace commission — % on model sales
+
+### Market Positioning
+- QUANTA = "Stripe for AI Agents"
+- Target: enterprises deploying AI agents who need payment rails
+- VN market first-mover: tech startups, fintech, outsourcing firms
+- Products to build: Dashboard → Agent Manager → Enterprise API → Integrations
+
+### Key Insight: Forward Deployed Engineer (FDE)
+- Enterprise AI agents don't "plug and play"
+- Need someone to bridge: workflow → system design → agent deployment
+- QUANTA provides the payment infrastructure layer
+- FDEs will need QUANTA to make agents transact autonomously
 ## Environment Variables (set per session)
 export DEPLOYER_KEY="0x..."       # 66 chars
 export BASE_SEPOLIA_RPC=https://sepolia.base.org

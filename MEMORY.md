@@ -1,7 +1,29 @@
 # MEMORY.md — QUANTA Decision Log
 
 Append-only. Add new entries at the top.
+## Session 3 (continued) — Business Strategy
 
+### Revenue Streams Identified
+1. Grants + Hackathons ($5-50K each) — drafts ready in grants/
+2. Token appreciation — Treasury holds 300M QTA (30% supply)
+3. Protocol fees — 0.3% AI tax burn (deflationary), can add protocol fee
+4. Marketplace commission — 2.5% on model sales
+5. Enterprise SaaS — Dashboard ($99/mo), Manager ($299/mo), API ($999/mo)
+6. FDE services — Deploy AI agents + QUANTA for VN enterprises ($2-10K/deployment)
+7. White-label licensing for other chains
+
+### Key Market Insight: Forward Deployed Engineer (FDE)
+- Enterprise AI agents need payment rails → QUANTA is that rail
+- Position QUANTA as "Stripe for AI Agents"
+- VN market: first-mover advantage, start with tech startups/fintech as pilot
+- Build: Web dashboard → Agent management UI → Analytics → Invoice export
+
+### Products to Build Next
+- QUANTA Dashboard (React) — agent spending realtime, tax report export
+- QUANTA Agent Manager — deploy agents 1-click, spending policies UI
+- Enterprise API — webhook, priority support, custom integrations
+- Slack/Discord bot notifications
+- Zapier/Make.com integration
 ---
 
 ## Session 3 — June 9, 2026
