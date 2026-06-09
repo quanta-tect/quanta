@@ -19,11 +19,11 @@ Last updated: June 9, 2026 (Session 3)
 - Blockscout: All 4 contracts Pass - Verified
 - BaseScan: Failed (V1 deprecated, V2 not available for Base Sepolia)
 - Sourcify URLs:
-  - https://sourcify.dev/#/lookup/84532/0x312137fb6943F8f89F5eF0f221aA102035a16625
-  - https://sourcify.dev/#/lookup/84532/0x10aE5f83F1CF20331186Ea1aD089D8fd3EbA5EEB
-  - https://sourcify.dev/#/lookup/84532/0xF146e95b97fce1d1800F5F922AE99155711A4314
-  - https://sourcify.dev/#/lookup/84532/0xFf584b30b2D00Bf0aB694683F06dC7E701fdfd49
-
+  https://base-sepolia.blockscout.com/address/0x312137fb6943F8f89F5eF0f221aA102035a16625?tab=contract
+  https://base-sepolia.blockscout.com/address/0x10aE5f83F1CF20331186Ea1aD089D8fd3EbA5EEB?tab=contract
+  https://base-sepolia.blockscout.com/address/0xF146e95b97fce1d1800F5F922AE99155711A4314?tab=contract
+  https://base-sepolia.blockscout.com/address/0xFf584b30b2D00Bf0aB694683F06dC7E701fdfd49?tab=contract
+ 
 ## Done
 
 ### Session 1-2:
