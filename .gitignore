@@ -85,4 +85,4 @@ TODO-private.md
 # WHITELIST
 !.env.example
 !.gitignore
-!.github/
+!.github/.env*
