@@ -71,3 +71,19 @@ Append-only. Add new entries at the top.
 - Off-chain tickets + 1 on-chain settlement (x402-style payment channels)
 - Base (Coinbase L2) for low gas + Ethereum security
 - 1B QTA supply, 30% genesis (300M to treasury)
+
+## Session 3 (continued) — Wallet Migration
+
+### Wallet Transfer Complete
+- Old deployer: 0x1d6a9512fF4A98C192A99Adea934ac3f83035953 (v1.0-v1.2)
+- Intermediate: 0x076FF02853F4E69989bbb9Ee61b8910B65CEc306 (leaked, rotated)
+- Final owner:  0x288bc8d816f9C2E00af706fEBFeac9a7B149c110 (current)
+- All 4 contracts ownership transferred (Ownable2Step: propose + accept)
+- All 300M QTA tokens transferred
+- .envx leaked to git → purged from history with git filter-branch
+
+### Security Lesson
+- .env file got committed as .envx by accident, contained PRIVATE_KEY
+- Fixed: git filter-branch --force + .gitignore updated with .env*
+- ALWAYS check `git ls-files | grep -i env` before pushing
+- On mainnet: if key leaks, rotate IMMEDIATELY — don't wait

@@ -16,7 +16,7 @@
 | **AIModelMarketplace** | [`0xFf584b30b2D00Bf0aB694683F06dC7E701fdfd49`](https://sepolia.basescan.org/address/0xFf584b30b2D00Bf0aB694683F06dC7E701fdfd49#code) | ⏳ Pending |
 
 ### Treasury (holds 300M QTA)
-0x076FF02853F4E69989bbb9Ee61b8910B65CEc306
+0x288bc8d816f9C2E00af706fEBFeac9a7B149c110
 ---
 
 ## 📊 Token Statistics

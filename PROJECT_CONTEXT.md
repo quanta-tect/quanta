@@ -10,7 +10,7 @@ Last updated: June 9, 2026 (Session 3)
 | AIAgentRegistry | 0x10aE5f83F1CF20331186Ea1aD089D8fd3EbA5EEB |
 | AIPaymentChannel | 0xF146e95b97fce1d1800F5F922AE99155711A4314 |
 | AIModelMarketplace | 0xFf584b30b2D00Bf0aB694683F06dC7E701fdfd49 |
-| Treasury/Deployer | 0x076FF02853F4E69989bbb9Ee61b8910B65CEc306  |
+| Treasury/Deployer | 0x288bc8d816f9C2E00af706fEBFeac9a7B149c110  |
 | Network | Base Sepolia (chainId 84532) |
 | Compiler | Solidity 0.8.24, OpenZeppelin |
 
