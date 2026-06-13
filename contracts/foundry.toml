@@ -1,18 +1,17 @@
 [profile.default]
-src = "src-v1.1"
+src = "src-v1.2"
+test = "test-v1.2"
 out = "out"
 libs = ["lib"]
-solc = "0.8.24"
+solc_version = "0.8.24"
+evm_version = "paris"
 optimizer = true
 optimizer_runs = 200
-via_ir = false
-test = "test-v1.1"
 
 remappings = [
-    "@openzeppelin/=lib/openzeppelin-contracts/",
+    "@openzeppelin/contracts/=lib/openzeppelin-contracts/contracts/",
     "forge-std/=lib/forge-std/src/"
 ]
-
 # Profile for invariant/fuzz testing
 [profile.fuzz]
 test = "test-invariant"
@@ -29,3 +28,17 @@ base = "${BASE_RPC_URL}"
 arbitrum = "${ARBITRUM_RPC_URL}"
 
 
+=======
+src = "src-v1.2"
+test = "test-v1.2"
+out = "out"
+libs = ["lib"]
+solc_version = "0.8.24"
+evm_version = "paris"
+optimizer = true
+optimizer_runs = 200
+
+remappings = [
+    "@openzeppelin/contracts/=lib/openzeppelin-contracts/contracts/"
+]
+>>>>>>> 710acaa (docs: Add Quantum Safety Roadmap + L1 Rust Plan + Deploy scripts)
