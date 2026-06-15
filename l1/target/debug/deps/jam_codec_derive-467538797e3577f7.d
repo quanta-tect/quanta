@@ -1,0 +1,10 @@
+/home/acer/quanta/l1/target/debug/deps/jam_codec_derive-467538797e3577f7.d: /home/acer/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/jam-codec-derive-0.1.1/src/lib.rs /home/acer/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/jam-codec-derive-0.1.1/src/decode.rs /home/acer/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/jam-codec-derive-0.1.1/src/encode.rs /home/acer/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/jam-codec-derive-0.1.1/src/max_encoded_len.rs /home/acer/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/jam-codec-derive-0.1.1/src/trait_bounds.rs /home/acer/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/jam-codec-derive-0.1.1/src/utils.rs
+
+/home/acer/quanta/l1/target/debug/deps/libjam_codec_derive-467538797e3577f7.so: /home/acer/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/jam-codec-derive-0.1.1/src/lib.rs /home/acer/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/jam-codec-derive-0.1.1/src/decode.rs /home/acer/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/jam-codec-derive-0.1.1/src/encode.rs /home/acer/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/jam-codec-derive-0.1.1/src/max_encoded_len.rs /home/acer/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/jam-codec-derive-0.1.1/src/trait_bounds.rs /home/acer/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/jam-codec-derive-0.1.1/src/utils.rs
+
+/home/acer/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/jam-codec-derive-0.1.1/src/lib.rs:
+/home/acer/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/jam-codec-derive-0.1.1/src/decode.rs:
+/home/acer/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/jam-codec-derive-0.1.1/src/encode.rs:
+/home/acer/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/jam-codec-derive-0.1.1/src/max_encoded_len.rs:
+/home/acer/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/jam-codec-derive-0.1.1/src/trait_bounds.rs:
+/home/acer/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/jam-codec-derive-0.1.1/src/utils.rs:

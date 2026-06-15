@@ -1,0 +1,14 @@
+[package]
+name = "quanta-l1-runtime"
+version = "0.1.0"
+edition = "2021"
+[dependencies]
+codec = { workspace = true }
+scale-info = { workspace = true }
+polkadot-sdk = { workspace = true, features = ["pallet-balances", "pallet-timestamp", "pallet-transaction-payment", "runtime"] }
+quanta-l1-crypto = { path = "../crypto", default-features = false }
+pallet-pq-dilithium = { path = "../pallets/pallet-pq-dilithium", default-features = false }
+pallet-pq-balances = { path = "../pallets/pallet-pq-balances", default-features = false }
+[features]
+default = ["std"]
+std = ["codec/std", "scale-info/std", "polkadot-sdk/std", "quanta-l1-crypto/std", "pallet-pq-dilithium/std", "pallet-pq-balances/std"]

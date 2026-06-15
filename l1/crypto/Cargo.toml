@@ -1,0 +1,13 @@
+[package]
+name = "quanta-l1-crypto"
+version = "0.1.0"
+edition = "2021"
+[dependencies]
+codec = { workspace = true }
+scale-info = { workspace = true }
+polkadot-sdk = { workspace = true, features = ["sp-runtime", "frame-support", "runtime"] }
+pqcrypto-dilithium = "0.5"
+pqcrypto-traits = "0.3"
+[features]
+default = ["std"]
+std = ["codec/std", "scale-info/std", "polkadot-sdk/std"]

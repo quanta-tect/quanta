@@ -1,0 +1,14 @@
+(TupleElement0, TupleElement1, TupleElement2, TupleElement3, TupleElement4, TupleElement5, TupleElement6)
+(TupleElement0, TupleElement1, TupleElement2, TupleElement3, TupleElement4, TupleElement5, TupleElement6, TupleElement7)
+(TupleElement0, TupleElement1, TupleElement2, TupleElement3, TupleElement4, TupleElement5, TupleElement6, TupleElement7, TupleElement8)
+(TupleElement0, TupleElement1, TupleElement2, TupleElement3, TupleElement4, TupleElement5, TupleElement6, TupleElement7, TupleElement8, TupleElement9)
+(TupleElement0, TupleElement1, TupleElement2, TupleElement3, TupleElement4, TupleElement5, TupleElement6, TupleElement7, TupleElement8, TupleElement9, TupleElement10)
+(TupleElement0, TupleElement1, TupleElement2, TupleElement3, TupleElement4, TupleElement5, TupleElement6, TupleElement7, TupleElement8, TupleElement9, TupleElement10, TupleElement11)
+(TupleElement0, TupleElement1, TupleElement2, TupleElement3, TupleElement4, TupleElement5, TupleElement6, TupleElement7, TupleElement8, TupleElement9, TupleElement10, TupleElement11, TupleElement12)
+(TupleElement0, TupleElement1, TupleElement2, TupleElement3, TupleElement4, TupleElement5, TupleElement6, TupleElement7, TupleElement8, TupleElement9, TupleElement10, TupleElement11, TupleElement12, TupleElement13)
+(TupleElement0, TupleElement1, TupleElement2, TupleElement3, TupleElement4, TupleElement5, TupleElement6, TupleElement7, TupleElement8, TupleElement9, TupleElement10, TupleElement11, TupleElement12, TupleElement13, TupleElement14)
+(TupleElement0, TupleElement1, TupleElement2, TupleElement3, TupleElement4, TupleElement5, TupleElement6, TupleElement7, TupleElement8, TupleElement9, TupleElement10, TupleElement11, TupleElement12, TupleElement13, TupleElement14, TupleElement15)
+(TupleElement0, TupleElement1, TupleElement2, TupleElement3, TupleElement4, TupleElement5, TupleElement6, TupleElement7, TupleElement8, TupleElement9, TupleElement10, TupleElement11, TupleElement12, TupleElement13, TupleElement14, TupleElement15, TupleElement16)
+(TupleElement0, TupleElement1, TupleElement2, TupleElement3, TupleElement4, TupleElement5, TupleElement6, TupleElement7, TupleElement8, TupleElement9, TupleElement10, TupleElement11, TupleElement12, TupleElement13, TupleElement14, TupleElement15, TupleElement16, TupleElement17)
+frame_support::pallet_prelude::StorageMap<_GeneratedPrefixForStoragePublicKeys<T>, frame_support::Blake2_128Concat, <T as frame_system::Config>::AccountId, std::vec::Vec<[u8; 1952]>, frame_support::pallet_prelude::ValueQuery>
+UncheckedExtrinsic<Address, Call, Signature, ExtensionV0, ExtensionOtherVersions, MAX_CALL_SIZE>

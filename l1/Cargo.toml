@@ -1,0 +1,13 @@
+[workspace]
+resolver = "2"
+members = ["crypto", "pallets/pallet-pq-dilithium", "pallets/pallet-pq-balances", "runtime"]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+license = "MIT"
+
+[workspace.dependencies]
+polkadot-sdk = { git = "https://github.com/paritytech/polkadot-sdk.git", default-features = false }
+codec = { package = "parity-scale-codec", version = "3", default-features = false }
+scale-info = { version = "2", default-features = false, features = ["derive"] }
