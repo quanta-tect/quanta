@@ -12,3 +12,6 @@ quanta-l1-crypto = { path = "../../crypto", default-features = false }
 [features]
 default = ["std"]
 std = ["codec/std", "scale-info/std", "polkadot-sdk/std", "quanta-l1-crypto/std"]
+
+[dev-dependencies]
+sp-io = { git = "https://github.com/paritytech/polkadot-sdk.git", default-features = false }

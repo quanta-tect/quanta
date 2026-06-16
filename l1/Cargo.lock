@@ -6171,6 +6171,7 @@ dependencies = [
  "polkadot-sdk",
  "quanta-l1-crypto",
  "scale-info",
+ "sp-io",
 ]
 
 [[package]]
@@ -6181,6 +6182,7 @@ dependencies = [
  "polkadot-sdk",
  "quanta-l1-crypto",
  "scale-info",
+ "sp-io",
 ]
 
 [[package]]
