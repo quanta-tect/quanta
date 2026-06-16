@@ -1,0 +1,13 @@
+[package]
+name = "pallet-pq-staking"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+codec = { workspace = true }
+scale-info = { workspace = true }
+polkadot-sdk = { workspace = true, features = ["experimental", "runtime"], default-features = false }
+
+[features]
+default = ["std"]
+std = ["codec/std", "scale-info/std", "polkadot-sdk/std"]
