@@ -1,8 +1,0 @@
-/home/acer/quanta/l1/target/debug/deps/pallet_transaction_payment-078492ca681f3430.d: /home/acer/.cargo/git/checkouts/polkadot-sdk-dee0edd6eefa0594/8ae2e6a/substrate/frame/transaction-payment/src/lib.rs /home/acer/.cargo/git/checkouts/polkadot-sdk-dee0edd6eefa0594/8ae2e6a/substrate/frame/transaction-payment/src/payment.rs /home/acer/.cargo/git/checkouts/polkadot-sdk-dee0edd6eefa0594/8ae2e6a/substrate/frame/transaction-payment/src/types.rs /home/acer/.cargo/git/checkouts/polkadot-sdk-dee0edd6eefa0594/8ae2e6a/substrate/frame/transaction-payment/src/weights.rs
-
-/home/acer/quanta/l1/target/debug/deps/libpallet_transaction_payment-078492ca681f3430.rmeta: /home/acer/.cargo/git/checkouts/polkadot-sdk-dee0edd6eefa0594/8ae2e6a/substrate/frame/transaction-payment/src/lib.rs /home/acer/.cargo/git/checkouts/polkadot-sdk-dee0edd6eefa0594/8ae2e6a/substrate/frame/transaction-payment/src/payment.rs /home/acer/.cargo/git/checkouts/polkadot-sdk-dee0edd6eefa0594/8ae2e6a/substrate/frame/transaction-payment/src/types.rs /home/acer/.cargo/git/checkouts/polkadot-sdk-dee0edd6eefa0594/8ae2e6a/substrate/frame/transaction-payment/src/weights.rs
-
-/home/acer/.cargo/git/checkouts/polkadot-sdk-dee0edd6eefa0594/8ae2e6a/substrate/frame/transaction-payment/src/lib.rs:
-/home/acer/.cargo/git/checkouts/polkadot-sdk-dee0edd6eefa0594/8ae2e6a/substrate/frame/transaction-payment/src/payment.rs:
-/home/acer/.cargo/git/checkouts/polkadot-sdk-dee0edd6eefa0594/8ae2e6a/substrate/frame/transaction-payment/src/types.rs:
-/home/acer/.cargo/git/checkouts/polkadot-sdk-dee0edd6eefa0594/8ae2e6a/substrate/frame/transaction-payment/src/weights.rs:

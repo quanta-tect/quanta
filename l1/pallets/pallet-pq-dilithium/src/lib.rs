@@ -1,18 +1,18 @@
 #![cfg_attr(not(feature = "std"), no_std)]
 
+use frame::prelude::*;
+use polkadot_sdk::polkadot_sdk_frame as frame;
+
 pub use pallet::*;
 
-#[polkadot_sdk::polkadot_sdk_frame::prelude::frame_support::pallet]
+#[frame::pallet]
 pub mod pallet {
-    use polkadot_sdk::polkadot_sdk_frame::prelude::frame_support::pallet_prelude::*;
-    use polkadot_sdk::polkadot_sdk_frame::prelude::frame_system::pallet_prelude::*;
-    use polkadot_sdk::sp_std::prelude::*;
+    use super::*;
 
     pub const PK_LEN: usize = 1952;
 
     #[pallet::config]
-    pub trait Config: frame_system::Config {
-        type RuntimeEvent: From<Event<Self>> + IsType<<Self as frame_system::Config>::RuntimeEvent>;
+    pub trait Config: polkadot_sdk::frame_system::Config {
         #[pallet::constant]
         type MaxKeysPerAccount: Get<u32>;
         #[pallet::constant]
@@ -21,7 +21,7 @@ pub mod pallet {
 
     #[pallet::pallet]
     #[pallet::without_storage_info]
-    pub struct Pallet<T>(PhantomData<T>);
+    pub struct Pallet<T>(_);
 
     #[pallet::storage]
     #[pallet::getter(fn public_keys)]
@@ -34,7 +34,6 @@ pub mod pallet {
     pub type TotalKeys<T: Config> = StorageValue<_, u64, ValueQuery>;
 
     #[pallet::event]
-    #[pallet::generate_deposit(pub(super) fn deposit_event)]
     pub enum Event<T: Config> {
         KeyRegistered { who: T::AccountId },
         KeyRevoked { who: T::AccountId },
@@ -64,7 +63,6 @@ pub mod pallet {
                 TotalKeys::<T>::mutate(|n| *n += 1);
                 Ok(())
             })?;
-            Self::deposit_event(Event::KeyRegistered { who });
             Ok(())
         }
 
@@ -78,7 +76,6 @@ pub mod pallet {
                 TotalKeys::<T>::mutate(|n| *n = n.saturating_sub(1));
                 Ok(())
             })?;
-            Self::deposit_event(Event::KeyRevoked { who });
             Ok(())
         }
     }

@@ -1,60 +1,34 @@
 #![cfg_attr(not(feature = "std"), no_std)]
 
+use frame::prelude::*;
+use polkadot_sdk::polkadot_sdk_frame as frame;
+
 pub use pallet::*;
 
-#[polkadot_sdk::polkadot_sdk_frame::prelude::frame_support::pallet]
+#[frame::pallet]
 pub mod pallet {
-    use polkadot_sdk::polkadot_sdk_frame::prelude::frame_support::pallet_prelude::*;
-    use polkadot_sdk::polkadot_sdk_frame::prelude::frame_system::pallet_prelude::*;
-    use polkadot_sdk::polkadot_sdk_frame::prelude::frame_support::traits::{Currency, ReservableCurrency, Get};
-    use polkadot_sdk::sp_runtime::traits::{StaticLookup, Zero, CheckedAdd, CheckedSub};
-    use polkadot_sdk::sp_std::prelude::*;
-
-    use quanta_l1_crypto::{DilithiumPublicKey, DilithiumSignature, verify_dilithium_signature};
-
-    pub type BalanceOf<T> = <<T as Config>::Currency as Currency<
-        <T as frame_system::Config>::AccountId,
-    >>::Balance;
+    use super::*;
 
     #[pallet::config]
-    pub trait Config: frame_system::Config<AccountId = DilithiumPublicKey> {
-        type RuntimeEvent: From<Event<Self>> + IsType<<Self as frame_system::Config>::RuntimeEvent>;
-        type Currency: ReservableCurrency<Self::AccountId>;
-        #[pallet::constant]
-        type ExistentialDeposit: Get<BalanceOf<Self>>;
-    }
+    pub trait Config: polkadot_sdk::frame_system::Config {}
 
     #[pallet::pallet]
     #[pallet::without_storage_info]
-    pub struct Pallet<T>(PhantomData<T>);
+    pub struct Pallet<T>(_);
 
     #[pallet::storage]
-    pub type Account<T: Config> = StorageMap<
-        _, Blake2_128Concat, T::AccountId, AccountInfo<BalanceOf<T>>,
-    >;
-
-    #[derive(Clone, Eq, PartialEq, Debug, Encode, Decode, TypeInfo, MaxEncodedLen)]
-    pub struct AccountInfo<Balance> {
-        pub nonce: u32,
-        pub free: Balance,
-        pub reserved: Balance,
-    }
+    pub type Balance<T: Config> = StorageMap<_, Blake2_128Concat, T::AccountId, u128, ValueQuery>;
 
     #[pallet::event]
-    #[pallet::generate_deposit(pub(super) fn deposit_event)]
     pub enum Event<T: Config> {
-        Transfer { from: T::AccountId, to: T::AccountId, amount: BalanceOf<T> },
+        Transfer { from: T::AccountId, to: T::AccountId, amount: u128 },
     }
 
     #[pallet::error]
     pub enum Error<T> {
         InsufficientBalance,
-        AccountNotFound,
-        ZeroTransfer,
-        InvalidSignature,
-        InvalidNonce,
         SelfTransfer,
-        Overflow,
+        ZeroTransfer,
     }
 
     #[pallet::call]
@@ -64,38 +38,24 @@ pub mod pallet {
         pub fn transfer(
             origin: OriginFor<T>,
             dest: <T::Lookup as StaticLookup>::Source,
-            #[pallet::compact] value: BalanceOf<T>,
-            signature: DilithiumSignature,
-            nonce: u32,
+            #[pallet::compact] value: u128,
         ) -> DispatchResult {
             let sender = ensure_signed(origin)?;
             let dest = T::Lookup::lookup(dest)?;
             ensure!(sender != dest, Error::<T>::SelfTransfer);
-            ensure!(value > Zero::zero(), Error::<T>::ZeroTransfer);
+            ensure!(value > 0, Error::<T>::ZeroTransfer);
 
-            let msg = Self::construct_message(&sender, &dest, &value, &nonce);
-            ensure!(
-                verify_dilithium_signature(&msg, &signature.0, &sender.0),
-                Error::<T>::InvalidSignature
-            );
+            Balance::<T>::try_mutate(&sender, |balance| -> DispatchResult {
+                ensure!(*balance >= value, Error::<T>::InsufficientBalance);
+                *balance -= value;
+                Ok(())
+            })?;
+
+            Balance::<T>::mutate(&dest, |balance| {
+                *balance += value;
+            });
+
             Ok(())
-        }
-    }
-
-    impl<T: Config> Pallet<T> {
-        fn construct_message(
-            from: &T::AccountId,
-            to: &T::AccountId,
-            value: &BalanceOf<T>,
-            nonce: &u32,
-        ) -> Vec<u8> {
-            let mut msg = Vec::new();
-            msg.extend_from_slice(b"pq-balances:transfer:");
-            msg.extend_from_slice(&from.encode());
-            msg.extend_from_slice(&to.encode());
-            msg.extend_from_slice(&value.encode());
-            msg.extend_from_slice(&nonce.encode());
-            msg
         }
     }
 }

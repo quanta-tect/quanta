@@ -8072,10 +8072,11 @@ name = "quanta-l1-crypto"
 version = "0.1.0"
 dependencies = [
  "parity-scale-codec",
- "polkadot-sdk",
  "pqcrypto-dilithium",
  "pqcrypto-traits",
  "scale-info",
+ "serde",
+ "sp-runtime",
 ]
 
 [[package]]
