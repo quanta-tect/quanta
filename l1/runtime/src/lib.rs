@@ -3,7 +3,7 @@
 extern crate alloc;
 
 use alloc::borrow::Cow;
-use polkadot_sdk::frame_support::{construct_runtime, parameter_types, traits::{ConstU16, ConstU32, Everything}};
+use polkadot_sdk::frame_support::{construct_runtime, parameter_types, traits::{ConstU16, ConstU32, ConstU128, Everything}};
 use polkadot_sdk::sp_core::H256;
 use polkadot_sdk::sp_runtime::{generic, traits::{BlakeTwo256, IdentityLookup}, Perbill};
 use polkadot_sdk::sp_version::RuntimeVersion;
@@ -65,6 +65,7 @@ construct_runtime!(
         Balances: polkadot_sdk::pallet_balances,
         PqDilithium: pallet_pq_dilithium,
         PqBalances: pallet_pq_balances,
+        PqStaking: pallet_pq_staking,
     }
 );
 
@@ -123,4 +124,9 @@ impl polkadot_sdk::pallet_balances::Config for Runtime {
     type RuntimeHoldReason = ();
     type RuntimeFreezeReason = ();
     type DoneSlashHandler = ();
+}
+
+impl pallet_pq_staking::Config for Runtime {
+    type MinStake = ConstU128<1_000_000_000_000_000_000>;
+    type RewardPerInference = ConstU128<10_000_000_000_000_000>;
 }

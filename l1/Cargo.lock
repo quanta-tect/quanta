@@ -6186,6 +6186,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "pallet-pq-staking"
+version = "0.1.0"
+dependencies = [
+ "parity-scale-codec",
+ "polkadot-sdk",
+ "scale-info",
+]
+
+[[package]]
 name = "pallet-preimage"
 version = "28.0.0"
 source = "git+https://github.com/paritytech/polkadot-sdk.git#8ae2e6a47aef16e392b4a951b7165c87d9f1e75b"
@@ -8087,6 +8096,7 @@ version = "0.1.0"
 dependencies = [
  "pallet-pq-balances",
  "pallet-pq-dilithium",
+ "pallet-pq-staking",
  "parity-scale-codec",
  "polkadot-sdk",
  "quanta-l1-crypto",
