@@ -1,6 +1,6 @@
 [workspace]
 resolver = "2"
-members = ["crypto", "pallets/pallet-pq-dilithium", "pallets/pallet-pq-balances", "pallets/pallet-pq-staking", "runtime"]
+members = ["crypto", "pallets/pallet-pq-dilithium", "pallets/pallet-pq-balances", "pallets/pallet-pq-staking", "runtime", "node"]
 
 [workspace.package]
 version = "0.1.0"

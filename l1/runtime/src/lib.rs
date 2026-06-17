@@ -18,6 +18,7 @@ pub type Address = AccountId;
 pub type Signature = DilithiumSignature;
 pub type Balance = u128;
 pub type Header = generic::Header<BlockNumber, BlakeTwo256>;
+
 pub type SignedExtra = (
     polkadot_sdk::frame_system::CheckSpecVersion<Runtime>,
     polkadot_sdk::frame_system::CheckTxVersion<Runtime>,
@@ -26,6 +27,7 @@ pub type SignedExtra = (
     polkadot_sdk::frame_system::CheckNonce<Runtime>,
     polkadot_sdk::frame_system::CheckWeight<Runtime>,
 );
+
 pub type UncheckedExtrinsic = generic::UncheckedExtrinsic<Address, RuntimeCall, Signature, SignedExtra>;
 pub type Block = generic::Block<Header, UncheckedExtrinsic>;
 
@@ -50,7 +52,7 @@ impl polkadot_sdk::sp_runtime::traits::Get<RuntimeVersion> for Version {
             impl_version: 1,
             transaction_version: 1,
             system_version: 1,
-            apis: Cow::Borrowed(&[]),
+            apis: alloc::vec![].into(),
         }
     }
 }

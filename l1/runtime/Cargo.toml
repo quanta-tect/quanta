@@ -6,7 +6,7 @@ edition = "2021"
 [dependencies]
 codec = { workspace = true }
 scale-info = { workspace = true }
-polkadot-sdk = { workspace = true, features = ["frame-support", "frame-system", "pallet-balances", "sp-core", "sp-runtime", "sp-version", "sp-std", "runtime"], default-features = false }
+polkadot-sdk = { workspace = true, features = ["experimental", "runtime", "frame-support", "frame-system", "pallet-balances", "sp-core", "sp-runtime", "sp-io", "sp-version", "sp-std"], default-features = false }
 quanta-l1-crypto = { path = "../crypto", default-features = false }
 pallet-pq-dilithium = { path = "../pallets/pallet-pq-dilithium", default-features = false }
 pallet-pq-balances = { path = "../pallets/pallet-pq-balances", default-features = false }
@@ -14,12 +14,4 @@ pallet-pq-staking = { path = "../pallets/pallet-pq-staking", default-features = 
 
 [features]
 default = ["std"]
-std = [
-    "codec/std",
-    "scale-info/std",
-    "polkadot-sdk/std",
-    "quanta-l1-crypto/std",
-    "pallet-pq-dilithium/std",
-    "pallet-pq-balances/std",
-    "pallet-pq-staking/std",
-]
+std = ["codec/std", "scale-info/std", "polkadot-sdk/std", "quanta-l1-crypto/std", "pallet-pq-dilithium/std", "pallet-pq-balances/std", "pallet-pq-staking/std"]
