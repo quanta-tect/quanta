@@ -84,7 +84,15 @@ impl IdentifyAccount for DilithiumPublicKey {
 }
 
 pub fn generate_keypair() -> DilithiumKeyPair {
-    let kp = DKP::generate(ML_DSA_65).expect("Dilithium keygen failed");
+    #[cfg(feature = "std")]
+    let seed = {
+        let mut s = [0u8; 32];
+        getrandom::getrandom(&mut s).unwrap_or_default();
+        s
+    };
+    #[cfg(not(feature = "std"))]
+    let seed = [0u8; 32];
+    let kp = DKP::generate_deterministic(ML_DSA_65, &seed);
     kp_to_quanta(&kp)
 }
 

@@ -1,5 +1,9 @@
 #![cfg_attr(not(feature = "std"), no_std)]
 
+// Make WASM binary available
+#[cfg(feature = "std")]
+include!(concat!(env!("OUT_DIR"), "/wasm_binary.rs"));
+
 extern crate alloc;
 
 use alloc::borrow::Cow;
@@ -18,7 +22,6 @@ pub type Address = AccountId;
 pub type Signature = DilithiumSignature;
 pub type Balance = u128;
 pub type Header = generic::Header<BlockNumber, BlakeTwo256>;
-
 pub type SignedExtra = (
     polkadot_sdk::frame_system::CheckSpecVersion<Runtime>,
     polkadot_sdk::frame_system::CheckTxVersion<Runtime>,
@@ -27,7 +30,6 @@ pub type SignedExtra = (
     polkadot_sdk::frame_system::CheckNonce<Runtime>,
     polkadot_sdk::frame_system::CheckWeight<Runtime>,
 );
-
 pub type UncheckedExtrinsic = generic::UncheckedExtrinsic<Address, RuntimeCall, Signature, SignedExtra>;
 pub type Block = generic::Block<Header, UncheckedExtrinsic>;
 
@@ -38,7 +40,9 @@ parameter_types! {
     pub const MaxLocks: u32 = 50;
     pub const MaxBlockSize: u32 = 10 * 1024 * 1024;
     pub const KeyRegistrationDepositVal: Balance = 1_000_000_000_000_000_000_000;
-    pub RuntimeBlockLength: polkadot_sdk::frame_system::limits::BlockLength = polkadot_sdk::frame_system::limits::BlockLength::max_with_normal_ratio(MaxBlockSize::get(), Perbill::from_percent(75));
+    pub RuntimeBlockLength: polkadot_sdk::frame_system::limits::BlockLength =
+        polkadot_sdk::frame_system::limits::BlockLength::max_with_normal_ratio(
+            MaxBlockSize::get(), Perbill::from_percent(75));
 }
 
 pub struct Version;
