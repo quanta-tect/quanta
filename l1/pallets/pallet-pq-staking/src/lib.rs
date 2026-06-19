@@ -64,6 +64,7 @@ pub mod pallet {
         pub fn stake(origin: OriginFor<T>, amount: u128) -> DispatchResult {
             let who = ensure_signed(origin)?;
             ensure!(amount >= T::MinStake::get(), Error::<T>::InsufficientStake);
+            ensure!(!StakeInfo::<T>::contains_key(&who), Error::<T>::AlreadyStaked);
 
             StakeInfo::<T>::insert(&who, (amount, true));
             Ok(())
