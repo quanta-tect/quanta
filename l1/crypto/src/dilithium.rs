@@ -15,7 +15,7 @@ use alloc::vec::Vec;
 use alloc::string::String;
 use alloc::format;
 
-use codec::{Decode, Encode, MaxEncodedLen};
+use codec::{Decode, Encode, MaxEncodedLen, DecodeWithMemTracking};
 use scale_info::TypeInfo;
 use sp_runtime::traits::{IdentifyAccount, Verify, Lazy};
 
@@ -25,10 +25,10 @@ pub const DILITHIUM_PUBLIC_KEY_LEN: usize = 1952;
 pub const DILITHIUM_SECRET_KEY_LEN: usize = 4032;
 pub const DILITHIUM_SIGNATURE_LEN: usize = 3309;
 
-#[derive(Clone, Eq, PartialEq, PartialOrd, Ord, Debug, Encode, Decode, TypeInfo, MaxEncodedLen)]
+#[derive(Clone, Eq, PartialEq, PartialOrd, Ord, Debug, Encode, Decode, DecodeWithMemTracking, TypeInfo, MaxEncodedLen)]
 pub struct DilithiumPublicKey(pub [u8; DILITHIUM_PUBLIC_KEY_LEN]);
 
-#[derive(Clone, Eq, PartialEq, Debug, Encode, Decode, TypeInfo, MaxEncodedLen)]
+#[derive(Clone, Eq, PartialEq, Debug, Encode, Decode, DecodeWithMemTracking, TypeInfo, MaxEncodedLen)]
 pub struct DilithiumSignature(pub [u8; DILITHIUM_SIGNATURE_LEN]);
 
 impl serde::Serialize for DilithiumPublicKey {

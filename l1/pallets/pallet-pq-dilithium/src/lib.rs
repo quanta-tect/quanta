@@ -8,6 +8,7 @@ pub use pallet::*;
 #[frame::pallet]
 pub mod pallet {
     use super::*;
+    use scale_info::prelude::vec::Vec;
 
     pub const PK_LEN: usize = 1952;
 
@@ -56,8 +57,12 @@ pub mod pallet {
             public_key: [u8; PK_LEN],
         ) -> DispatchResult {
             let who = ensure_signed(origin)?;
-            PublicKeys::<T>::try_mutate(&who, |keys| -> DispatchResult {
-                ensure!((keys.len() as u32) < T::MaxKeysPerAccount::get(), Error::<T>::MaxKeysExceeded);
+            PublicKeys::<T>::try_mutate(&who, |keys: &mut Vec<[u8; PK_LEN]>| -> DispatchResult {
+                let max_allowed: u32 = T::MaxKeysPerAccount::get();
+                let exceeds_max: bool = (keys.len() as u32).ge(&max_allowed);
+                if exceeds_max {
+                    return Err(Error::<T>::MaxKeysExceeded.into());
+                }
                 ensure!(!keys.contains(&public_key), Error::<T>::KeyAlreadyExists);
                 keys.push(public_key);
                 TotalKeys::<T>::mutate(|n| *n += 1);
@@ -70,7 +75,7 @@ pub mod pallet {
         #[pallet::weight(50_000)]
         pub fn revoke_key(origin: OriginFor<T>, public_key: [u8; PK_LEN]) -> DispatchResult {
             let who = ensure_signed(origin)?;
-            PublicKeys::<T>::try_mutate(&who, |keys| -> DispatchResult {
+            PublicKeys::<T>::try_mutate(&who, |keys: &mut Vec<[u8; PK_LEN]>| -> DispatchResult {
                 let pos = keys.iter().position(|k| *k == public_key).ok_or(Error::<T>::KeyNotFound)?;
                 keys.remove(pos);
                 TotalKeys::<T>::mutate(|n| *n = n.saturating_sub(1));

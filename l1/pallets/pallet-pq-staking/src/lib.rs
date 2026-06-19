@@ -43,7 +43,7 @@ pub mod pallet {
     pub enum Event<T: Config> {
         Staked { who: T::AccountId, amount: u128 },
         Unstaked { who: T::AccountId, amount: u128 },
-        InferenceSubmitted { who: T::AccountId, model_hash: [u8; 32], input_hash: [u8; 32] },
+        InferenceSubmitted { who: T::AccountId, _model_hash: [u8; 32], input_hash: [u8; 32] },
         RewardClaimed { who: T::AccountId, amount: u128 },
     }
 
@@ -63,7 +63,6 @@ pub mod pallet {
         #[pallet::weight(100_000)]
         pub fn stake(origin: OriginFor<T>, amount: u128) -> DispatchResult {
             let who = ensure_signed(origin)?;
-            ensure!(!StakeInfo::<T>::contains_key(&who), Error::<T>::AlreadyStaked);
             ensure!(amount >= T::MinStake::get(), Error::<T>::InsufficientStake);
 
             StakeInfo::<T>::insert(&who, (amount, true));
@@ -74,17 +73,17 @@ pub mod pallet {
         #[pallet::weight(50_000)]
         pub fn submit_inference(
             origin: OriginFor<T>,
-            model_hash: [u8; 32],
-            input_hash: [u8; 32],
+            _model_hash: [u8; 32],
+            _input_hash: [u8; 32],
         ) -> DispatchResult {
             let who = ensure_signed(origin)?;
             let (stake, active) = StakeInfo::<T>::get(&who);
             ensure!(stake > 0, Error::<T>::NotStaked);
             ensure!(active, Error::<T>::WorkerInactive);
 
-            InferenceCount::<T>::mutate(&who, |n| *n += 1);
+            InferenceCount::<T>::mutate(&who, |n: &mut u64| *n += 1);
             let reward = T::RewardPerInference::get();
-            PendingRewards::<T>::mutate(&who, |r| *r += reward);
+            PendingRewards::<T>::mutate(&who, |r: &mut u128| *r += reward);
             Ok(())
         }
 

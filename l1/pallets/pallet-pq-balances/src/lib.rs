@@ -20,6 +20,7 @@ pub mod pallet {
     pub type Balance<T: Config> = StorageMap<_, Blake2_128Concat, T::AccountId, u128, ValueQuery>;
 
     #[pallet::event]
+    #[pallet::generate_deposit(pub(super) fn deposit_event)]
     pub enum Event<T: Config> {
         Transfer { from: T::AccountId, to: T::AccountId, amount: u128 },
     }
@@ -37,24 +38,24 @@ pub mod pallet {
         #[pallet::weight(200_000)]
         pub fn transfer(
             origin: OriginFor<T>,
-            dest: <T::Lookup as StaticLookup>::Source,
+            dest: T::AccountId,
             #[pallet::compact] value: u128,
         ) -> DispatchResult {
             let sender = ensure_signed(origin)?;
-            let dest = T::Lookup::lookup(dest)?;
             ensure!(sender != dest, Error::<T>::SelfTransfer);
             ensure!(value > 0, Error::<T>::ZeroTransfer);
 
-            Balance::<T>::try_mutate(&sender, |balance| -> DispatchResult {
+            <Balance<T>>::try_mutate(&sender, |balance: &mut u128| -> DispatchResult {
                 ensure!(*balance >= value, Error::<T>::InsufficientBalance);
                 *balance -= value;
                 Ok(())
             })?;
 
-            Balance::<T>::mutate(&dest, |balance| {
+            <Balance<T>>::mutate(&dest, |balance: &mut u128| {
                 *balance += value;
             });
 
+            Self::deposit_event(Event::Transfer { from: sender, to: dest, amount: value });
             Ok(())
         }
     }

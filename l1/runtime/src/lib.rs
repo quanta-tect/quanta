@@ -5,12 +5,13 @@
 include!(concat!(env!("OUT_DIR"), "/wasm_binary.rs"));
 
 extern crate alloc;
+use alloc::vec::Vec;
 
 use alloc::borrow::Cow;
 use polkadot_sdk::frame_support::{construct_runtime, parameter_types, traits::{ConstU16, ConstU32, ConstU128, Everything}};
 use polkadot_sdk::sp_core::H256;
 use polkadot_sdk::sp_runtime::{generic, traits::{BlakeTwo256, IdentityLookup}, Perbill};
-use polkadot_sdk::sp_version::RuntimeVersion;
+use polkadot_sdk::sp_version::{runtime_version, RuntimeVersion};
 
 use quanta_l1_crypto::{DilithiumPublicKey, DilithiumSignature};
 
@@ -41,32 +42,36 @@ parameter_types! {
     pub const MaxBlockSize: u32 = 10 * 1024 * 1024;
     pub const KeyRegistrationDepositVal: Balance = 1_000_000_000_000_000_000_000;
     pub RuntimeBlockLength: polkadot_sdk::frame_system::limits::BlockLength =
-        polkadot_sdk::frame_system::limits::BlockLength::max_with_normal_ratio(
-            MaxBlockSize::get(), Perbill::from_percent(75));
+        polkadot_sdk::frame_system::limits::BlockLength::builder()
+            .max_length(MaxBlockSize::get())
+            .modify_max_length_for_class(
+                polkadot_sdk::frame_support::dispatch::DispatchClass::Normal,
+                |n| *n = Perbill::from_percent(75) * *n
+            )
+            .build();
 }
+
+#[runtime_version]
+pub const VERSION: RuntimeVersion = RuntimeVersion {
+    spec_name: Cow::Borrowed("quanta-l1"),
+    impl_name: Cow::Borrowed("quanta-l1"),
+    authoring_version: 1,
+    spec_version: 1,
+    impl_version: 1,
+    transaction_version: 1,
+    system_version: 1,
+    apis: Cow::Borrowed(&[]),
+};
 
 pub struct Version;
 impl polkadot_sdk::sp_runtime::traits::Get<RuntimeVersion> for Version {
     fn get() -> RuntimeVersion {
-        RuntimeVersion {
-            spec_name: Cow::Borrowed("quanta-l1"),
-            impl_name: Cow::Borrowed("quanta-l1"),
-            authoring_version: 1,
-            spec_version: 1,
-            impl_version: 1,
-            transaction_version: 1,
-            system_version: 1,
-            apis: alloc::vec![].into(),
-        }
+        VERSION
     }
 }
 
 construct_runtime!(
-    pub enum Runtime where
-        Block = Block,
-        NodeBlock = Block,
-        UncheckedExtrinsic = UncheckedExtrinsic
-    {
+    pub enum Runtime {
         System: polkadot_sdk::frame_system,
         Balances: polkadot_sdk::pallet_balances,
         PqDilithium: pallet_pq_dilithium,

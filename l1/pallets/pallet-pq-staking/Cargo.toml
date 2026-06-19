@@ -11,3 +11,6 @@ polkadot-sdk = { workspace = true, features = ["experimental", "runtime"], defau
 [features]
 default = ["std"]
 std = ["codec/std", "scale-info/std", "polkadot-sdk/std"]
+
+[dev-dependencies]
+sp-io = { git = "https://github.com/paritytech/polkadot-sdk.git", default-features = false }
