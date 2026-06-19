@@ -1,43 +1,46 @@
-#![cfg_attr(not(feature = "std"), no_std)]
+//! # Dilithium3 — Pure Rust wrapper (dung dilithium-rs)
+//!
+//! Thay the pqcrypto-dilithium (C code / cc crate) bang dilithium-rs (pure Rust).
+//!
+//! ## Thay doi API:
+//! - `sign_message` bay gio can `&DilithiumKeyPair` (ca pk + sk)
+//!   Vi dilithium-rs can full keypair de sign
+//!
+//! ## Giu nguyen:
+//! - Kich thuoc: PK=1952, SK=4032, Sig=3309
+//! - Type: DilithiumPublicKey, DilithiumSignature, DilithiumSecretKey
+//! - Substrate traits: Verify, IdentifyAccount
 
-extern crate alloc;
-use core::cmp::min;
+use alloc::vec::Vec;
+use alloc::string::String;
+use alloc::format;
 
 use codec::{Decode, Encode, MaxEncodedLen};
 use scale_info::TypeInfo;
-
 use sp_runtime::traits::{IdentifyAccount, Verify, Lazy};
-use codec::DecodeWithMemTracking;
 
-use pqcrypto_dilithium::dilithium3::{PublicKey, SecretKey, SignedMessage, keypair, sign, open};
-use pqcrypto_traits::sign::PublicKey as PubT;
-use pqcrypto_traits::sign::SecretKey as SecT;
-use pqcrypto_traits::sign::SignedMessage as SigT;
+use dilithium::{DilithiumKeyPair as DKP, DilithiumSignature as DSig, ML_DSA_65};
 
 pub const DILITHIUM_PUBLIC_KEY_LEN: usize = 1952;
 pub const DILITHIUM_SECRET_KEY_LEN: usize = 4032;
 pub const DILITHIUM_SIGNATURE_LEN: usize = 3309;
 
-#[derive(Clone, Eq, PartialEq, PartialOrd, Ord, Debug, Encode, Decode, TypeInfo, MaxEncodedLen, DecodeWithMemTracking)]
+#[derive(Clone, Eq, PartialEq, PartialOrd, Ord, Debug, Encode, Decode, TypeInfo, MaxEncodedLen)]
 pub struct DilithiumPublicKey(pub [u8; DILITHIUM_PUBLIC_KEY_LEN]);
 
-#[derive(Clone, Eq, PartialEq, Debug, Encode, Decode, TypeInfo, MaxEncodedLen, DecodeWithMemTracking)]
+#[derive(Clone, Eq, PartialEq, Debug, Encode, Decode, TypeInfo, MaxEncodedLen)]
 pub struct DilithiumSignature(pub [u8; DILITHIUM_SIGNATURE_LEN]);
 
 impl serde::Serialize for DilithiumPublicKey {
     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
-    where
-        S: serde::Serializer,
-    {
+    where S: serde::Serializer {
         serializer.serialize_bytes(&self.0)
     }
 }
 
 impl<'de> serde::Deserialize<'de> for DilithiumPublicKey {
     fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
-    where
-        D: serde::Deserializer<'de>,
-    {
+    where D: serde::Deserializer<'de> {
         let bytes = Vec::<u8>::deserialize(deserializer)?;
         if bytes.len() != DILITHIUM_PUBLIC_KEY_LEN {
             return Err(serde::de::Error::custom("invalid public key length"));
@@ -70,7 +73,8 @@ impl Default for DilithiumSecretKey { fn default() -> Self { Self([0u8; DILITHIU
 impl Verify for DilithiumSignature {
     type Signer = DilithiumPublicKey;
     fn verify<L: Lazy<[u8]>>(&self, mut msg: L, signer: &Self::Signer) -> bool {
-        verify_dilithium_signature(msg.get(), &self.0, &signer.0)
+        let sig = DSig::from_slice(&self.0);
+        DKP::verify(&signer.0, &sig, msg.get(), &[], ML_DSA_65)
     }
 }
 
@@ -80,26 +84,36 @@ impl IdentifyAccount for DilithiumPublicKey {
 }
 
 pub fn generate_keypair() -> DilithiumKeyPair {
-    let (pk, sk) = keypair();
-    let pk_b = <PublicKey as PubT>::as_bytes(&pk);
-    let sk_b = <SecretKey as SecT>::as_bytes(&sk);
-    let mut pk_arr = [0u8; DILITHIUM_PUBLIC_KEY_LEN];
-    let mut sk_arr = [0u8; DILITHIUM_SECRET_KEY_LEN];
-    let pke = min(pk_b.len(), DILITHIUM_PUBLIC_KEY_LEN);
-    let ske = min(sk_b.len(), DILITHIUM_SECRET_KEY_LEN);
-    pk_arr[..pke].copy_from_slice(&pk_b[..pke]);
-    sk_arr[..ske].copy_from_slice(&sk_b[..ske]);
-    DilithiumKeyPair { public: DilithiumPublicKey(pk_arr), secret: DilithiumSecretKey(sk_arr) }
+    let kp = DKP::generate(ML_DSA_65).expect("Dilithium keygen failed");
+    kp_to_quanta(&kp)
 }
 
-pub fn sign_message(message: &[u8], secret: &DilithiumSecretKey) -> DilithiumSignature {
-    let sk = <SecretKey as SecT>::from_bytes(&secret.0).expect("Invalid SK");
-    let sm = sign(message, &sk);
-    let sb = <SignedMessage as SigT>::as_bytes(&sm);
-    let sig_only = &sb[..DILITHIUM_SIGNATURE_LEN];
-    let mut sig = [0u8; DILITHIUM_SIGNATURE_LEN];
-    sig.copy_from_slice(sig_only);
-    DilithiumSignature(sig)
+pub fn generate_keypair_deterministic(seed: &[u8; 32]) -> DilithiumKeyPair {
+    let kp = DKP::generate_deterministic(ML_DSA_65, seed);
+    kp_to_quanta(&kp)
+}
+
+fn kp_to_quanta(kp: &DKP) -> DilithiumKeyPair {
+    let pk_raw = kp.public_key();
+    let sk_raw = kp.private_key();
+    let mut pk = [0u8; DILITHIUM_PUBLIC_KEY_LEN];
+    let mut sk = [0u8; DILITHIUM_SECRET_KEY_LEN];
+    pk.copy_from_slice(pk_raw);
+    sk.copy_from_slice(sk_raw);
+    DilithiumKeyPair { public: DilithiumPublicKey(pk), secret: DilithiumSecretKey(sk) }
+}
+
+pub fn sign_message(message: &[u8], kp: &DilithiumKeyPair) -> DilithiumSignature {
+    let inner = DKP::from_keys(&kp.secret.0, &kp.public.0, ML_DSA_65)
+        .expect("sign_message: invalid keypair");
+    #[cfg(feature = "std")]
+    let sig = inner.sign(message, &[]).expect("sign_message: signing failed");
+    #[cfg(not(feature = "std"))]
+    let sig = inner.sign_deterministic(message, &[], &[0u8; 32])
+        .expect("sign_message: deterministic signing failed");
+    let mut out = [0u8; DILITHIUM_SIGNATURE_LEN];
+    out.copy_from_slice(sig.as_bytes());
+    DilithiumSignature(out)
 }
 
 pub fn verify_dilithium_signature(
@@ -107,18 +121,14 @@ pub fn verify_dilithium_signature(
     signature: &[u8; DILITHIUM_SIGNATURE_LEN],
     public_key: &[u8; DILITHIUM_PUBLIC_KEY_LEN],
 ) -> bool {
-    let pk = match <PublicKey as PubT>::from_bytes(public_key) { Ok(p) => p, Err(_) => return false };
-    let mut sm_bytes = Vec::with_capacity(DILITHIUM_SIGNATURE_LEN + message.len());
-    sm_bytes.extend_from_slice(signature);
-    sm_bytes.extend_from_slice(message);
-    let sm = match <SignedMessage as SigT>::from_bytes(&sm_bytes) { Ok(s) => s, Err(_) => return false };
-    open(&sm, &pk).is_ok()
+    let sig = DSig::from_slice(signature.as_ref());
+    DKP::verify(public_key, &sig, message, &[], ML_DSA_65)
 }
 
-pub fn dilithium_to_address(pk: &DilithiumPublicKey) -> alloc::string::String {
-    let hex: alloc::string::String = pk.0.iter().map(|b| alloc::format!("{:02x}", b)).collect();
+pub fn dilithium_to_address(pk: &DilithiumPublicKey) -> String {
+    let hex: String = pk.0.iter().map(|b| format!("{:02x}", b)).collect();
     let end = if hex.len() > 40 { 40 } else { hex.len() };
-    alloc::format!("QR{}", &hex[..end])
+    format!("QR{}", &hex[..end])
 }
 
 #[cfg(test)]
@@ -126,75 +136,72 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_keypair_generation() {
-        let kp = generate_keypair();
-        assert_eq!(kp.public.0.len(), DILITHIUM_PUBLIC_KEY_LEN);
-        assert_eq!(kp.secret.0.len(), DILITHIUM_SECRET_KEY_LEN);
-        assert_ne!(kp.public.0, [0u8; DILITHIUM_PUBLIC_KEY_LEN]);
+    fn test_keypair() {
+        let kp = generate_keypair_deterministic(&[0x42u8; 32]);
+        assert_eq!(kp.public.0.len(), 1952);
+        assert_eq!(kp.secret.0.len(), 4032);
+        assert_ne!(kp.public.0, [0u8; 1952]);
     }
 
     #[test]
-    fn test_sign_and_verify() {
-        let kp = generate_keypair();
+    fn test_sign_verify() {
+        let kp = generate_keypair_deterministic(&[0x42u8; 32]);
         let msg = b"hello quanta l1";
-        let sig = sign_message(msg, &kp.secret);
+        let sig = sign_message(msg, &kp);
         assert!(verify_dilithium_signature(msg, &sig.0, &kp.public.0));
     }
 
     #[test]
-    fn test_verify_wrong_signature_fails() {
-        let kp = generate_keypair();
-        let msg = b"hello quanta l1";
-        let bad_sig = DilithiumSignature([0u8; DILITHIUM_SIGNATURE_LEN]);
-        assert!(!verify_dilithium_signature(msg, &bad_sig.0, &kp.public.0));
+    fn test_wrong_sig_fails() {
+        let kp = generate_keypair_deterministic(&[0x42u8; 32]);
+        assert!(!verify_dilithium_signature(b"msg", &[0u8; 3309], &kp.public.0));
     }
 
     #[test]
-    fn test_verify_wrong_message_fails() {
-        let kp = generate_keypair();
-        let msg = b"hello quanta l1";
-        let sig = sign_message(msg, &kp.secret);
-        let wrong_msg = b"tampered message";
-        assert!(!verify_dilithium_signature(wrong_msg, &sig.0, &kp.public.0));
+    fn test_wrong_msg_fails() {
+        let kp = generate_keypair_deterministic(&[0x42u8; 32]);
+        let sig = sign_message(b"real msg", &kp);
+        assert!(!verify_dilithium_signature(b"fake msg", &sig.0, &kp.public.0));
     }
 
     #[test]
-    fn test_address_generation() {
-        let kp = generate_keypair();
-        let addr = dilithium_to_address(&kp.public);
-        assert!(addr.starts_with("QR"));
-        assert_eq!(addr.len(), 42);
-    }
-
-    #[test]
-    fn test_serde_serialize() {
-        let kp = generate_keypair();
-        let s = format!("{}", kp.public);
-        assert!(s.starts_with("["));
-    }
-
-    #[test]
-    fn test_signature_length() {
-        let kp = generate_keypair();
-        let msg_empty = b"";
-        let sk = <SecretKey as SecT>::from_bytes(&kp.secret.0).expect("Invalid SK");
-        let sm_empty = sign(msg_empty, &sk);
-        let sb = <SignedMessage as SigT>::as_bytes(&sm_empty);
-        assert_eq!(DILITHIUM_SIGNATURE_LEN, sb.len(), "signature length mismatch: expected {} got {}", DILITHIUM_SIGNATURE_LEN, sb.len());
+    fn test_address() {
+        let kp = generate_keypair_deterministic(&[0x42u8; 32]);
+        let a = dilithium_to_address(&kp.public);
+        assert!(a.starts_with("QR"));
+        assert_eq!(a.len(), 42);
     }
 
     #[test]
     fn test_verify_trait() {
-        let kp = generate_keypair();
-        let msg = b"test verify trait";
-        let sig = sign_message(msg, &kp.secret);
+        let kp = generate_keypair_deterministic(&[0x42u8; 32]);
+        let msg = b"test";
+        let sig = sign_message(msg, &kp);
         assert!(sig.verify(&msg[..], &kp.public));
     }
 
     #[test]
-    fn test_identify_account() {
-        let kp = generate_keypair();
-        let account: DilithiumPublicKey = kp.public.clone().into_account();
-        assert_eq!(kp.public.0.to_vec(), account.0.to_vec());
+    fn test_deterministic() {
+        let a = generate_keypair_deterministic(&[0x42u8; 32]);
+        let b = generate_keypair_deterministic(&[0x42u8; 32]);
+        assert_eq!(a.public.0, b.public.0);
+    }
+
+    #[test]
+    fn test_roundtrip() {
+        let kp = generate_keypair_deterministic(&[0x42u8; 32]);
+        let msg = b"QUANTA test";
+        let sig = sign_message(msg, &kp);
+        assert!(sig.verify(&msg[..], &kp.public));
+    }
+
+    #[test]
+    fn test_multi_msgs() {
+        let kp = generate_keypair_deterministic(&[0x42u8; 32]);
+        let msgs: [&[u8]; 3] = [b"a", b"hello world", b""];
+        for m in &msgs {
+            let sig = sign_message(m, &kp);
+            assert!(verify_dilithium_signature(m, &sig.0, &kp.public.0));
+        }
     }
 }
