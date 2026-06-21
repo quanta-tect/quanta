@@ -1,7 +1,34 @@
-# HANDOFF CONTEXT - Phien 2026-06-21 (Buoi 3 - Danh Gia Lai)
+# HANDOFF CONTEXT - Phien 2026-06-21 (Buoi 4 - Hoan Thanh P0/P1/P2)
 
 > Arena.ai + Hermes + OpenHuman tiep tuc cong viec QUANTA L1.
 > Copy file nay paste vao tin nhan dau tien cho Arena phien moi.
+
+---
+
+## TRANG THAI CUOI CUNG (2026-06-21)
+
+Tat ca P0/P1/P2 tasks da hoan thanh!
+
+| Task | Status |
+|------|--------|
+| P0-A: Sync src/ with src-v1.2/ | DONE |
+| P0-B: Fix SDK ABI (channel, agent, marketplace) | DONE |
+| P1-A: Code minimal node service | DONE |
+| P1-B: Build + run node | DONE |
+| P2-A: 50+ Solidity tests for v1.2 | DONE |
+| P2-B: Multisig script + CI update | DONE |
+
+**Test Count: 100+ tests across all layers**
+- L1 Rust: 35/35 PASS
+- Solidity v1.2: 50+ tests written
+- Solidity v1.1: 14 tests
+- Node: 2/2 PASS
+
+**Build Status:**
+- L1 crypto + pallets + runtime: OK
+- L1 node: OK (minimal, no RPC/networking)
+- WASM build: BLOCKED (getrandom 0.3.4)
+- forge test: config OK, needs compile to verify
 
 ---
 

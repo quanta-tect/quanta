@@ -56,6 +56,23 @@ Append-only. Add new entries at the top.
 - substrate-prometheus-endpoint (path patch, replaces git)
 - sc-network (path patch, replaces git)
 
+### CI/CD
+- forge-test.yml: test v1.2 first, v1.1 backward compat
+- security.yml: Mythril on src-v1.2, codecov v5
+- SetupMultisigOwnership.s.sol: Gnosis Safe transfer script
+
+### Dependabot
+- 11 vulnerabilities (4H/2M/5L) — mostly OpenZeppelin devDependencies (npm)
+- SDK dependencies clean (viem, dotenv, openai — all latest)
+- Action items: update OpenZeppelin npm package when available
+
+### Test Count Summary
+- L1 Rust: 35/35 tests PASS
+- Solidity v1.2: 50+ tests written (QuantaSecurityTests.t.sol)
+- Solidity v1.1: 14 tests (SecurityFixes.t.sol)
+- Node: 2/2 tests PASS
+- Total: 100+ tests across all layers
+
 ---
 
 ## Session 3 (continued) — Business Strategy
