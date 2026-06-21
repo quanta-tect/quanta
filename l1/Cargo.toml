@@ -1,6 +1,6 @@
 [workspace]
 resolver = "2"
-members = ["crypto", "pallets/pallet-pq-dilithium", "pallets/pallet-pq-balances", "pallets/pallet-pq-staking", "runtime", "node"]
+members = ["crypto", "pallets/pallet-pq-dilithium", "pallets/pallet-pq-balances", "pallets/pallet-pq-staking", "runtime", "node", "stubs/substrate-prometheus-endpoint"]
 
 [workspace.package]
 version = "0.1.0"
@@ -11,3 +11,7 @@ license = "MIT"
 polkadot-sdk = { git = "https://github.com/paritytech/polkadot-sdk.git", default-features = false }
 codec = { package = "parity-scale-codec", version = "3", default-features = false }
 scale-info = { version = "2", default-features = false, features = ["derive"] }
+serde_json = { version = "1", default-features = false, features = ["alloc"] }
+
+[patch."https://github.com/paritytech/polkadot-sdk.git"]
+substrate-prometheus-endpoint = { path = "./stubs/substrate-prometheus-endpoint" }

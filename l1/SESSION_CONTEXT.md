@@ -1,6 +1,6 @@
 # 🧠 QUANTA — Session Context Handoff
 
-> **Ngày:** 2026-06-19
+> **Ngày:** 2026-06-21
 > **Agent:** 🏟️ Arena.ai + 🧠 Hermes + 👤 OpenHuman
 > **Dự án:** QUANTA — Quantum-safe AI-native Blockchain
 
@@ -14,17 +14,14 @@
 - ✅ SDK TypeScript demo 7/7 steps
 - ✅ Security audit + Forta bot + War games
 
-### Layer 1 (Rust/Substrate) — 🎉 BREAKTHROUGH!
-- ✅ **crypto/** Dilithium3 **pure Rust** (thay pqcrypto-dilithium C code)
-  - Crate: `dilithium-rs v0.2.0` — pure Rust, no_std, WASM-ready
+### Layer 1 (Rust/Substrate) — 35/35 tests PASS
+- ✅ **crypto/** Dilithium3 **pure Rust** (dilithium-rs v0.2.0)
   - 0 unsafe blocks, NIST FIPS 204 compliant
-  - 9 tests PASS (keygen, sign, verify, deterministic, traits)
-  - Kích thước giữ nguyên: PK=1952, SK=4032, Sig=3309
+  - 9 tests PASS
 - ✅ pallet-pq-dilithium: 7 tests PASS
 - ✅ pallet-pq-balances: 6 tests PASS
 - ✅ pallet-pq-staking (PoUW): 11 tests PASS
 - ✅ runtime: 2 tests PASS
-- ✅ node: binary build OK
 - ✅ **TOTAL: 35/35 tests ALL PASS**
 
 ### Agent System
@@ -34,13 +31,17 @@
 
 ---
 
-## ✅ GIẢI QUYẾT: Runtime không build WASM (VẤN ĐỀ GỐC RỄ)
+## 🔧 ĐÃ TRONG PHIÊN 3 (2026-06-21)
 
-**Vấn đề cũ:** pqcrypto-dilithium dùng C code, không compile cho wasm32-unknown-unknown
+### Fixed
+1. ✅ **foundry.toml merge conflict** — xóa conflict markers dòng 31-44
+2. ✅ **getrandom 0.3.4 wasm-bindgen feature** — comment out wasm32 target dep (native-only for now)
+3. ✅ **Verify 35/35 tests PASS** — tất cả pallets + runtime build OK
 
-**Giải pháp:** Thay bằng dilithium-rs v0.2.0 — pure Rust
-- ✅ **WASM-ready** — có thể build runtime WASM
-- ✅ Không cần C compiler (cc crate)
+### Discovered (chưa fix)
+4. ⚠️ **Contract src vs src-v1.2 mismatch** — src/ là v1.0 (có lỗi bảo mật), src-v1.2/ là fixed
+5. ⚠️ **SDK ABI mismatch** — channel.ts dùng 5 params nhưng contract src chỉ có 3 params
+6. ⚠️ **Node service chưa code** — main.rs chỉ 7 dòng, cần chain_spec, cli, service, rpc
 
 ---
 
@@ -48,12 +49,13 @@
 
 | # | Task | Status |
 |---|------|--------|
-| 1 | Bật WASM builder trong runtime | ⏳ NEXT |
-| 2 | Code node service đầy đủ (Aura consensus, RPC, CLI, chain spec) | ⏳ |
-| 3 | Chạy testnet local | ⏳ |
-| 4 | Layer 2: contracts, SDK, wallet UI | 🔜 |
-| 5 | Agent system triển khai thực tế | 🔜 |
-| 6 | Fix 5 Dependabot vulnerabilities | 🔜 |
+| 1 | Đồng bộ contract src với src-v1.2 | ⏳ P0 |
+| 2 | Fix SDK ABI mismatch | ⏳ P0 |
+| 3 | Code node service đầy đủ (manual-seal, RPC, CLI, chain spec) | ⏳ P1 |
+| 4 | Chạy testnet local | ⏳ P1 |
+| 5 | Viết test đầy đủ cho src-v1.2 contracts | ⏳ P2 |
+| 6 | Setup multisig cho contract ownership | ⏳ P2 |
+| 7 | Fix 5 Dependabot vulnerabilities | ⏳ P2 |
 
 ---
 
@@ -67,7 +69,6 @@
 | Secret key | 4,032 bytes |
 | Block time | 6s |
 | Token | QTA (1B supply, 18 decimals) |
-| Crate cũ (đã xoá) | pqcrypto-dilithium v0.5, pqcrypto-traits v0.3 |
 | Crate mới | **dilithium-rs v0.2.0** (Pure Rust ✅) |
 
 ---

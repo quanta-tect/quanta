@@ -10,8 +10,13 @@ sp-runtime = { git = "https://github.com/paritytech/polkadot-sdk.git", default-f
 serde = { version = "1", default-features = false, features = ["derive"] }
 
 dilithium-rs = { version = "0.2", default-features = false }
+
+[target."cfg(target_arch = \"wasm32\")".dependencies]
+getrandom = { version = "0.2", features = ["js"], optional = true }
+
+[target."cfg(not(target_arch = \"wasm32\"))".dependencies]
 getrandom = { version = "0.2", optional = true }
 
 [features]
 default = ["std"]
-std = ["codec/std", "scale-info/std", "sp-runtime/std", "serde/std", "dilithium-rs/std", "getrandom/std"]
+std = ["codec/std", "scale-info/std", "sp-runtime/std", "serde/std", "dilithium-rs/std", "getrandom", "getrandom?/std"]

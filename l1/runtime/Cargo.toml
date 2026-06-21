@@ -6,11 +6,17 @@ edition = "2021"
 [dependencies]
 codec = { workspace = true }
 scale-info = { workspace = true }
-polkadot-sdk = { workspace = true, features = ["experimental", "runtime", "frame-support", "frame-system", "pallet-balances", "sp-core", "sp-runtime", "sp-io", "sp-version", "sp-std"], default-features = false }
+polkadot-sdk = { workspace = true, features = ["frame-support", "frame-system", "pallet-balances", "sp-api", "sp-block-builder", "sp-core", "sp-externalities", "sp-io", "sp-runtime", "sp-std", "sp-storage", "sp-trie", "sp-version"], default-features = false }
 quanta-l1-crypto = { path = "../crypto", default-features = false }
 pallet-pq-dilithium = { path = "../pallets/pallet-pq-dilithium", default-features = false }
 pallet-pq-balances = { path = "../pallets/pallet-pq-balances", default-features = false }
 pallet-pq-staking = { path = "../pallets/pallet-pq-staking", default-features = false }
+
+
+# NOTE: WASM build blocked by getrandom 0.3.4 (no wasm32 backend).
+# For now, native-only execution. Uncomment below when getrandom 0.3+ adds wasm support.
+# [target.'cfg(target_arch = "wasm32")'.dependencies]
+# getrandom = { version = "0.3", features = ["wasm-bindgen"] }
 
 [build-dependencies]
 polkadot-sdk = { workspace = true, features = ["substrate-wasm-builder"] }

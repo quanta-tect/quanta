@@ -1,0 +1,15 @@
+[package]
+name = "substrate-prometheus-endpoint"
+version = "0.17.0"
+edition = "2021"
+publish = false
+description = "Stub for wasm32 - no hyper dep"
+
+[features]
+default = ["std"]
+std = []
+http = []
+register = []
+
+[dependencies]
+prometheus = { version = "0.13", default-features = false }
