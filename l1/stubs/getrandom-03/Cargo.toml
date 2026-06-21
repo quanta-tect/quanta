@@ -1,0 +1,15 @@
+[package]
+name = "getrandom"
+version = "0.3.4"
+edition = "2021"
+publish = false
+description = "Stub for getrandom 0.3.x — wasm32 support"
+
+[features]
+default = ["std"]
+std = []
+js = []
+wasm-bindgen = []
+wasm_js = []
+
+[dependencies]
