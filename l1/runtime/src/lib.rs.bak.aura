@@ -1,0 +1,322 @@
+#![cfg_attr(not(feature = "std"), no_std)]
+
+// Make WASM binary available
+#[cfg(feature = "std")]
+include!(concat!(env!("OUT_DIR"), "/wasm_binary.rs"));
+
+extern crate alloc;
+use alloc::vec::Vec;
+
+use alloc::borrow::Cow;
+use polkadot_sdk::frame_support::{
+    construct_runtime, parameter_types,
+    traits::{ConstBool, ConstU32, ConstU64, ConstU128, Everything},
+};
+use polkadot_sdk::frame_system::EnsureRoot;
+use polkadot_sdk::pallet_transaction_payment::{ConstFeeMultiplier, FungibleAdapter, NoFee, FixedFee};
+use polkadot_sdk::sp_core::H256;
+use polkadot_sdk::sp_runtime::{
+    generic,
+    traits::{BlakeTwo256, IdentityLookup, Block as BlockT},
+    ExtrinsicInclusionMode, Perbill,
+};
+use polkadot_sdk::sp_version::{runtime_version, RuntimeVersion};
+
+use quanta_l1_crypto::{DilithiumPublicKey, DilithiumSignature};
+
+pub type BlockNumber = u32;
+pub type Index = u32;
+pub type Hash = H256;
+pub type AccountId = DilithiumPublicKey;
+pub type Address = AccountId;
+pub type Signature = DilithiumSignature;
+pub type Balance = u128;
+pub type Header = generic::Header<BlockNumber, BlakeTwo256>;
+pub type SignedExtra = (
+    polkadot_sdk::frame_system::CheckSpecVersion<Runtime>,
+    polkadot_sdk::frame_system::CheckTxVersion<Runtime>,
+    polkadot_sdk::frame_system::CheckGenesis<Runtime>,
+    polkadot_sdk::frame_system::CheckEra<Runtime>,
+    polkadot_sdk::frame_system::CheckNonce<Runtime>,
+    polkadot_sdk::frame_system::CheckWeight<Runtime>,
+    polkadot_sdk::pallet_transaction_payment::ChargeTransactionPayment<Runtime>,
+);
+pub type UncheckedExtrinsic = generic::UncheckedExtrinsic<Address, RuntimeCall, Signature, SignedExtra>;
+pub type Block = generic::Block<Header, UncheckedExtrinsic>;
+pub type Executive = polkadot_sdk::frame_executive::Executive<
+    Runtime,
+    Block,
+    polkadot_sdk::frame_system::ChainContext<Runtime>,
+    Runtime,
+    polkadot_sdk::frame_support::traits::AllPalletsWithSystem,
+>;
+
+pub use polkadot_sdk::sp_consensus_aura::sr25519::AuthorityId as AuraId;
+
+parameter_types! {
+    pub const BlockHashCount: BlockNumber = 2400;
+    pub const MaxKeysPerAccount: u32 = 10;
+    pub const ExistentialDeposit: Balance = 100_000_000_000_000_000_000;
+    pub const MaxLocks: u32 = 50;
+    pub const MaxBlockSize: u32 = 10 * 1024 * 1024;
+    pub const KeyRegistrationDepositVal: Balance = 1_000_000_000_000_000_000_000;
+    pub RuntimeBlockLength: polkadot_sdk::frame_system::limits::BlockLength =
+        polkadot_sdk::frame_system::limits::BlockLength::builder()
+            .max_length(MaxBlockSize::get())
+            .modify_max_length_for_class(
+                polkadot_sdk::frame_support::dispatch::DispatchClass::Normal,
+                |n| *n = Perbill::from_percent(75) * *n
+            )
+            .build();
+    pub const MinStakeVal: Balance = 1_000_000_000_000_000_000;
+    pub const RewardPerInferenceVal: Balance = 10_000_000_000_000_000;
+    pub const MaxAuthorities: u32 = 32;
+    pub const MinimumPeriod: u64 = 3_000;
+    pub const SlotDuration: u64 = 6_000;
+    pub const FeeMultiplier: u64 = 1;
+}
+
+#[runtime_version]
+pub const VERSION: RuntimeVersion = RuntimeVersion {
+    spec_name: Cow::Borrowed("quanta-l1"),
+    impl_name: Cow::Borrowed("quanta-l1"),
+    authoring_version: 1,
+    spec_version: 1,
+    impl_version: 1,
+    transaction_version: 1,
+    system_version: 1,
+    apis: Cow::Borrowed(&[]),
+};
+
+pub struct Version;
+impl polkadot_sdk::sp_runtime::traits::Get<RuntimeVersion> for Version {
+    fn get() -> RuntimeVersion {
+        VERSION
+    }
+}
+
+construct_runtime!(
+    pub enum Runtime {
+        System: polkadot_sdk::frame_system,
+        Timestamp: polkadot_sdk::pallet_timestamp,
+        Aura: polkadot_sdk::pallet_aura,
+        Balances: polkadot_sdk::pallet_balances,
+        TransactionPayment: polkadot_sdk::pallet_transaction_payment,
+        PqDilithium: pallet_pq_dilithium,
+        PqBalances: pallet_pq_balances,
+        PqStaking: pallet_pq_staking,
+    }
+);
+
+impl polkadot_sdk::frame_system::Config for Runtime {
+    type BaseCallFilter = Everything;
+    type BlockWeights = ();
+    type BlockLength = RuntimeBlockLength;
+    type DbWeight = ();
+    type RuntimeOrigin = RuntimeOrigin;
+    type RuntimeCall = RuntimeCall;
+    type RuntimeTask = ();
+    type Nonce = Index;
+    type Hash = Hash;
+    type Hashing = BlakeTwo256;
+    type AccountId = AccountId;
+    type Lookup = IdentityLookup<Self::AccountId>;
+    type Block = Block;
+    type RuntimeEvent = RuntimeEvent;
+    type BlockHashCount = BlockHashCount;
+    type Version = Version;
+    type PalletInfo = PalletInfo;
+    type AccountData = polkadot_sdk::pallet_balances::AccountData<Balance>;
+    type OnNewAccount = ();
+    type OnKilledAccount = ();
+    type SystemWeightInfo = ();
+    type ExtensionsWeightInfo = ();
+    type SS58Prefix = ();
+    type OnSetCode = ();
+    type MaxConsumers = ConstU32<16>;
+    type SingleBlockMigrations = ();
+    type MultiBlockMigrator = ();
+    type PreInherents = ();
+    type PostInherents = ();
+    type PostTransactions = ();
+}
+
+impl polkadot_sdk::pallet_balances::Config for Runtime {
+    type MaxLocks = MaxLocks;
+    type MaxReserves = ();
+    type ReserveIdentifier = [u8; 8];
+    type Balance = Balance;
+    type DustRemoval = ();
+    type RuntimeEvent = RuntimeEvent;
+    type ExistentialDeposit = ExistentialDeposit;
+    type AccountStore = System;
+    type WeightInfo = ();
+    type FreezeIdentifier = ();
+    type MaxFreezes = ();
+    type RuntimeHoldReason = ();
+    type RuntimeFreezeReason = ();
+    type DoneSlashHandler = ();
+}
+
+impl polkadot_sdk::pallet_timestamp::Config for Runtime {
+    type Moment = u64;
+    type OnTimestampSet = Aura;
+    type MinimumPeriod = MinimumPeriod;
+    type WeightInfo = ();
+}
+
+impl polkadot_sdk::pallet_aura::Config for Runtime {
+    type AuthorityId = AuraId;
+    type DisabledValidators = ();
+    type MaxAuthorities = MaxAuthorities;
+    type AllowMultipleBlocksPerSlot = ConstBool<false>;
+    type SlotDuration = SlotDuration;
+}
+
+impl polkadot_sdk::pallet_transaction_payment::Config for Runtime {
+    type RuntimeEvent = RuntimeEvent;
+    type OnChargeTransaction = FungibleAdapter<Balances, ()>;
+    type WeightToFee = NoFee<Balance>;
+    type LengthToFee = FixedFee<1, Balance>;
+    type FeeMultiplierUpdate = ConstFeeMultiplier<FeeMultiplier>;
+    type OperationalFeeMultiplier = ConstU32<5>;
+}
+
+impl pallet_pq_dilithium::Config for Runtime {
+    type MaxKeysPerAccount = MaxKeysPerAccount;
+    type KeyRegistrationDeposit = KeyRegistrationDepositVal;
+}
+
+impl pallet_pq_balances::Config for Runtime {}
+
+impl pallet_pq_staking::Config for Runtime {
+    type MinStake = MinStakeVal;
+    type RewardPerInference = RewardPerInferenceVal;
+}
+
+#[cfg(feature = "std")]
+pub fn native_version() -> polkadot_sdk::sp_version::NativeVersion {
+    polkadot_sdk::sp_version::NativeVersion {
+        runtime_version: VERSION,
+        can_author_with: Default::default(),
+    }
+}
+
+impl_runtime_apis! {
+    impl sp_api::Core<Block> for Runtime {
+        fn version() -> RuntimeVersion {
+            VERSION
+        }
+
+        fn execute_block(block: Block) {
+            Executive::execute_block(block);
+        }
+
+        fn initialize_block(header: &<Block as BlockT>::Header) -> ExtrinsicInclusionMode {
+            Executive::initialize_block(header)
+        }
+    }
+
+    impl sp_api::Metadata<Block> for Runtime {
+        fn metadata() -> polkadot_sdk::sp_core::OpaqueMetadata {
+            polkadot_sdk::sp_core::OpaqueMetadata::new(Runtime::metadata().into())
+        }
+
+        fn metadata_at_version(version: u32) -> Option<polkadot_sdk::sp_core::OpaqueMetadata> {
+            Runtime::metadata_at_version(version)
+        }
+
+        fn metadata_versions() -> Vec<u32> {
+            Runtime::metadata_versions()
+        }
+    }
+
+    impl sp_block_builder::BlockBuilder<Block> for Runtime {
+        fn apply_extrinsic(extrinsic: <Block as BlockT>::Extrinsic) -> polkadot_sdk::sp_runtime::ApplyExtrinsicResult {
+            Executive::apply_extrinsic(extrinsic)
+        }
+
+        fn finalize_block() -> <Block as BlockT>::Header {
+            Executive::finalize_block()
+        }
+
+        fn inherent_extrinsics(data: polkadot_sdk::sp_inherents::InherentData) -> Vec<<Block as BlockT>::Extrinsic> {
+            data.create_extrinsics()
+        }
+
+        fn check_inherents(
+            block: Block,
+            data: polkadot_sdk::sp_inherents::InherentData,
+        ) -> polkadot_sdk::sp_inherents::CheckInherentsResult {
+            data.check_extrinsics(&block)
+        }
+    }
+
+    impl sp_transaction_pool::runtime_api::TaggedTransactionQueue<Block> for Runtime {
+        fn validate_transaction(
+            source: polkadot_sdk::sp_runtime::transaction_validity::TransactionSource,
+            tx: <Block as BlockT>::Extrinsic,
+            block_hash: <Block as BlockT>::Hash,
+        ) -> polkadot_sdk::sp_runtime::transaction_validity::TransactionValidity {
+            Executive::validate_transaction(source, tx, block_hash)
+        }
+    }
+
+    impl sp_offchain::OffchainWorkerApi<Block> for Runtime {
+        fn offchain_worker(header: &<Block as BlockT>::Header) {
+            Executive::offchain_worker(header)
+        }
+    }
+
+    impl sp_session::SessionKeys<Block> for Runtime {
+        fn generate_session_keys(_seed: Option<Vec<u8>>) -> Vec<u8> {
+            Default::default()
+        }
+
+        fn decode_session_keys(
+            _encoded: Vec<u8>,
+        ) -> Option<Vec<(Vec<u8>, polkadot_sdk::sp_core::crypto::KeyTypeId)>> {
+            Default::default()
+        }
+    }
+
+    impl sp_consensus_aura::AuraApi<Block, AuraId> for Runtime {
+        fn slot_duration() -> sp_consensus_aura::SlotDuration {
+            sp_consensus_aura::SlotDuration::from_millis(Aura::slot_duration())
+        }
+
+        fn authorities() -> Vec<AuraId> {
+            Aura::authorities().into_inner()
+        }
+    }
+
+    impl pallet_transaction_payment_rpc_runtime_api::TransactionPaymentApi<
+        Block,
+        Balance,
+    > for Runtime {
+        fn query_info(
+            uxt: <Block as BlockT>::Extrinsic,
+            len: u32,
+        ) -> polkadot_sdk::pallet_transaction_payment::RuntimeDispatchInfo<Balance> {
+            TransactionPayment::query_info(uxt, len)
+        }
+        fn query_fee_details(
+            uxt: <Block as BlockT>::Extrinsic,
+            len: u32,
+        ) -> polkadot_sdk::pallet_transaction_payment::FeeDetails<Balance> {
+            TransactionPayment::query_fee_details(uxt, len)
+        }
+        fn query_weight_to_fee(weight: polkadot_sdk::sp_weights::Weight) -> Balance {
+            TransactionPayment::weight_to_fee(weight)
+        }
+        fn query_length_to_fee(length: u32) -> Balance {
+            TransactionPayment::length_to_fee(length)
+        }
+    }
+
+    impl substrate_frame_rpc_system::AccountNonceApi<Block, AccountId, Index> for Runtime {
+        fn account_nonce(account: AccountId) -> Index {
+            System::account_nonce(account)
+        }
+    }
+}
