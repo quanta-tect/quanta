@@ -29,3 +29,4 @@ QUANTA Protocol — AI agent payment infrastructure on Base (Coinbase L2).
 - AIPaymentChannel:  0xF146e95b97fce1d1800F5F922AE99155711A4314
 - AIModelMarketplace: 0xFf584b30b2D00Bf0aB694683F06dC7E701fdfd49
 - Treasury/Deployer: 0x288bc8d816f9C2E00af706fEBFeac9a7B149c110
+- Multisig (SimpleMultisig 1-of-1): 0xf103577A823593f8983D179129c8f3580De70e24

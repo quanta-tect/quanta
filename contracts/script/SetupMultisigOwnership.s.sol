@@ -46,16 +46,16 @@ contract SetupMultisigOwnership is Script {
 
         // Step 1: Propose new owner on all 4 contracts (Ownable2Step)
         token.transferOwnership(multisig);
-        console.log("✓ QuantaToken ownership proposed");
+        console.log("OK: QuantaToken ownership proposed");
 
         registry.transferOwnership(multisig);
-        console.log("✓ AIAgentRegistry ownership proposed");
+        console.log("OK: AIAgentRegistry ownership proposed");
 
         channel.transferOwnership(multisig);
-        console.log("✓ AIPaymentChannel ownership proposed");
+        console.log("OK: AIPaymentChannel ownership proposed");
 
         market.transferOwnership(multisig);
-        console.log("✓ AIModelMarketplace ownership proposed");
+        console.log("OK: AIModelMarketplace ownership proposed");
 
         vm.stopBroadcast();
 
