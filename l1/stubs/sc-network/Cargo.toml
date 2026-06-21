@@ -1,0 +1,12 @@
+[package]
+name = "sc-network"
+version = "0.34.0"
+edition = "2021"
+publish = false
+description = "Stub for wasm32 - no libp2p dep"
+
+[features]
+default = ["std"]
+std = []
+
+[dependencies]

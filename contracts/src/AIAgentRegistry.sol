@@ -1,191 +1,154 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.24;
+pragma solidity =0.8.24;
 
-/**
- * @title AIAgentRegistry
- * @notice On-chain identity + spending policy + reputation for AI agents.
- *
- * Mỗi AI agent có:
- *  - Owner (EOA or multisig) — người create ra agent
- *  - Wallet address — ví riêng of agent (smart account)
- *  - Spending policy — giới hạn chi tiêu
- *  - Reputation score — increases/decreases based on behavior
- *  - Death switch — tự refund if không ping in N ngày
- *
- * Dùng was for mọi AI framework: LangChain, AutoGPT, CrewAI, Claude Computer Use...
- */
-contract AIAgentRegistry {
+import "@openzeppelin/contracts/access/Ownable2Step.sol";
+import "@openzeppelin/contracts/utils/Pausable.sol";
+
+contract AIAgentRegistry is Ownable2Step, Pausable {
+
+    uint256 public constant MAX_AGENTS_PER_OWNER = 500;
+    uint256 public constant MAX_METADATA_LEN     = 512;
+    uint256 public constant MAX_REPUTATION       = 10_000;
+    uint32  public constant WINDOW_SLOTS         = 24;
+
     struct SpendingPolicy {
-        uint128 maxPerTx;        // Wei
-        uint128 maxPerDay;       // Wei
-        uint64  deathSwitchSec;  // seconds without ping → refund
-        bool    requireIntent;   // require signed intent vs raw tx
+        uint256 maxPerTx;
+        uint256 maxPerDay;
+        bool    active;
+    }
+
+    struct RollingWindow {
+        uint256[24] slots;
+        uint8       cursor;
+        uint40      slotTs;
     }
 
     struct Agent {
         address owner;
-        address wallet;          // smart account address
-        string  name;
-        string  metadataURI;     // IPFS URI: capabilities, model card, etc
+        uint256 reputation;
         SpendingPolicy policy;
+        RollingWindow window;
+        string  metadataURI;
         uint64  registeredAt;
-        uint64  lastPing;
-        uint32  reputation;      // 0-10000, starts at 5000
-        uint128 spentToday;
-        uint64  todayStarted;
         bool    active;
     }
 
-    mapping(bytes32 => Agent) public agents;       // agentId = keccak256(owner, name)
-    mapping(address => bytes32[]) public agentsByOwner;
-    bytes32[] public allAgents;
+    mapping(bytes32 => Agent)      public agents;
+    mapping(address => bytes32[])  public agentsByOwner;
+    mapping(address => bool)       public reputationOracles;
 
-    event AgentRegistered(bytes32 indexed agentId, address indexed owner, string name, address wallet);
-    event AgentPinged(bytes32 indexed agentId, uint64 timestamp);
-    event PolicyUpdated(bytes32 indexed agentId);
-    event SpendRecorded(bytes32 indexed agentId, uint256 amount, address recipient);
-    event ReputationChanged(bytes32 indexed agentId, int32 delta, uint32 newScore);
-    event AgentDeactivated(bytes32 indexed agentId, string reason);
+    event AgentRegistered(bytes32 indexed agentId, address indexed owner, uint64 registeredAt);
+    event AgentDeactivated(bytes32 indexed agentId);
+    event ReputationAdjusted(bytes32 indexed agentId, address indexed oracle, int256 delta, uint256 newScore);
+    event PolicyUpdated(bytes32 indexed agentId, uint256 maxPerTx, uint256 maxPerDay);
+    event OracleSet(address indexed oracle, bool enabled);
+    event SpendRecorded(bytes32 indexed agentId, uint256 amount, uint256 rollingTotal);
 
-    error AgentNotFound();
-    error NotOwner();
-    error AgentInactive();
-    error PolicyViolation(string reason);
-    error DeathSwitchTriggered();
+    constructor(address _initialOwner) Ownable(_initialOwner) {}
 
-    modifier onlyOwner(bytes32 agentId) {
-        if (agents[agentId].owner != msg.sender) revert NotOwner();
-        _;
+    function setReputationOracle(address oracle, bool enabled) external onlyOwner {
+        require(oracle != address(0), "Registry: zero address");
+        reputationOracles[oracle] = enabled;
+        emit OracleSet(oracle, enabled);
     }
 
-    // ------------------------------------------------------------------
-    // Registration
-    // ------------------------------------------------------------------
+    function pause()   external onlyOwner { _pause(); }
+    function unpause() external onlyOwner { _unpause(); }
 
     function registerAgent(
-        string calldata name,
-        address wallet,
+        bytes32        agentId,
         string calldata metadataURI,
-        SpendingPolicy calldata policy
-    ) external returns (bytes32 agentId) {
-        agentId = keccak256(abi.encode(msg.sender, name));
-        require(agents[agentId].registeredAt == 0, "exists");
-        require(wallet != address(0), "zero wallet");
+        uint256        maxPerTx,
+        uint256        maxPerDay
+    ) external whenNotPaused {
+        require(agents[agentId].registeredAt == 0, "Registry: exists");
+        require(bytes(metadataURI).length <= MAX_METADATA_LEN, "Registry: metadata too long");
+        require(agentsByOwner[msg.sender].length < MAX_AGENTS_PER_OWNER, "Registry: too many agents");
+        require(maxPerTx > 0 && maxPerDay >= maxPerTx, "Registry: invalid policy");
 
-        agents[agentId] = Agent({
-            owner: msg.sender,
-            wallet: wallet,
-            name: name,
-            metadataURI: metadataURI,
-            policy: policy,
-            registeredAt: uint64(block.timestamp),
-            lastPing: uint64(block.timestamp),
-            reputation: 5000,
-            spentToday: 0,
-            todayStarted: uint64(block.timestamp),
-            active: true
-        });
+        Agent storage a = agents[agentId];
+        a.owner        = msg.sender;
+        a.reputation   = 5_000;
+        a.registeredAt = uint64(block.timestamp);
+        a.active       = true;
+        a.metadataURI  = metadataURI;
+        a.policy       = SpendingPolicy({ maxPerTx: maxPerTx, maxPerDay: maxPerDay, active: true });
+        a.window.slotTs = uint40(block.timestamp);
 
         agentsByOwner[msg.sender].push(agentId);
-        allAgents.push(agentId);
-
-        emit AgentRegistered(agentId, msg.sender, name, wallet);
+        emit AgentRegistered(agentId, msg.sender, uint64(block.timestamp));
     }
 
-    // ------------------------------------------------------------------
-    // Lifecycle
-    // ------------------------------------------------------------------
-
-    function ping(bytes32 agentId) external {
+    function deactivateAgent(bytes32 agentId) external {
         Agent storage a = agents[agentId];
-        if (a.registeredAt == 0) revert AgentNotFound();
-        require(msg.sender == a.owner || msg.sender == a.wallet, "unauthorized");
-        a.lastPing = uint64(block.timestamp);
-        emit AgentPinged(agentId, uint64(block.timestamp));
+        require(a.registeredAt != 0, "Registry: not found");
+        require(a.owner == msg.sender || msg.sender == owner(), "Registry: not authorized");
+        a.active = false;
+        emit AgentDeactivated(agentId);
     }
 
-    function isAlive(bytes32 agentId) public view returns (bool) {
-        Agent memory a = agents[agentId];
-        if (!a.active) return false;
-        return (block.timestamp - a.lastPing) <= a.policy.deathSwitchSec;
-    }
-
-    function deactivate(bytes32 agentId, string calldata reason) external onlyOwner(agentId) {
-        agents[agentId].active = false;
-        emit AgentDeactivated(agentId, reason);
-    }
-
-    function updatePolicy(bytes32 agentId, SpendingPolicy calldata newPolicy)
-        external
-        onlyOwner(agentId)
-    {
-        agents[agentId].policy = newPolicy;
-        emit PolicyUpdated(agentId);
-    }
-
-    // ------------------------------------------------------------------
-    // Spending enforcement — called by AI Agent's smart wallet
-    // ------------------------------------------------------------------
-
-    /**
-     * @notice Check + record spending. Reverts if policy violated.
-     *         AI agent's smart account calls this before executing any tx.
-     */
-    function checkAndRecordSpend(bytes32 agentId, uint256 amount, address recipient)
-        external
-        returns (bool)
-    {
+    function updatePolicy(bytes32 agentId, uint256 maxPerTx, uint256 maxPerDay) external {
         Agent storage a = agents[agentId];
-        if (a.registeredAt == 0) revert AgentNotFound();
-        if (!a.active) revert AgentInactive();
-        if (msg.sender != a.wallet) revert NotOwner();
-        if (!isAlive(agentId)) revert DeathSwitchTriggered();
+        require(a.registeredAt != 0, "Registry: not found");
+        require(a.owner == msg.sender, "Registry: not owner");
+        require(maxPerTx > 0 && maxPerDay >= maxPerTx, "Registry: invalid policy");
+        a.policy.maxPerTx  = maxPerTx;
+        a.policy.maxPerDay = maxPerDay;
+        emit PolicyUpdated(agentId, maxPerTx, maxPerDay);
+    }
 
-        if (amount > a.policy.maxPerTx) revert PolicyViolation("max_per_tx");
+    function adjustReputation(bytes32 agentId, int256 delta) external {
+        require(reputationOracles[msg.sender], "Registry: not oracle");
+        Agent storage a = agents[agentId];
+        require(a.registeredAt != 0, "Registry: not found");
 
-        // Reset daily window
-        if (block.timestamp - a.todayStarted >= 1 days) {
-            a.spentToday = 0;
-            a.todayStarted = uint64(block.timestamp);
-        }
-        if (uint256(a.spentToday) + amount > a.policy.maxPerDay) {
-            revert PolicyViolation("max_per_day");
+        int256 current = int256(a.reputation);
+        int256 updated = current + delta;
+        if (updated < 0) updated = 0;
+        if (updated > int256(MAX_REPUTATION)) updated = int256(MAX_REPUTATION);
+        a.reputation = uint256(updated);
+        emit ReputationAdjusted(agentId, msg.sender, delta, a.reputation);
+    }
+
+    function checkAndRecordSpend(bytes32 agentId, uint256 amount) external whenNotPaused {
+        Agent storage a = agents[agentId];
+        require(a.registeredAt != 0, "Registry: not found");
+        require(a.active, "Registry: inactive");
+        require(a.policy.active, "Registry: policy off");
+        require(amount <= a.policy.maxPerTx, "Registry: exceeds maxPerTx");
+
+        RollingWindow storage w = a.window;
+        uint256 now_ = block.timestamp;
+        uint256 slotsPassed = (now_ - w.slotTs) / 1 hours;
+
+        if (slotsPassed > 0) {
+            uint256 clearCount = slotsPassed > WINDOW_SLOTS ? WINDOW_SLOTS : slotsPassed;
+            for (uint256 i = 0; i < clearCount; i++) {
+                w.cursor = uint8((uint256(w.cursor) + 1) % WINDOW_SLOTS);
+                w.slots[w.cursor] = 0;
+            }
+            w.slotTs = uint40(w.slotTs + slotsPassed * 1 hours);
         }
 
-        a.spentToday += uint128(amount);
-        a.lastPing = uint64(block.timestamp);
+        uint256 total = 0;
+        for (uint256 i = 0; i < WINDOW_SLOTS; i++) {
+            total += w.slots[i];
+        }
 
-        emit SpendRecorded(agentId, amount, recipient);
-        return true;
+        require(total + amount <= a.policy.maxPerDay, "Registry: exceeds maxPerDay");
+        w.slots[w.cursor] += amount;
+
+        emit SpendRecorded(agentId, amount, total + amount);
     }
 
-    // ------------------------------------------------------------------
-    // Reputation
-    // ------------------------------------------------------------------
+    function getAgentCount(address owner_) external view returns (uint256) {
+        return agentsByOwner[owner_].length;
+    }
 
-    /// @notice Marketplaces/services adjust reputation based on behavior.
-    /// In production: gated to whitelisted reputation oracles.
-    function adjustReputation(bytes32 agentId, int32 delta) external {
+    function getRolling24hSpend(bytes32 agentId) external view returns (uint256 total) {
         Agent storage a = agents[agentId];
-        if (a.registeredAt == 0) revert AgentNotFound();
-
-        int64 newScore = int64(uint64(a.reputation)) + delta;
-        if (newScore < 0) newScore = 0;
-        if (newScore > 10000) newScore = 10000;
-        a.reputation = uint32(uint64(newScore));
-
-        emit ReputationChanged(agentId, delta, a.reputation);
-    }
-
-    // ------------------------------------------------------------------
-    // Views
-    // ------------------------------------------------------------------
-
-    function agentCount() external view returns (uint256) {
-        return allAgents.length;
-    }
-
-    function getAgentsByOwner(address owner) external view returns (bytes32[] memory) {
-        return agentsByOwner[owner];
+        for (uint256 i = 0; i < WINDOW_SLOTS; i++) {
+            total += a.window.slots[i];
+        }
     }
 }

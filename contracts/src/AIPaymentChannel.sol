@@ -1,158 +1,187 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.24;
+pragma solidity =0.8.24;
 
-import {IQuantaToken} from "./interfaces/IQuantaToken.sol";
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
+import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
+import "@openzeppelin/contracts/utils/cryptography/EIP712.sol";
+import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
+import "@openzeppelin/contracts/access/Ownable2Step.sol";
+import "@openzeppelin/contracts/utils/Pausable.sol";
 
-import {ECDSA} from "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
-import {MessageHashUtils} from "@openzeppelin/contracts/utils/cryptography/MessageHashUtils.sol";
-import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import {SafeERC20} from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
-/**
- * @title AIPaymentChannel
- * @notice x402-style state channels for AI micropayments.
- *
- * Flow:
- *  1. Payer (AI agent / human) opens channel with deposit
- *  2. Off-chain: payer signs incremental state {channelId, spent, nonce}
- *  3. Payee accumulates signed states, can submit best one anytime
- *  4. Close: payee submits final state → settle in 1 onchain tx
- *
- * Result: 1 triệu micropayments = 2 on-chain tx (open + close).
- * Fee per micropayment ≈ 0 (just 1 off-chain signature).
- */
-contract AIPaymentChannel {
-    using ECDSA for bytes32;
-    using MessageHashUtils for bytes32;
-    using SafeERC20 for IERC20;
+interface IQuantaToken is IERC20 {
+    function collectAITax(uint256 amount) external returns (uint256 taxed);
+}
+
+contract AIPaymentChannel is EIP712, ReentrancyGuard, Ownable2Step, Pausable {
+    using SafeERC20 for IQuantaToken;
+    using ECDSA     for bytes32;
+
+    uint256 public constant MIN_DEPOSIT       = 0.01e18;
+    uint64  public constant MIN_TIMEOUT       = 1 hours;
+    uint64  public constant MAX_TIMEOUT       = 30 days;
+    uint64  public constant DEFAULT_TIMEOUT   = 7 days;
+    uint64  public constant CHALLENGE_WINDOW  = 24 hours;
+
+    bytes32 public constant TICKET_TYPEHASH = keccak256(
+        "PaymentTicket(bytes32 channelId,uint256 amount,uint256 nonce)"
+    );
+
+    enum ChannelState { Open, Closing, Closed }
 
     struct Channel {
-        address payer;
-        address payee;
-        uint256 deposit;
-        uint256 settledAmount;
-        uint64  openedAt;
-        uint64  challengePeriodEnd;
-        bool    closed;
+        address  payer;
+        address  payee;
+        uint256  deposit;
+        uint256  settledAmount;
+        uint64   openedAt;
+        uint64   closeInitiatedAt;
+        uint64   timeout;
+        ChannelState state;
     }
 
-    IERC20 public immutable token;
-    IQuantaToken public immutable quantaToken;
-    uint64 public constant CHALLENGE_PERIOD = 1 days;
-
+    IQuantaToken public immutable token;
     mapping(bytes32 => Channel) public channels;
 
-    event ChannelOpened(bytes32 indexed channelId, address indexed payer, address indexed payee, uint256 deposit);
-    event ChannelClosed(bytes32 indexed channelId, uint256 paidToPayee, uint256 refund);
-    event ChannelChallenged(bytes32 indexed channelId, uint256 newAmount);
+    event ChannelOpened(bytes32 indexed channelId, address indexed payer, address indexed payee, uint256 deposit, uint64 timeout);
+    event ChannelClosed(bytes32 indexed channelId, uint256 payeeAmount, uint256 payerRefund, uint256 taxBurned);
+    event ForceCloseInitiated(bytes32 indexed channelId, uint64 executeAfter);
+    event ForceCloseChallenged(bytes32 indexed channelId, uint256 newSettledAmount);
 
-    error InvalidSignature();
-    error ChannelAlreadyClosed();
-    error ChannelNotReady();
-    error InsufficientDeposit();
-    error AmountDecreased();
-
-    constructor(IERC20 _token, IQuantaToken _quantaToken) {
-        token = _token;
-        quantaToken = _quantaToken;
+    constructor(address _token, address _initialOwner)
+        EIP712("AIPaymentChannel", "1")
+        Ownable(_initialOwner)
+    {
+        require(_token != address(0), "Channel: zero token");
+        token = IQuantaToken(_token);
     }
 
-    function _channelId(address payer, address payee, uint64 nonce)
-        internal
-        pure
-        returns (bytes32)
-    {
-        return keccak256(abi.encode(payer, payee, nonce));
-    }
+    function openChannel(
+        address payee,
+        uint64  nonce,
+        uint256 deposit,
+        uint64  timeout
+    ) external whenNotPaused nonReentrant returns (bytes32 channelId) {
+        require(payee != address(0), "Channel: zero payee");
+        require(deposit >= MIN_DEPOSIT, "Channel: deposit too small");
 
-    /**
-     * @notice Open channel with deposit.
-     */
-    function openChannel(address payee, uint64 nonce, uint256 deposit)
-        external
-        returns (bytes32 channelId)
-    {
-        channelId = _channelId(msg.sender, payee, nonce);
-        require(channels[channelId].openedAt == 0, "exists");
+        if (timeout == 0) {
+            timeout = DEFAULT_TIMEOUT;
+        } else {
+            require(timeout >= MIN_TIMEOUT && timeout <= MAX_TIMEOUT, "Channel: bad timeout");
+        }
+
+        channelId = keccak256(abi.encode(msg.sender, payee, nonce));
+        require(channels[channelId].openedAt == 0, "Channel: exists");
 
         channels[channelId] = Channel({
-            payer: msg.sender,
-            payee: payee,
-            deposit: deposit,
-            settledAmount: 0,
-            openedAt: uint64(block.timestamp),
-            challengePeriodEnd: 0,
-            closed: false
+            payer:            msg.sender,
+            payee:            payee,
+            deposit:          deposit,
+            settledAmount:    0,
+            openedAt:         uint64(block.timestamp),
+            closeInitiatedAt: 0,
+            timeout:          timeout,
+            state:            ChannelState.Open
         });
 
         token.safeTransferFrom(msg.sender, address(this), deposit);
-        emit ChannelOpened(channelId, msg.sender, payee, deposit);
+        emit ChannelOpened(channelId, msg.sender, payee, deposit, timeout);
     }
 
-    /**
-     * @notice Payee submit signed state để close channel.
-     * @param signature Signature từ payer ký {channelId, amount}
-     */
-    function closeChannel(bytes32 channelId, uint256 amount, bytes calldata signature)
-        external
-    {
+    function closeChannel(
+        bytes32 channelId,
+        uint256 amount,
+        uint256 nonce,
+        bytes calldata signature
+    ) external nonReentrant whenNotPaused {
         Channel storage c = channels[channelId];
-        require(!c.closed, "closed");
-        require(msg.sender == c.payee, "only payee");
-        require(amount <= c.deposit, "amount > deposit");
+        require(c.openedAt != 0, "Channel: not found");
+        require(c.state == ChannelState.Open || c.state == ChannelState.Closing, "Channel: already closed");
+        require(msg.sender == c.payee, "Channel: not payee");
+        require(amount <= c.deposit, "Channel: amount > deposit");
+        require(amount > c.settledAmount, "Channel: not higher than current");
 
-        // Verify signature
-        bytes32 msgHash = keccak256(abi.encode(channelId, amount)).toEthSignedMessageHash();
-        address signer = msgHash.recover(signature);
-        if (signer != c.payer) revert InvalidSignature();
+        bytes32 structHash = keccak256(abi.encode(TICKET_TYPEHASH, channelId, amount, nonce));
+        address signer = _hashTypedDataV4(structHash).recover(signature);
+        require(signer == c.payer, "Channel: invalid signature");
+
+        uint256 toPayee = amount;
+        uint256 toRefund = c.deposit - amount;
+        c.settledAmount = amount;
+        c.state = ChannelState.Closed;
+
+        _settle(channelId, toPayee, toRefund);
+    }
+
+    function initiateForceClose(bytes32 channelId) external whenNotPaused {
+        Channel storage c = channels[channelId];
+        require(c.openedAt != 0, "Channel: not found");
+        require(c.state == ChannelState.Open, "Channel: not open");
+        require(msg.sender == c.payer, "Channel: not payer");
+
+        c.state = ChannelState.Closing;
+        c.closeInitiatedAt = uint64(block.timestamp);
+        emit ForceCloseInitiated(channelId, uint64(block.timestamp) + CHALLENGE_WINDOW);
+    }
+
+    function challengeForceClose(
+        bytes32 channelId,
+        uint256 amount,
+        uint256 nonce,
+        bytes calldata signature
+    ) external nonReentrant {
+        Channel storage c = channels[channelId];
+        require(c.state == ChannelState.Closing, "Channel: not closing");
+        require(msg.sender == c.payee, "Channel: not payee");
+        require(amount > c.settledAmount, "Channel: not higher");
+        require(amount <= c.deposit, "Channel: overflow");
+
+        bytes32 structHash = keccak256(abi.encode(TICKET_TYPEHASH, channelId, amount, nonce));
+        address signer = _hashTypedDataV4(structHash).recover(signature);
+        require(signer == c.payer, "Channel: invalid signature");
 
         c.settledAmount = amount;
-        c.challengePeriodEnd = uint64(block.timestamp) + CHALLENGE_PERIOD;
-
-        // Settle immediately (no challenge in this MVP — production will có)
-        _settle(channelId);
+        emit ForceCloseChallenged(channelId, amount);
     }
 
-    /**
-     * @notice Payer có thể challenge bằng cách show signed state with amount thấp hơn?
-     *         Không — payee chỉ submit was max amount already ký. Nên đơn giản hơn:
-     *         Payer có thể force-close if payee không close in T thời gian.
-     */
-    function forceClose(bytes32 channelId) external {
+    function executeForceClose(bytes32 channelId) external nonReentrant whenNotPaused {
         Channel storage c = channels[channelId];
-        require(!c.closed, "closed");
-        require(msg.sender == c.payer, "only payer");
-        require(block.timestamp >= c.openedAt + 7 days, "too early");
-
-        // Refund everything to payer if payee never claimed
-        c.settledAmount = 0;
-        _settle(channelId);
-    }
-
-    function _settle(bytes32 channelId) internal {
-        Channel storage c = channels[channelId];
-        c.closed = true;
+        require(c.state == ChannelState.Closing, "Channel: not closing");
+        require(msg.sender == c.payer, "Channel: not payer");
+        require(block.timestamp >= c.closeInitiatedAt + CHALLENGE_WINDOW + c.timeout, "Channel: timeout active");
 
         uint256 toPayee = c.settledAmount;
-        uint256 refund = c.deposit - toPayee;
+        uint256 toRefund = c.deposit - c.settledAmount;
+        c.state = ChannelState.Closed;
+
+        _settle(channelId, toPayee, toRefund);
+    }
+
+    function _settle(bytes32 channelId, uint256 toPayee, uint256 toRefund) internal {
+        Channel storage c = channels[channelId];
+
+        uint256 taxed = 0;
+        uint256 netPayee = toPayee;
 
         if (toPayee > 0) {
-            // Collect AI tax → burn portion
-            uint256 taxed = quantaToken.collectAITax(address(this), toPayee);
-            // Note: tax was burn từ contract's balance — need token approve self
-            token.safeTransfer(c.payee, toPayee - taxed);
+            taxed = token.collectAITax(toPayee);
+            netPayee = toPayee - taxed;
+            if (netPayee > 0) token.safeTransfer(c.payee, netPayee);
         }
-        if (refund > 0) {
-            token.safeTransfer(c.payer, refund);
-        }
+        if (toRefund > 0) token.safeTransfer(c.payer, toRefund);
 
-        emit ChannelClosed(channelId, toPayee, refund);
+        emit ChannelClosed(channelId, netPayee, toRefund, taxed);
     }
 
-    // ------------------------------------------------------------------
-    // Helper: create hash để off-chain ký
-    // ------------------------------------------------------------------
-
-    function hashState(bytes32 channelId, uint256 amount) external pure returns (bytes32) {
-        return keccak256(abi.encode(channelId, amount)).toEthSignedMessageHash();
+    function getChannelId(address payer, address payee, uint64 nonce) external pure returns (bytes32) {
+        return keccak256(abi.encode(payer, payee, nonce));
     }
+
+    function domainSeparator() external view returns (bytes32) {
+        return _domainSeparatorV4();
+    }
+
+    function pause() external onlyOwner { _pause(); }
+    function unpause() external onlyOwner { _unpause(); }
 }

@@ -3,14 +3,14 @@ import { encodeAbiParameters, keccak256 } from "viem";
 import type { QuantaClient } from "./client.js";
 import type { ChannelState } from "./types.js";
 
+// v1.2 ABI: openChannel(address payee, uint64 nonce, uint256 deposit, uint64 timeout)
 const CHANNEL_ABI = [
   {
     inputs: [
       { name: "payee", type: "address" },
       { name: "nonce", type: "uint64" },
-      { name: "deposit", type: "uint128" },
-      { name: "challengePeriod", type: "uint64" },
-      { name: "forceCloseAfter", type: "uint64" },
+      { name: "deposit", type: "uint256" },
+      { name: "timeout", type: "uint64" },
     ],
     name: "openChannel",
     outputs: [{ type: "bytes32" }],
@@ -21,7 +21,7 @@ const CHANNEL_ABI = [
     inputs: [
       { name: "channelId", type: "bytes32" },
       { name: "amount", type: "uint256" },
-      { name: "ticketNonce", type: "uint256" },
+      { name: "nonce", type: "uint256" },
       { name: "signature", type: "bytes" },
     ],
     name: "closeChannel",
@@ -51,22 +51,21 @@ export class PaymentChannel {
     client: QuantaClient,
     payee: Address,
     deposit: bigint,
-    opts?: { nonce?: bigint; challengePeriod?: bigint; forceCloseAfter?: bigint },
+    opts?: { nonce?: bigint; timeout?: bigint },
   ): Promise<PaymentChannel> {
     const openNonce = opts?.nonce ?? BigInt(Math.floor(Date.now() / 1000));
-    const challengePeriod = opts?.challengePeriod ?? 0n; // 0 = contract default (1 day)
-    const forceCloseAfter = opts?.forceCloseAfter ?? 0n; // 0 = contract default (7 days)
+    const timeout = opts?.timeout ?? 0n; // 0 = contract default (7 days)
 
     // 1. Approve token spend
     const approveHash = await client.approve(client.contracts.channel, deposit);
     await client.publicClient.waitForTransactionReceipt({ hash: approveHash });
 
-    // 2. Open channel (v1.1: 5 params)
+    // 2. Open channel (v1.2: 4 params — payee, nonce, deposit, timeout)
     const txHash = await client.walletClient.writeContract({
       address: client.contracts.channel,
       abi: CHANNEL_ABI,
       functionName: "openChannel",
-      args: [payee, openNonce, deposit, challengePeriod, forceCloseAfter],
+      args: [payee, openNonce, deposit, timeout],
       chain: client.walletClient.chain,
       account: client.walletClient.account!,
     });
@@ -96,15 +95,34 @@ export class PaymentChannel {
     this.spent += amount;
     this.nonce++;
 
-    const msgHash = keccak256(
-      encodeAbiParameters(
-        [{ type: "bytes32" }, { type: "uint256" }],
-        [this.state.channelId, this.spent],
-      ),
-    );
+    // v1.2: EIP-712 typed data signing
+    // Ticket: PaymentTicket(bytes32 channelId, uint256 amount, uint256 nonce)
+    const domain = {
+      name: "AIPaymentChannel",
+      version: "1",
+      chainId: this.client.walletClient.chain.id,
+      verifyingContract: this.client.contracts.channel,
+    } as const;
 
-    const signature = await this.client.walletClient.signMessage({
-      message: { raw: msgHash },
+    const types = {
+      PaymentTicket: [
+        { name: "channelId", type: "bytes32" },
+        { name: "amount", type: "uint256" },
+        { name: "nonce", type: "uint256" },
+      ],
+    } as const;
+
+    const message = {
+      channelId: this.state.channelId,
+      amount: this.spent,
+      nonce: BigInt(this.nonce),
+    } as const;
+
+    const signature = await this.client.walletClient.signTypedData({
+      domain,
+      types,
+      primaryType: "PaymentTicket",
+      message,
       account: this.client.walletClient.account!,
     });
 
