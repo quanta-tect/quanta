@@ -19,6 +19,23 @@
 0x288bc8d816f9C2E00af706fEBFeac9a7B149c110
 ---
 
+## 🔐 Ownership & Multisig
+
+### Current Owner (EOA)
+0x288bc8d816f9C2E00af706fEBFeac9a7B149c110
+
+### Recommended: Gnosis Safe Multisig
+- Deploy a 2/3 or 3/5 Gnosis Safe on Base Sepolia
+- Transfer ownership via `Ownable2Step`: propose → accept
+- Setup script: `contracts/script/SetupMultisigOwnership.s.sol`
+
+### Why Multisig?
+- Single compromised key cannot: pause contracts, change bridge, mint tokens, modify tax rate
+- All critical operations require multiple signer approval
+- Industry standard for DeFi protocols
+
+---
+
 ## 📊 Token Statistics
 
 | Metric | Value |

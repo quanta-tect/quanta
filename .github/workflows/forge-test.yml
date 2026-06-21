@@ -27,8 +27,11 @@ jobs:
       - name: Build
         run: forge build --sizes
 
-      - name: Run security tests (v1.1)
+      - name: Run v1.2 security tests
+        run: forge test --match-path "test-v1.2/**" -vvv
+
+      - name: Run v1.1 regression tests
         run: forge test --match-path "test-v1.1/**" -vvv
 
-      - name: Run invariant tests
-        run: FOUNDRY_PROFILE=fuzz forge test --match-path "test-invariant/**" -vvv
+      - name: Run unit tests
+        run: forge test --match-path "test/**" -vvv

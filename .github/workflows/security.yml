@@ -34,14 +34,17 @@ jobs:
       - name: Build
         run: forge build --sizes
 
-      - name: Test (v1.1 security regression)
+      - name: Test (v1.2 security regression)
+        run: forge test --match-path "test-v1.2/**" -vv
+
+      - name: Test (v1.1 backward compat)
         run: forge test --match-path "test-v1.1/**" -vv
 
       - name: Coverage
         run: forge coverage --report summary --report lcov
 
       - name: Upload coverage
-        uses: codecov/codecov-action@v4
+        uses: codecov/codecov-action@v5
         with:
           files: contracts/lcov.info
           fail_ci_if_error: false
@@ -96,10 +99,18 @@ jobs:
       - name: Install mythril
         run: pip install mythril
 
-      - name: Analyze QuantaToken
+      - name: Analyze QuantaToken (v1.2)
         run: |
           cd contracts
-          myth analyze src-v1.1/QuantaToken.sol \
+          myth analyze src-v1.2/QuantaToken.sol \
+            --solv 0.8.24 \
+            --execution-timeout 120 \
+            --max-depth 12 || true
+
+      - name: Analyze AIAgentRegistry (v1.2)
+        run: |
+          cd contracts
+          myth analyze src-v1.2/AIAgentRegistry.sol \
             --solv 0.8.24 \
             --execution-timeout 120 \
             --max-depth 12 || true
