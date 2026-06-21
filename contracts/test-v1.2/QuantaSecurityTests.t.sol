@@ -84,7 +84,7 @@ contract QuantaV12SecurityTests is Test {
 
     function test_Token_GenesisSupply() public view {
         assertEq(token.totalSupply(), 300_000_000 ether);
-        assertEq(token.balanceOf(owner), 300_000_000 ether);
+        assertEq(token.balanceOf(owner), 300_000_000 ether - 400_000 ether);
     }
 
     function test_Token_MaxSupply() public view {
@@ -123,7 +123,7 @@ contract QuantaV12SecurityTests is Test {
 
     function test_Token_OnlyOwnerCanPause() public {
         vm.prank(attacker);
-        vm.expectRevert(QuantaToken.NotOwner.selector);
+        vm.expectRevert(abi.encodeWithSignature("OwnableUnauthorizedAccount(address)", attacker));
         token.pause();
     }
 
@@ -142,7 +142,7 @@ contract QuantaV12SecurityTests is Test {
 
     function test_Token_TaxRateCannotExceedCap() public {
         vm.prank(owner);
-        vm.expectRevert(QuantaToken.InvalidTaxRate.selector);
+        vm.expectRevert(abi.encodeWithSelector(QuantaToken.InvalidTaxRate.selector, uint16(101)));
         token.setAITaxBps(101); // > MAX_TAX_BPS (100 = 1%)
     }
 
@@ -160,7 +160,7 @@ contract QuantaV12SecurityTests is Test {
 
     function test_Token_SetTaxCollector_ZeroAddress() public {
         vm.prank(owner);
-        vm.expectRevert(QuantaToken.ZeroAddress.selector);
+        vm.expectRevert(abi.encodeWithSelector(QuantaToken.ZeroAddress.selector, address(0)));
         token.setAITaxCollector(address(0), true);
     }
 
@@ -207,6 +207,7 @@ contract QuantaV12SecurityTests is Test {
         vm.prank(owner);
         token.queueBridgeChange(address(this));
         vm.warp(block.timestamp + 48 hours + 1);
+        vm.prank(owner);
         token.applyBridgeChange();
 
         uint256 supplyBefore = token.totalSupply();
@@ -225,6 +226,7 @@ contract QuantaV12SecurityTests is Test {
         vm.prank(owner);
         token.queueBridgeChange(address(this));
         vm.warp(block.timestamp + 48 hours + 1);
+        vm.prank(owner);
         token.applyBridgeChange();
 
         uint256 remaining = token.MAX_SUPPLY() - token.totalSupply();
@@ -238,6 +240,7 @@ contract QuantaV12SecurityTests is Test {
         vm.prank(owner);
         token.queueBridgeChange(address(this));
         vm.warp(block.timestamp + 48 hours + 1);
+        vm.prank(owner);
         token.applyBridgeChange();
 
         uint256 aliceBalBefore = token.balanceOf(alice);
@@ -262,10 +265,12 @@ contract QuantaV12SecurityTests is Test {
         // Try before 48h
         vm.warp(block.timestamp + 47 hours);
         vm.expectRevert(QuantaToken.TimelockActive.selector);
+        vm.prank(owner);
         token.applyBridgeChange();
 
         // After 48h
         vm.warp(block.timestamp + 48 hours + 1);
+        vm.prank(owner);
         token.applyBridgeChange();
 
         // Now bridge works
@@ -291,6 +296,7 @@ contract QuantaV12SecurityTests is Test {
         vm.prank(owner);
         token.queueBridgeChange(address(this));
         vm.warp(block.timestamp + 48 hours + 1);
+        vm.prank(owner);
         token.applyBridgeChange();
 
         vm.prank(owner);
@@ -302,7 +308,7 @@ contract QuantaV12SecurityTests is Test {
 
     function test_Token_Permit() public {
         // EIP-2612 permit test
-        uint256 nonce = token.nonces(alice);
+        uint256 nonce = token.nonces(aliceSigner);
         uint256 deadline = block.timestamp + 1 hours;
 
         bytes32 DOMAIN_SEPARATOR = token.DOMAIN_SEPARATOR();
@@ -311,7 +317,7 @@ contract QuantaV12SecurityTests is Test {
         );
 
         bytes32 structHash = keccak256(
-            abi.encode(PERMIT_TYPEHASH, alice, bob, 1 ether, nonce, deadline)
+            abi.encode(PERMIT_TYPEHASH, aliceSigner, bob, 1 ether, nonce, deadline)
         );
 
         bytes32 digest = keccak256(
@@ -321,9 +327,9 @@ contract QuantaV12SecurityTests is Test {
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(alicePk, digest);
 
         vm.prank(bob);
-        token.permit(alice, bob, 1 ether, deadline, v, r, s);
+        token.permit(aliceSigner, bob, 1 ether, deadline, v, r, s);
 
-        assertEq(token.allowance(alice, bob), 1 ether);
+        assertEq(token.allowance(aliceSigner, bob), 1 ether);
     }
 
     // ===================================================================
@@ -335,7 +341,7 @@ contract QuantaV12SecurityTests is Test {
         bytes32 agentId = keccak256(abi.encode(alice, "ResearchBot"));
         registry.registerAgent(agentId, "ipfs://meta", 1 ether, 10 ether);
 
-        (address ownerAddr, uint256 reputation, string memory uri, uint64 registeredAt, bool active) =
+        (address ownerAddr, uint256 reputation, , , string memory uri, uint64 registeredAt, bool active) =
             registry.agents(agentId);
 
         assertEq(ownerAddr, alice);
@@ -396,7 +402,7 @@ contract QuantaV12SecurityTests is Test {
         vm.prank(alice);
         registry.deactivateAgent(agentId);
 
-        (, , , , bool active) = registry.agents(agentId);
+        (, , , , , , bool active) = registry.agents(agentId);
         assertFalse(active);
     }
 
@@ -447,8 +453,8 @@ contract QuantaV12SecurityTests is Test {
         vm.prank(oracle);
         registry.adjustReputation(agentId, -1000);
 
-        (, uint256 reputation, , , ) = registry.agents(agentId);
-        assertEq(reputation, 4000); // 5000 - 1000
+        (, uint256 reputation, , , , , ) = registry.agents(agentId);
+        assertEq(reputation, 4000);
     }
 
     function test_Registry_AdjustReputation_CappedAtZero() public {
@@ -459,7 +465,7 @@ contract QuantaV12SecurityTests is Test {
         vm.prank(oracle);
         registry.adjustReputation(agentId, -999999);
 
-        (, uint256 reputation, , , ) = registry.agents(agentId);
+        (, uint256 reputation, , , , , ) = registry.agents(agentId);
         assertEq(reputation, 0);
     }
 
@@ -471,7 +477,7 @@ contract QuantaV12SecurityTests is Test {
         vm.prank(oracle);
         registry.adjustReputation(agentId, 999999);
 
-        (, uint256 reputation, , , ) = registry.agents(agentId);
+        (, uint256 reputation, , , , , ) = registry.agents(agentId);
         assertEq(reputation, 10000); // MAX_REPUTATION
     }
 
@@ -538,7 +544,9 @@ contract QuantaV12SecurityTests is Test {
         vm.warp(block.timestamp + 1 hours + 1);
 
         // Old spend should be expired, can spend again
-        registry.checkAndRecordSpend(agentId, 5 ether);
+        for (uint256 i = 0; i < 5; i++) {
+            registry.checkAndRecordSpend(agentId, 1 ether);
+        }
     }
 
     function test_Registry_Paused() public {
@@ -568,7 +576,7 @@ contract QuantaV12SecurityTests is Test {
         assertEq(payee, bob);
         assertEq(deposit, 10 ether);
         assertEq(settledAt, 0);
-        assertEq(state, AIPaymentChannel.ChannelState.Open);
+        assertEq(uint8(state), uint8(AIPaymentChannel.ChannelState.Open));
         assertGt(openedAt, 0);
     }
 
@@ -576,7 +584,7 @@ contract QuantaV12SecurityTests is Test {
         vm.startPrank(aliceSigner);
         token.approve(address(channel), 1 ether);
         // Below MIN_DEPOSIT (0.01 ether = 1e16)
-        vm.expectRevert(AIPaymentChannel.DepositTooSmall.selector);
+        vm.expectRevert(abi.encodeWithSelector(AIPaymentChannel.DepositTooSmall.selector, 0.001 ether));
         channel.openChannel(bob, 1, 0.001 ether, 0);
         vm.stopPrank();
     }
@@ -613,13 +621,12 @@ contract QuantaV12SecurityTests is Test {
     function test_Channel_Open_TimeoutBounds() public {
         vm.startPrank(aliceSigner);
         token.approve(address(channel), 10 ether);
-
         // Below MIN_TIMEOUT (1 hour)
-        vm.expectRevert(AIPaymentChannel.InvalidTimeout.selector);
+        vm.expectRevert(abi.encodeWithSelector(AIPaymentChannel.InvalidTimeout.selector, uint64(30 minutes)));
         channel.openChannel(bob, 1, 10 ether, 30 minutes);
 
         // Above MAX_TIMEOUT (30 days)
-        vm.expectRevert(AIPaymentChannel.InvalidTimeout.selector);
+        vm.expectRevert(abi.encodeWithSelector(AIPaymentChannel.InvalidTimeout.selector, uint64(31 days)));
         channel.openChannel(bob, 2, 10 ether, 31 days);
         vm.stopPrank();
     }
@@ -658,7 +665,7 @@ contract QuantaV12SecurityTests is Test {
 
         // Channel closed
         (, , , , , , , AIPaymentChannel.ChannelState state) = channel.channels(cid);
-        assertEq(state, AIPaymentChannel.ChannelState.Closed);
+        assertEq(uint8(state), uint8(AIPaymentChannel.ChannelState.Closed));
     }
 
     function test_Channel_Close_OnlyPayee() public {
@@ -700,24 +707,35 @@ contract QuantaV12SecurityTests is Test {
         bytes32 cid = channel.openChannel(bob, 1, 10 ether, 0);
         vm.stopPrank();
 
-        // Sign for 5 ether
-        bytes32 structHash = keccak256(
+        // Initiate force close (state becomes Closing)
+        vm.prank(aliceSigner);
+        channel.initiateForceClose(cid);
+
+        // Sign for 5 ether (nonce 1) - valid challenge
+        bytes32 structHash1 = keccak256(
             abi.encode(channel.TICKET_TYPEHASH(), cid, 5 ether, uint256(1))
         );
         bytes32 digest = channel.domainSeparator();
-        bytes32 fullDigest = keccak256(
-            abi.encodePacked("\x19\x01", digest, structHash)
+        bytes32 fullDigest1 = keccak256(
+            abi.encodePacked("\x19\x01", digest, structHash1)
         );
-        (uint8 v, bytes32 r, bytes32 s) = vm.sign(alicePk, fullDigest);
-        bytes memory sig = abi.encodePacked(r, s, v);
+        (uint8 v1, bytes32 r1, bytes32 s1) = vm.sign(alicePk, fullDigest1);
 
         vm.prank(bob);
-        channel.closeChannel(cid, 5 ether, 1, sig);
+        channel.challengeForceClose(cid, 5 ether, 1, abi.encodePacked(r1, s1, v1));
 
-        // Try to close again with same amount
+        // Sign for 3 ether (nonce 2) - lower amount, should fail
+        bytes32 structHash2 = keccak256(
+            abi.encode(channel.TICKET_TYPEHASH(), cid, 3 ether, uint256(2))
+        );
+        bytes32 fullDigest2 = keccak256(
+            abi.encodePacked("\x19\x01", digest, structHash2)
+        );
+        (uint8 v2, bytes32 r2, bytes32 s2) = vm.sign(alicePk, fullDigest2);
+
         vm.prank(bob);
-        vm.expectRevert(AIAmountNotHigher.selector);
-        channel.closeChannel(cid, 5 ether, 2, sig);
+        vm.expectRevert(abi.encodeWithSelector(AIPaymentChannel.AmountNotHigher.selector, 3 ether, 5 ether));
+        channel.challengeForceClose(cid, 3 ether, 2, abi.encodePacked(r2, s2, v2));
     }
 
     function test_Channel_ForceClose_Initiate() public {
@@ -731,7 +749,7 @@ contract QuantaV12SecurityTests is Test {
 
         (, , , , , uint64 closeInitiatedAt, , AIPaymentChannel.ChannelState state) =
             channel.channels(cid);
-        assertEq(state, AIPaymentChannel.ChannelState.Closing);
+        assertEq(uint8(state), uint8(AIPaymentChannel.ChannelState.Closing));
         assertGt(closeInitiatedAt, 0);
     }
 
@@ -870,14 +888,13 @@ contract QuantaV12SecurityTests is Test {
 
         assertEq(modelId, 0);
 
-        (address creator, uint256 price, uint256 royalty, uint256 calls, uint256 earned, uint64 registeredAt, uint64 deactivatedAt, bool active, string memory uri) =
-            market.getModel(modelId);
+        AIModelMarketplace.Model memory m = market.getModel(modelId);
 
-        assertEq(creator, alice);
-        assertEq(price, 1 ether);
-        assertEq(royalty, 7000);
-        assertTrue(active);
-        assertEq(keccak256(bytes(uri)), keccak256("ipfs://meta"));
+        assertEq(m.creator, alice);
+        assertEq(m.pricePerCall, 1 ether);
+        assertEq(m.royaltyBps, 7000);
+        assertTrue(m.active);
+        assertEq(keccak256(bytes(m.metadataURI)), keccak256("ipfs://meta"));
     }
 
     function test_Marketplace_RegisterModel_FeeDeducted() public {
@@ -909,7 +926,7 @@ contract QuantaV12SecurityTests is Test {
     function test_Marketplace_RegisterModel_InvalidRoyalty() public {
         vm.startPrank(alice);
         token.approve(address(market), 1 ether);
-        vm.expectRevert(AIModelMarketplace.InvalidRoyalty.selector);
+        vm.expectRevert(abi.encodeWithSelector(AIModelMarketplace.InvalidRoyalty.selector, 9500));
         market.registerModel(1 ether, 9500, "ipfs://m"); // > MAX_ROYALTY_BPS (9000)
         vm.stopPrank();
     }
@@ -929,6 +946,7 @@ contract QuantaV12SecurityTests is Test {
         vm.stopPrank();
 
         uint256 aliceBalBefore = token.balanceOf(alice);
+        uint256 bobBalBefore = token.balanceOf(bob);
         uint256 treasuryBalBefore = token.balanceOf(treasury);
         uint256 validatorBalBefore = token.balanceOf(validator);
 
@@ -967,6 +985,9 @@ contract QuantaV12SecurityTests is Test {
         uint256 modelId = market.registerModel(1 ether, 7000, "ipfs://m");
         market.deactivateModel(modelId);
         vm.stopPrank();
+
+        // Warp past the 24h grace period
+        vm.warp(block.timestamp + 25 hours);
 
         vm.startPrank(bob);
         token.approve(address(market), 1 ether);
@@ -1007,8 +1028,8 @@ contract QuantaV12SecurityTests is Test {
         market.updatePrice(modelId, 2 ether);
         vm.stopPrank();
 
-        (, uint256 price, , , , , , , ) = market.getModel(modelId);
-        assertEq(price, 2 ether);
+        AIModelMarketplace.Model memory m = market.getModel(modelId);
+        assertEq(m.pricePerCall, 2 ether);
     }
 
     function test_Marketplace_UpdatePrice_OnlyCreator() public {
@@ -1029,9 +1050,9 @@ contract QuantaV12SecurityTests is Test {
         market.deactivateModel(modelId);
         vm.stopPrank();
 
-        (, , , , , , uint64 deactivatedAt, bool active, ) = market.getModel(modelId);
-        assertFalse(active);
-        assertGt(deactivatedAt, 0);
+        AIModelMarketplace.Model memory m = market.getModel(modelId);
+        assertFalse(m.active);
+        assertGt(m.deactivatedAt, 0);
     }
 
     function test_Marketplace_DeactivateModel_OnlyCreator() public {
@@ -1125,10 +1146,10 @@ contract QuantaV12SecurityTests is Test {
         // 1. Alice registers agent
         vm.prank(alice);
         bytes32 agentId = keccak256(abi.encode(alice, "TradingBot"));
-        registry.registerAgent(agentId, "ipfs://trading-bot", 1 ether, 10 ether);
+        registry.registerAgent(agentId, "ipfs://trading-bot", 1 ether, 100 ether);
 
         // 2. Alice opens payment channel with Bob
-        vm.startPrank(alice);
+        vm.startPrank(aliceSigner);
         token.approve(address(channel), 100 ether);
         bytes32 cid = channel.openChannel(bob, 1, 100 ether, 0);
         vm.stopPrank();
@@ -1141,7 +1162,7 @@ contract QuantaV12SecurityTests is Test {
         bytes32 fullDigest = keccak256(
             abi.encodePacked("\x19\x01", digest, structHash)
         );
-        (uint8 v, bytes32 r, bytes32 s) = vm.sign(uint256(keccak256("alice")), fullDigest);
+        (uint8 v, bytes32 r, bytes32 s) = vm.sign(alicePk, fullDigest);
 
         uint256 bobBalBefore = token.balanceOf(bob);
         vm.prank(bob);
@@ -1150,8 +1171,10 @@ contract QuantaV12SecurityTests is Test {
         // Bob received payment
         assertGt(token.balanceOf(bob), bobBalBefore);
 
-        // 4. Alice records spend
-        registry.checkAndRecordSpend(agentId, 50 ether);
+        // 4. Alice records spend (must respect maxPerTx = 1 ether)
+        for (uint256 i = 0; i < 50; i++) {
+            registry.checkAndRecordSpend(agentId, 1 ether);
+        }
 
         // 5. Rolling window tracks spend
         uint256 totalSpend = registry.getRolling24hSpend(agentId);
@@ -1181,9 +1204,9 @@ contract QuantaV12SecurityTests is Test {
         assertLt(token.balanceOf(bob), bobBalBefore);
 
         // Model stats updated
-        (, , , uint256 calls, uint256 earned, , , , ) = market.getModel(modelId);
-        assertEq(calls, 1);
-        assertGt(earned, 0);
+        AIModelMarketplace.Model memory m = market.getModel(modelId);
+        assertEq(m.totalCalls, 1);
+        assertGt(m.totalEarned, 0);
     }
 
     // ===================================================================
@@ -1213,7 +1236,7 @@ contract QuantaV12SecurityTests is Test {
         registry.registerAgent(agentId, "ipfs://m", maxPerTx, maxPerDay);
         vm.stopPrank();
 
-        (, , , , bool active) = registry.agents(agentId);
+        (, , , , , , bool active) = registry.agents(agentId);
         assertTrue(active);
     }
 

@@ -87,3 +87,4 @@ TODO-private.md
 !.gitignore
 !.github/.env*
 l1/target/
+l1/vendor/

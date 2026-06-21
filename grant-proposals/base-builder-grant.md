@@ -20,8 +20,8 @@ QUANTA provides:
 ## Traction
 
 - ✅ 4 smart contracts deployed + verified on Base Sepolia (Sourcify + Blockscout)
-- ✅ TypeScript SDK working (viem-based)
-- ✅ 100+ tests (Rust L1 node + Solidity contracts)
+- ✅ TypeScript SDK working (viem, 0 tsc errors)
+- ✅ 150+ tests (Rust L1 node + Solidity contracts)
 - ✅ Open-source: https://github.com/quanta-tect/quanta
 
 ## Technical Architecture

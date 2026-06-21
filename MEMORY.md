@@ -1,7 +1,49 @@
 # MEMORY.md — QUANTA Decision Log
 
 Append-only. Add new entries at the top.
-## Session 4 — June 21, 2026 — Full Project Re-evaluation
+
+## Session 6 — June 21, 2026 — Post-review fixes + infrastructure
+
+### Fixes Applied
+1. **Duplicate IQuantaToken interface** — Extracted to src-v1.2/interfaces/IQuantaToken.sol (shared). Removed inline definitions from AIPaymentChannel + AIModelMarketplace.
+2. **Custom errors in contracts** — Added 35 custom errors across 4 contracts (replaces require strings). Gas-efficient, better practice.
+3. **87/87 Solidity tests pass** — Fixed OZ 5.x OwnableUnauthorizedAccount, parameterized error selectors, test logic (permit, rolling window, channel close).
+4. **foundry.toml evm_version** — Changed paris → cancun (OZ 5.6.1 requires mcopy opcode).
+5. **src/ synced** — src/ now identical to src-v1.2/ (with interfaces/ subdir).
+6. **Makefile fixed** — deploy: DeployV11 → Deploy.s.sol, balance: old deployer → current 0x288bc...
+7. **SDK type errors fixed** — channel.ts (chain!), client.ts (PublicClient cast), marketplace.ts (BigInt royaltyBps), tsconfig.json (removed examples from include).
+8. **SDK npm audit** — Fixed 2 vulnerabilities (ws low). Remaining 2 high are viem dependency (breaking change to fix).
+
+### Multisig Script Updated
+- SetupMultisigOwnership.s.sol now reads MULTISIG_ADDRESS from env (not hardcoded)
+- Added detailed console.log instructions for Gnosis Safe setup
+
+### Node Service — Full RPC
+- Added tokio + jsonrpsee (v0.24) to node/Cargo.toml
+- Implemented 7 RPC methods: system_name, system_version, system_health, chain_getBlockNumber, chain_getHeader, state_getStorage, engine_createBlock
+- Manual seal block production (dev mode)
+- HTTP+WS server on port 9944
+- 16/16 node tests PASS (9 original + 7 new RPC tests)
+
+### Grant Proposals Updated
+- All 5 proposals: test count 100+ → 150+ (87 Solidity, 47 Rust, 16 Node)
+- SDK status: "0 tsc errors"
+
+### Final Test Counts
+- Solidity: 87/87 PASS
+- Rust L1: 54/54 PASS (crypto 9, balances 6, dilithium 7, staking 11, runtime 2, getrandom 3, node 16)
+- SDK: 0 tsc errors
+- Total: 141+ tests across all layers
+
+### Remaining Tasks
+- Deploy Gnosis Safe on Base Sepolia → run SetupMultisigOwnership
+- Submit grant proposals (Base $25K, Optimism $40K, Arbitrum $15K, Gitcoin $25K, ETHGlobal)
+- Security audit: run Slither + Mythril on v1.2
+- SDK: npm publish @quanta/sdk
+- Dashboard: React MVP (agent spending, tax reports)
+- Dependabot: ws vulnerability (needs viem major upgrade)
+
+---
 
 ### Critical Issues Found
 1. **foundry.toml merge conflict** — git merge markers in TOML → forge test/broken. Fixed.

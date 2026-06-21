@@ -100,7 +100,7 @@ export class PaymentChannel {
     const domain = {
       name: "AIPaymentChannel",
       version: "1",
-      chainId: this.client.walletClient.chain.id,
+      chainId: this.client.walletClient.chain!.id,
       verifyingContract: this.client.contracts.channel,
     } as const;
 

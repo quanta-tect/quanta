@@ -32,7 +32,7 @@ QUANTA provides a complete payment stack for AI agents:
 - ✅ 4 contracts deployed + verified on Base Sepolia
 - ✅ TypeScript SDK (viem-based)
 - ✅ Rust L1 node (Substrate) — native + WASM
-- ✅ 100+ tests across all layers
+- ✅ 150+ tests across all layers
 - ✅ Security audit completed (internal, Trail of Bits methodology)
 - ✅ CI/CD: GitHub Actions with Slither, Mythril, gitleaks
 

@@ -84,7 +84,7 @@ export class ModelMarketplace {
       address: this.client.contracts.marketplace,
       abi: MARKET_ABI,
       functionName: "registerModel",
-      args: [opts.pricePerCall, opts.royaltyBps, opts.metadataURI],
+      args: [opts.pricePerCall, BigInt(opts.royaltyBps), opts.metadataURI],
       chain: this.client.walletClient.chain,
       account: this.client.walletClient.account!,
     });
@@ -115,7 +115,7 @@ export class ModelMarketplace {
       abi: MARKET_ABI,
       functionName: "models",
       args: [modelId],
-    })) as readonly [Address, bigint, number, bigint, bigint, number, number, boolean, string];
+    })) as readonly [Address, bigint, bigint, bigint, bigint, bigint, bigint, boolean, string];
 
     return {
       modelId,

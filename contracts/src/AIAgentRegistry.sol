@@ -37,6 +37,18 @@ contract AIAgentRegistry is Ownable2Step, Pausable {
     mapping(address => bytes32[])  public agentsByOwner;
     mapping(address => bool)       public reputationOracles;
 
+    // Custom errors
+    error AgentAlreadyExists();
+    error MetadataTooLong();
+    error InvalidPolicy();
+    error TooManyAgents();
+    error NotAuthorized();
+    error NotOwner();
+    error NotReputationOracle();
+    error ZeroAddress();
+    error ExceedsMaxPerTx();
+    error ExceedsMaxPerDay();
+
     event AgentRegistered(bytes32 indexed agentId, address indexed owner, uint64 registeredAt);
     event AgentDeactivated(bytes32 indexed agentId);
     event ReputationAdjusted(bytes32 indexed agentId, address indexed oracle, int256 delta, uint256 newScore);
@@ -47,7 +59,7 @@ contract AIAgentRegistry is Ownable2Step, Pausable {
     constructor(address _initialOwner) Ownable(_initialOwner) {}
 
     function setReputationOracle(address oracle, bool enabled) external onlyOwner {
-        require(oracle != address(0), "Registry: zero address");
+        if (oracle == address(0)) revert ZeroAddress();
         reputationOracles[oracle] = enabled;
         emit OracleSet(oracle, enabled);
     }
@@ -61,10 +73,10 @@ contract AIAgentRegistry is Ownable2Step, Pausable {
         uint256        maxPerTx,
         uint256        maxPerDay
     ) external whenNotPaused {
-        require(agents[agentId].registeredAt == 0, "Registry: exists");
-        require(bytes(metadataURI).length <= MAX_METADATA_LEN, "Registry: metadata too long");
-        require(agentsByOwner[msg.sender].length < MAX_AGENTS_PER_OWNER, "Registry: too many agents");
-        require(maxPerTx > 0 && maxPerDay >= maxPerTx, "Registry: invalid policy");
+        if (agents[agentId].registeredAt != 0) revert AgentAlreadyExists();
+        if (bytes(metadataURI).length > MAX_METADATA_LEN) revert MetadataTooLong();
+        if (agentsByOwner[msg.sender].length >= MAX_AGENTS_PER_OWNER) revert TooManyAgents();
+        if (maxPerTx == 0 || maxPerDay < maxPerTx) revert InvalidPolicy();
 
         Agent storage a = agents[agentId];
         a.owner        = msg.sender;
@@ -82,7 +94,7 @@ contract AIAgentRegistry is Ownable2Step, Pausable {
     function deactivateAgent(bytes32 agentId) external {
         Agent storage a = agents[agentId];
         require(a.registeredAt != 0, "Registry: not found");
-        require(a.owner == msg.sender || msg.sender == owner(), "Registry: not authorized");
+        if (a.owner != msg.sender && msg.sender != owner()) revert NotAuthorized();
         a.active = false;
         emit AgentDeactivated(agentId);
     }
@@ -90,15 +102,15 @@ contract AIAgentRegistry is Ownable2Step, Pausable {
     function updatePolicy(bytes32 agentId, uint256 maxPerTx, uint256 maxPerDay) external {
         Agent storage a = agents[agentId];
         require(a.registeredAt != 0, "Registry: not found");
-        require(a.owner == msg.sender, "Registry: not owner");
-        require(maxPerTx > 0 && maxPerDay >= maxPerTx, "Registry: invalid policy");
+        if (a.owner != msg.sender) revert NotOwner();
+        if (maxPerTx == 0 || maxPerDay < maxPerTx) revert InvalidPolicy();
         a.policy.maxPerTx  = maxPerTx;
         a.policy.maxPerDay = maxPerDay;
         emit PolicyUpdated(agentId, maxPerTx, maxPerDay);
     }
 
     function adjustReputation(bytes32 agentId, int256 delta) external {
-        require(reputationOracles[msg.sender], "Registry: not oracle");
+        if (!reputationOracles[msg.sender]) revert NotReputationOracle();
         Agent storage a = agents[agentId];
         require(a.registeredAt != 0, "Registry: not found");
 
@@ -115,7 +127,7 @@ contract AIAgentRegistry is Ownable2Step, Pausable {
         require(a.registeredAt != 0, "Registry: not found");
         require(a.active, "Registry: inactive");
         require(a.policy.active, "Registry: policy off");
-        require(amount <= a.policy.maxPerTx, "Registry: exceeds maxPerTx");
+        if (amount > a.policy.maxPerTx) revert ExceedsMaxPerTx();
 
         RollingWindow storage w = a.window;
         uint256 now_ = block.timestamp;
@@ -135,7 +147,7 @@ contract AIAgentRegistry is Ownable2Step, Pausable {
             total += w.slots[i];
         }
 
-        require(total + amount <= a.policy.maxPerDay, "Registry: exceeds maxPerDay");
+        if (total + amount > a.policy.maxPerDay) revert ExceedsMaxPerDay();
         w.slots[w.cursor] += amount;
 
         emit SpendRecorded(agentId, amount, total + amount);

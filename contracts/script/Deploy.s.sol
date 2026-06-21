@@ -2,10 +2,10 @@
 pragma solidity ^0.8.24;
 
 import "forge-std/Script.sol";
-import "../src/QuantaToken.sol";
-import "../src/AIAgentRegistry.sol";
-import "../src/AIPaymentChannel.sol";
-import "../src/AIModelMarketplace.sol";
+import "../src-v1.2/QuantaToken.sol";
+import "../src-v1.2/AIAgentRegistry.sol";
+import "../src-v1.2/AIPaymentChannel.sol";
+import "../src-v1.2/AIModelMarketplace.sol";
 
 /**
  * Deploy script for Base Sepolia / Base mainnet.
@@ -28,22 +28,22 @@ contract DeployScript is Script {
         console.log("QuantaToken:", address(token));
 
         // 2. Agent Registry
-        AIAgentRegistry registry = new AIAgentRegistry();
+        AIAgentRegistry registry = new AIAgentRegistry(treasury);
         console.log("AIAgentRegistry:", address(registry));
 
         // 3. Payment Channel
         AIPaymentChannel channel = new AIPaymentChannel(
-            IERC20(address(token)),
-            IQuantaToken(address(token))
+            address(token),
+            treasury
         );
         console.log("AIPaymentChannel:", address(channel));
 
         // 4. Marketplace
         AIModelMarketplace market = new AIModelMarketplace(
-            IERC20(address(token)),
-            IQuantaToken(address(token)),
+            address(token),
             treasury,
-            validatorPool
+            validatorPool,
+            treasury
         );
         console.log("AIModelMarketplace:", address(market));
 

@@ -29,7 +29,7 @@ QUANTA is infrastructure, not a business. Like TCP/IP for AI agent payments.
 ## Impact Metrics
 
 - **Deployed**: 4 contracts on Base Sepolia, verified on Sourcify + Blockscout
-- **Test Coverage**: 100+ tests (Rust + Solidity)
+- **Test Coverage**: 150+ tests (Rust + Solidity)
 - **Code Quality**: 0 unsafe blocks in crypto code, comprehensive security audit
 - **Documentation**: Whitepaper, SDK docs, API reference, security audit report
 - **Adoption**: SDK ready for integration with LangChain, AutoGPT, CrewAI
@@ -39,7 +39,7 @@ QUANTA is infrastructure, not a business. Like TCP/IP for AI agent payments.
 1. **Public Goods**: QUANTA is MIT-licensed open-source infrastructure
 2. **Retroactive Impact**: Already built and deployed, not just a promise
 3. **Ecosystem Growth**: AI agent payments are a new category that expands the onchain economy
-4. **Technical Excellence**: Post-quantum cryptography, formal security analysis, 100+ tests
+4. **Technical Excellence**: Post-quantum cryptography, formal security analysis, 150+ tests
 
 ## Multi-Chain Vision
 

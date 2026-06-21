@@ -41,7 +41,7 @@ QUANTA provides:
 
 - ✅ 4 smart contracts deployed + verified on Base Sepolia
 - ✅ TypeScript SDK working
-- ✅ 100+ tests (Rust + Solidity)
+- ✅ 150+ tests (Rust + Solidity)
 - ✅ Rust L1 node (native + WASM)
 - ✅ Security audit completed
 - ✅ CI/CD pipeline

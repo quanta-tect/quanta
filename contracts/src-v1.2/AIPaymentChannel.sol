@@ -8,10 +8,7 @@ import "@openzeppelin/contracts/utils/cryptography/EIP712.sol";
 import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 import "@openzeppelin/contracts/access/Ownable2Step.sol";
 import "@openzeppelin/contracts/utils/Pausable.sol";
-
-interface IQuantaToken is IERC20 {
-    function collectAITax(uint256 amount) external returns (uint256 taxed);
-}
+import "./interfaces/IQuantaToken.sol";
 
 contract AIPaymentChannel is EIP712, ReentrancyGuard, Ownable2Step, Pausable {
     using SafeERC20 for IQuantaToken;
@@ -43,6 +40,17 @@ contract AIPaymentChannel is EIP712, ReentrancyGuard, Ownable2Step, Pausable {
     IQuantaToken public immutable token;
     mapping(bytes32 => Channel) public channels;
 
+    // Custom errors
+    error DepositTooSmall(uint256 deposit);
+    error ZeroPayee();
+    error ChannelExists();
+    error InvalidTimeout(uint64 timeout);
+    error NotPayee();
+    error InvalidSignature();
+    error AmountNotHigher(uint256 amount, uint256 current);
+    error NotPayer();
+    error TimeoutActive();
+
     event ChannelOpened(bytes32 indexed channelId, address indexed payer, address indexed payee, uint256 deposit, uint64 timeout);
     event ChannelClosed(bytes32 indexed channelId, uint256 payeeAmount, uint256 payerRefund, uint256 taxBurned);
     event ForceCloseInitiated(bytes32 indexed channelId, uint64 executeAfter);
@@ -62,17 +70,17 @@ contract AIPaymentChannel is EIP712, ReentrancyGuard, Ownable2Step, Pausable {
         uint256 deposit,
         uint64  timeout
     ) external whenNotPaused nonReentrant returns (bytes32 channelId) {
-        require(payee != address(0), "Channel: zero payee");
-        require(deposit >= MIN_DEPOSIT, "Channel: deposit too small");
+        if (payee == address(0)) revert ZeroPayee();
+        if (deposit < MIN_DEPOSIT) revert DepositTooSmall(deposit);
 
         if (timeout == 0) {
             timeout = DEFAULT_TIMEOUT;
         } else {
-            require(timeout >= MIN_TIMEOUT && timeout <= MAX_TIMEOUT, "Channel: bad timeout");
+            if (timeout < MIN_TIMEOUT || timeout > MAX_TIMEOUT) revert InvalidTimeout(timeout);
         }
 
         channelId = keccak256(abi.encode(msg.sender, payee, nonce));
-        require(channels[channelId].openedAt == 0, "Channel: exists");
+        if (channels[channelId].openedAt != 0) revert ChannelExists();
 
         channels[channelId] = Channel({
             payer:            msg.sender,
@@ -98,13 +106,13 @@ contract AIPaymentChannel is EIP712, ReentrancyGuard, Ownable2Step, Pausable {
         Channel storage c = channels[channelId];
         require(c.openedAt != 0, "Channel: not found");
         require(c.state == ChannelState.Open || c.state == ChannelState.Closing, "Channel: already closed");
-        require(msg.sender == c.payee, "Channel: not payee");
+        if (msg.sender != c.payee) revert NotPayee();
         require(amount <= c.deposit, "Channel: amount > deposit");
-        require(amount > c.settledAmount, "Channel: not higher than current");
+        if (amount <= c.settledAmount) revert AmountNotHigher(amount, c.settledAmount);
 
         bytes32 structHash = keccak256(abi.encode(TICKET_TYPEHASH, channelId, amount, nonce));
         address signer = _hashTypedDataV4(structHash).recover(signature);
-        require(signer == c.payer, "Channel: invalid signature");
+        if (signer != c.payer) revert InvalidSignature();
 
         uint256 toPayee = amount;
         uint256 toRefund = c.deposit - amount;
@@ -118,7 +126,7 @@ contract AIPaymentChannel is EIP712, ReentrancyGuard, Ownable2Step, Pausable {
         Channel storage c = channels[channelId];
         require(c.openedAt != 0, "Channel: not found");
         require(c.state == ChannelState.Open, "Channel: not open");
-        require(msg.sender == c.payer, "Channel: not payer");
+        if (msg.sender != c.payer) revert NotPayer();
 
         c.state = ChannelState.Closing;
         c.closeInitiatedAt = uint64(block.timestamp);
@@ -133,13 +141,13 @@ contract AIPaymentChannel is EIP712, ReentrancyGuard, Ownable2Step, Pausable {
     ) external nonReentrant {
         Channel storage c = channels[channelId];
         require(c.state == ChannelState.Closing, "Channel: not closing");
-        require(msg.sender == c.payee, "Channel: not payee");
-        require(amount > c.settledAmount, "Channel: not higher");
+        if (msg.sender != c.payee) revert NotPayee();
+        if (amount <= c.settledAmount) revert AmountNotHigher(amount, c.settledAmount);
         require(amount <= c.deposit, "Channel: overflow");
 
         bytes32 structHash = keccak256(abi.encode(TICKET_TYPEHASH, channelId, amount, nonce));
         address signer = _hashTypedDataV4(structHash).recover(signature);
-        require(signer == c.payer, "Channel: invalid signature");
+        if (signer != c.payer) revert InvalidSignature();
 
         c.settledAmount = amount;
         emit ForceCloseChallenged(channelId, amount);
@@ -148,8 +156,8 @@ contract AIPaymentChannel is EIP712, ReentrancyGuard, Ownable2Step, Pausable {
     function executeForceClose(bytes32 channelId) external nonReentrant whenNotPaused {
         Channel storage c = channels[channelId];
         require(c.state == ChannelState.Closing, "Channel: not closing");
-        require(msg.sender == c.payer, "Channel: not payer");
-        require(block.timestamp >= c.closeInitiatedAt + CHALLENGE_WINDOW + c.timeout, "Channel: timeout active");
+        if (msg.sender != c.payer) revert NotPayer();
+        if (block.timestamp < c.closeInitiatedAt + CHALLENGE_WINDOW + c.timeout) revert TimeoutActive();
 
         uint256 toPayee = c.settledAmount;
         uint256 toRefund = c.deposit - c.settledAmount;

@@ -20,6 +20,15 @@ contract QuantaToken is ERC20, ERC20Permit, ERC20Burnable, Ownable2Step, Pausabl
 
     mapping(address => bool) public aiTaxCollectors;
 
+    // Custom errors
+    error ZeroAddress(address addr);
+    error NotBridge();
+    error TimelockActive();
+    error CapExceeded();
+    error NotCollector();
+    error InvalidTaxRate(uint16 bps);
+    error NotOwner();
+
     event BridgeChangeQueued(address indexed pending, uint64 executeAfter);
     event BridgeChangeApplied(address indexed oldBridge, address indexed newBridge);
     event BridgeChangeCancelled(address indexed cancelled);
@@ -38,12 +47,12 @@ contract QuantaToken is ERC20, ERC20Permit, ERC20Burnable, Ownable2Step, Pausabl
     }
 
     modifier onlyBridge() {
-        require(msg.sender == bridge, "QTA: not bridge");
+        if (msg.sender != bridge) revert NotBridge();
         _;
     }
 
     function queueBridgeChange(address _newBridge) external onlyOwner {
-        require(_newBridge != address(0), "QTA: zero address");
+        if (_newBridge == address(0)) revert ZeroAddress(_newBridge);
         pendingBridge  = _newBridge;
         bridgeChangeAt = uint64(block.timestamp) + BRIDGE_TIMELOCK;
         emit BridgeChangeQueued(_newBridge, bridgeChangeAt);
@@ -51,7 +60,7 @@ contract QuantaToken is ERC20, ERC20Permit, ERC20Burnable, Ownable2Step, Pausabl
 
     function applyBridgeChange() external onlyOwner {
         require(pendingBridge != address(0), "QTA: no pending change");
-        require(block.timestamp >= bridgeChangeAt, "QTA: timelock active");
+        if (block.timestamp < bridgeChangeAt) revert TimelockActive();
         address old = bridge;
         bridge = pendingBridge;
         pendingBridge = address(0);
@@ -67,32 +76,32 @@ contract QuantaToken is ERC20, ERC20Permit, ERC20Burnable, Ownable2Step, Pausabl
     }
 
     function bridgeMint(address to, uint256 amount) external onlyBridge whenNotPaused {
-        require(to != address(0), "QTA: zero address");
-        require(totalSupply() + amount <= MAX_SUPPLY, "QTA: cap exceeded");
+        if (to == address(0)) revert ZeroAddress(to);
+        if (totalSupply() + amount > MAX_SUPPLY) revert CapExceeded();
         _mint(to, amount);
         emit BridgeMint(to, amount);
     }
 
     function bridgeBurn(address from, uint256 amount) external onlyBridge whenNotPaused {
-        require(from != address(0), "QTA: zero address");
+        if (from == address(0)) revert ZeroAddress(from);
         _burn(from, amount);
         emit BridgeBurn(from, amount);
     }
 
     function setAITaxCollector(address collector, bool enabled) external onlyOwner {
-        require(collector != address(0), "QTA: zero address");
+        if (collector == address(0)) revert ZeroAddress(collector);
         aiTaxCollectors[collector] = enabled;
         emit AITaxCollectorSet(collector, enabled);
     }
 
     function setAITaxBps(uint16 newBps) external onlyOwner {
-        require(newBps <= MAX_TAX_BPS, "QTA: tax too high");
+        if (newBps > MAX_TAX_BPS) revert InvalidTaxRate(newBps);
         emit AITaxBpsUpdated(aiUsageTaxBps, newBps);
         aiUsageTaxBps = newBps;
     }
 
     function collectAITax(uint256 amount) external returns (uint256 taxed) {
-        require(aiTaxCollectors[msg.sender], "QTA: not collector");
+        if (!aiTaxCollectors[msg.sender]) revert NotCollector();
         taxed = (amount * aiUsageTaxBps) / 10_000;
         if (taxed > 0) _burn(msg.sender, taxed);
         emit AITaxCollected(msg.sender, amount, taxed);

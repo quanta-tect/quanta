@@ -30,7 +30,7 @@ QUANTA is open-source infrastructure that enables AI agents to pay each other. T
 ### Current Traction
 - 4 smart contracts deployed on Base Sepolia (verified)
 - TypeScript SDK ready
-- 100+ tests (Rust + Solidity)
+- 150+ tests (Rust + Solidity)
 - Rust L1 node (Substrate) — native + WASM
 
 ### Potential Impact

@@ -21,15 +21,19 @@ Last updated: June 21, 2026 (Session 4)
 ## L1 Rust Node
 
 ### Build Status
-- Native: ✅ compile OK, 35/35 tests PASS
+- Native: ✅ compile OK, 54/54 tests PASS
 - WASM: ✅ compile OK (getrandom 0.3 stub)
-- Node: ✅ builds + runs, 9/9 tests PASS
+- Node: ✅ builds + runs, 16/16 tests PASS (RPC: jsonrpsee + tokio)
 
-### Test Count: 100+ tests across all layers
-- L1 Rust: 35/35 PASS (crypto 9, dilithium 7, balances 6, staking 11, runtime 2)
-- Solidity v1.2: 50+ tests (QuantaSecurityTests.t.sol)
-- Solidity v1.1: 14 tests (SecurityFixes.t.sol)
-- Node: 9/9 PASS
+### RPC Server (Session 6)
+- HTTP + WebSocket on port 9944
+- Methods: system_name, system_version, system_health, chain_getBlockNumber, chain_getHeader, state_getStorage, engine_createBlock
+- Manual seal block production (dev mode)
+
+### Test Count: 141+ tests across all layers
+- L1 Rust: 54/54 PASS (crypto 9, balances 6, dilithium 7, staking 11, runtime 2, getrandom 3, node 16)
+- Solidity v1.2: 87/87 tests PASS (QuantaSecurityTests.t.sol, 35 custom errors)
+- SDK: 0 tsc errors (viem-based)
 
 ### Stubs (path-based patches)
 - substrate-prometheus-endpoint (replaces git dep)
@@ -60,14 +64,24 @@ Last updated: June 21, 2026 (Session 4)
 - ✅ WASM build fixed (getrandom 0.3 stub)
 - ✅ Node service improved (RPC module, storage module)
 
+### Session 6 (June 21 — continued):
+- ✅ Extracted shared IQuantaToken interface
+- ✅ Added 35 custom errors to 4 contracts
+- ✅ Fixed 87/87 Solidity tests (OZ 5.x compat)
+- ✅ Fixed SDK type errors (tsc 0 errors)
+- ✅ Fixed Makefile stale targets
+- ✅ Updated SetupMultisigOwnership (env-based)
+- ✅ Full RPC node: jsonrpsee + tokio, 16/16 tests
+- ✅ Updated 5 grant proposals (150+ tests)
+- ✅ Total: 141+ tests across all layers
+
 ## Remaining (Next Session)
-1. Deploy multisig on Base Sepolia (Gnosis Safe)
-2. Transfer contract ownership to multisig
-3. Run forge test to verify Solidity tests compile
-4. Full node service with RPC + networking (needs tokio + jsonrpsee)
-5. Fix 11 Dependabot vulnerabilities (mostly OpenZeppelin npm devDeps)
-6. Post LinkedIn + record demo video
-7. Apply for grants — Base, Optimism, Arbitrum
+1. Deploy multisig on Base Sepolia (Gnosis Safe) — script ready, just need Safe address
+2. Transfer contract ownership to multisig — run SetupMultisigOwnership.s.sol
+3. Run security audit: Slither + Mythril on v1.2
+4. Submit grant proposals — Base ($25K), Optimism ($40K), Arbitrum ($15K), Gitcoin ($25K), ETHGlobal
+5. Publish SDK to npm (@quanta/sdk)
+6. Build Dashboard MVP (React, agent spending + tax reports)
 
 ## Business Strategy
 ### Revenue Model (priority order)
