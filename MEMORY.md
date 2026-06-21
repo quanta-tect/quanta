@@ -1,6 +1,32 @@
 # MEMORY.md — QUANTA Decision Log
 
 Append-only. Add new entries at the top.
+## Session 4 — June 21, 2026 — Full Project Re-evaluation
+
+### Critical Issues Found
+1. **foundry.toml merge conflict** — git merge markers in TOML → forge test/broken. Fixed.
+2. **getrandom 0.3.4 wasm-bindgen** — runtime/Cargo.toml wasm32 dep fails. Fixed (commented out, native-only).
+3. **Contract src vs src-v1.2 mismatch** — src/ is v1.0 (security bugs), src-v1.2/ is hardened. NOT YET FIXED.
+4. **SDK ABI mismatch** — channel.ts calls openChannel with 5 params, contracts have 3. NOT YET FIXED.
+5. **Node service empty** — main.rs is 7 lines, needs chain_spec/cli/service/rpc. NOT YET CODED.
+
+### Fixes Applied
+- foundry.toml: removed conflict markers
+- runtime/Cargo.toml: commented out getrandom wasm32 dep
+- All 35/35 L1 tests verified PASS
+
+### Build Status
+- L1 crypto + pallets + runtime: ✅ compile OK, 35/35 tests PASS
+- L1 node minimal binary: ✅ builds (1.7MB ELF)
+- L1 node full service: ❌ NOT CODED (needs ~500 lines)
+- WASM build: ❌ BLOCKED (getrandom 0.3.4, workaround = native only)
+- forge test: ⚠️ was blocked by foundry.toml, now config OK but needs compile time
+
+### git config
+- Pinned provider: openrouter/owl-alpha
+
+---
+
 ## Session 3 (continued) — Business Strategy
 
 ### Revenue Streams Identified
