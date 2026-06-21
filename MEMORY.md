@@ -27,6 +27,37 @@ Append-only. Add new entries at the top.
 
 ---
 
+## Session 4 — June 21, 2026 — P0/P1 Fixes + Node Service
+
+### P0-A: Contract src/ synced with src-v1.2/
+- Copied src-v1.2/*.sol → src/ (4 contracts now identical)
+- Updated IQuantaToken interface: collectAITax(uint256) 1-param signature
+- src/ now has: Ownable2Step, Pausable, EIP-712, rolling window, bridge timelock
+
+### P0-B: SDK ABI fixed for v1.2
+- channel.ts: openChannel(4 params), closeChannel(4 params), EIP-712 typed signing
+- agent.ts: registerAgent(bytes32 agentId, string metadataURI, uint256 maxPerTx, uint256 maxPerDay)
+- marketplace.ts: registerModel(uint256 price, uint256 royaltyBps, string metadataURI)
+
+### P1: Node service coded + running
+- Simplified node/Cargo.toml (minimal deps, no sc-service/sc-cli)
+- main.rs: runtime info display + verification tests
+- Added sc-network stub (path-based patch)
+- Build: OK | Run: OK | Tests: 2/2 PASS
+- All 35/35 L1 pallet tests still PASS
+
+### Build Status (updated)
+- L1 crypto + pallets + runtime: ✅ compile OK, 35/35 tests PASS
+- L1 node: ✅ builds + runs (minimal, no RPC/networking)
+- WASM build: ❌ BLOCKED (getrandom 0.3.4)
+- forge test: ⚠️ config OK, needs compile time to verify
+
+### Stub inventory
+- substrate-prometheus-endpoint (path patch, replaces git)
+- sc-network (path patch, replaces git)
+
+---
+
 ## Session 3 (continued) — Business Strategy
 
 ### Revenue Streams Identified
