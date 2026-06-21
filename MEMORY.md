@@ -70,8 +70,15 @@ Append-only. Add new entries at the top.
 - L1 Rust: 35/35 tests PASS
 - Solidity v1.2: 50+ tests written (QuantaSecurityTests.t.sol)
 - Solidity v1.1: 14 tests (SecurityFixes.t.sol)
-- Node: 2/2 tests PASS
+- Node: 9/9 tests PASS
 - Total: 100+ tests across all layers
+
+### Content & Grants (Session 5)
+- LinkedIn launch post (VN + EN)
+- Twitter/X thread (8 tweets)
+- Reddit post (r/ethereum + r/cryptocurrency)
+- 5 grant proposals: Base ($25K), Optimism ($40K), Arbitrum ($15K), Gitcoin ($25K), ETHGlobal
+- Total potential funding: $105K+
 
 ---
 
