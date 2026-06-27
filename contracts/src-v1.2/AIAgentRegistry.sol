@@ -157,10 +157,28 @@ contract AIAgentRegistry is Ownable2Step, Pausable {
         return agentsByOwner[owner_].length;
     }
 
+    /**
+     * @notice Trả về tổng chi tiêu trong 24h theo thời gian thực, bỏ qua slot cũ.
+     * @dev Mỗi slot tương ứng 1 giờ, slotTs là thời điểm của slot tại cursor.
+     */
     function getRolling24hSpend(bytes32 agentId) external view returns (uint256 total) {
         Agent storage a = agents[agentId];
+        RollingWindow memory w = a.window;
+        if (w.slotTs == 0) return 0;
+
+        uint256 now_ = block.timestamp;
+        uint256 windowStart = now_ > 24 hours ? now_ - 24 hours : 0;
+
         for (uint256 i = 0; i < WINDOW_SLOTS; i++) {
-            total += a.window.slots[i];
+            uint8 idx = uint8((uint256(w.cursor) + i) % WINDOW_SLOTS);
+            uint256 slotTime = w.slotTs;
+            if (i > 0) {
+                uint256 age = i * 1 hours;
+                slotTime = slotTime > age ? slotTime - age : 0;
+            }
+            if (slotTime >= windowStart && slotTime <= now_) {
+                total += w.slots[idx];
+            }
         }
     }
 }

@@ -1,16 +1,22 @@
 // SPDX-License-Identifier: MIT
 pragma solidity =0.8.24;
 
-/// @title SimpleMultisig — Minimal multisig wallet for QUANTA testnet
-/// @notice 1-of-N multisig (any signer can execute). Expandable to M-of-N.
-/// @dev For testnet/development. Mainnet should use Gnosis Safe.
+/** @title SimpleMultisig — Minimal multisig wallet for QUANTA testnet
+ * @notice Operation-centric threshold wallet: any signer can broadcast an
+ *         operation, but it only executes once enough distinct signers have
+ *         confirmed the same op. Use separate EOAs per signer.
+ * @dev For testnet/development. Mainnet should use Gnosis Safe.
+ */
 contract SimpleMultisig {
     address[] public signers;
     uint256 public threshold;
 
     mapping(bytes32 => bool) public executed;
+    mapping(bytes32 => uint256) public confirmations;
+    mapping(bytes32 => mapping(address => bool)) public signerConfirmed;
 
     event TransactionExecuted(bytes32 indexed txHash, address indexed to, uint256 value, bytes data);
+    event Confirmation(bytes32 indexed txHash, address indexed signer);
     event SignerAdded(address indexed signer);
     event SignerRemoved(address indexed signer);
 
@@ -44,8 +50,16 @@ contract SimpleMultisig {
         uint256 value,
         bytes calldata data
     ) external onlySigner returns (bool success) {
-        bytes32 txHash = keccak256(abi.encodePacked(block.timestamp, msg.sender, to, value, data));
+        bytes32 txHash = keccak256(abi.encodePacked(to, value, data));
         require(!executed[txHash], "MSig: already executed");
+
+        if (!signerConfirmed[txHash][msg.sender]) {
+            signerConfirmed[txHash][msg.sender] = true;
+            confirmations[txHash]++;
+            emit Confirmation(txHash, msg.sender);
+        }
+
+        require(confirmations[txHash] >= threshold, "MSig: threshold not met");
 
         executed[txHash] = true;
         (success, ) = to.call{value: value}(data);
