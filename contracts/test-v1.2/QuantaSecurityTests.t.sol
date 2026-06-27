@@ -1097,8 +1097,11 @@ contract QuantaV12SecurityTests is Test {
     }
 
     function test_Marketplace_SetTreasury() public {
-        vm.prank(owner);
+        vm.startPrank(owner);
         market.setTreasury(address(0x1234));
+        vm.warp(block.timestamp + market.TREASURY_TIMELOCK() + 1);
+        market.applyTreasuryChange();
+        vm.stopPrank();
         assertEq(market.treasury(), address(0x1234));
     }
 
@@ -1109,8 +1112,11 @@ contract QuantaV12SecurityTests is Test {
     }
 
     function test_Marketplace_SetValidatorPool() public {
-        vm.prank(owner);
+        vm.startPrank(owner);
         market.setValidatorPool(address(0x5678));
+        vm.warp(block.timestamp + market.TREASURY_TIMELOCK() + 1);
+        market.applyValidatorPoolChange();
+        vm.stopPrank();
         assertEq(market.validatorPool(), address(0x5678));
     }
 

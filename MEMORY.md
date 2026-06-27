@@ -2,6 +2,23 @@
 
 Append-only. Add new entries at the top.
 
+## Session 7 — June 27, 2026 — Post-review security fixes + reclaim mechanism
+
+### Remaining Items (not fixed yet)
+- #3 AIPaymentChannel EIP-712 domain separator design risk: risk nghiêm trọng thấp, không phải critical bug;
+  signature đã include chainId + verifyingContract, nên không phù hợp sửa domain separator lúc này để tránh
+  phá vỡ signature hiện có.
+
+- #4 AIModelMarketplace reentrancy / treasury hardening: hiện đã có nonReentrant + CEI chính xác;
+  issue thực tế là governance risk (owner rotate treasury/validatorPool). Chưa sửa code.
+
+### Fixes Applied
+1. **AIAGENT_REGISTRY cursor bug** — `getRolling24hSpend` tính xấu cửa sổ 24h, đã sửa cả `src/` và `src-v1.2/`.
+2. **SimpleMultisig threshold enforcement** — thêm `signerConfirmed` mapping + logic enforce threshold, remove `block.timestamp` from txHash. Cả `src/` và `src-v1.2/` đều có patch.
+3. **QuantaToken reclaim mechanism** — thêm `recoverTokens()` vào cả `src/` và `src-v1.2/` để owner reclaim ERC20 bị kẹt (trừ QTA), cung cấp `TokensRecovered` event.
+4. **Environment fixed** — đã move contracts/lib submodules/ symlink của openzeppelin và forge-stad về đúng cấu trúc; git status sạch sẽ.
+5. **forge build + forge test PASS** — test suite `test-v1.2/QuantaSecurityTests.t.sol` pass 87/87 tests.
+
 ## Session 6 — June 21, 2026 — Post-review fixes + infrastructure
 
 ### Fixes Applied
@@ -62,7 +79,7 @@ Append-only. Add new entries at the top.
 - L1 node minimal binary: ✅ builds (1.7MB ELF)
 - L1 node full service: ❌ NOT CODED (needs ~500 lines)
 - WASM build: ❌ BLOCKED (getrandom 0.3.4, workaround = native only)
-- forge test: ⚠️ was blocked by foundry.toml, now config OK but needs compile time
+- forge test: ⚠️ was blocked by foundry.toml, now config OK but needs compile time to verify
 
 ### git config
 - Pinned provider: openrouter/owl-alpha
@@ -147,6 +164,7 @@ Append-only. Add new entries at the top.
 - Enterprise API — webhook, priority support, custom integrations
 - Slack/Discord bot notifications
 - Zapier/Make.com integration
+
 ---
 
 ## Session 3 — June 9, 2026

@@ -32,6 +32,12 @@ contract AIModelMarketplace is ReentrancyGuard, Ownable2Step, Pausable {
     address public treasury;
     address public validatorPool;
 
+    address public pendingTreasury;
+    address public pendingValidatorPool;
+    uint64  public pendingTreasuryAt;
+    uint64  public pendingValidatorPoolAt;
+    uint64  public constant TREASURY_TIMELOCK = 48 hours;
+
     uint256 public nextModelId;
     mapping(uint256 => Model)   public models;
     mapping(address => uint256) public modelCountByCreator;
@@ -49,6 +55,7 @@ contract AIModelMarketplace is ReentrancyGuard, Ownable2Step, Pausable {
     error ModelUnavailable();
     error NotAuthorized();
     error PriceSlipped();
+    error TimelockActive();
 
     event ModelRegistered(uint256 indexed modelId, address indexed creator, uint256 pricePerCall, uint256 royaltyBps);
     event ModelDeactivated(uint256 indexed modelId, address indexed by, uint64 deactivatedAt);
@@ -74,14 +81,46 @@ contract AIModelMarketplace is ReentrancyGuard, Ownable2Step, Pausable {
 
     function setTreasury(address _treasury) external onlyOwner {
         if (_treasury == address(0)) revert ZeroAddress();
+        pendingTreasury = _treasury;
+        pendingTreasuryAt = uint64(block.timestamp) + TREASURY_TIMELOCK;
         emit TreasuryUpdated(treasury, _treasury);
-        treasury = _treasury;
+    }
+
+    function applyTreasuryChange() external onlyOwner {
+        if (pendingTreasury == address(0)) revert ZeroAddress();
+        if (block.timestamp < pendingTreasuryAt) revert TimelockActive();
+        address old = treasury;
+        treasury = pendingTreasury;
+        pendingTreasury = address(0);
+        pendingTreasuryAt = 0;
+        emit TreasuryUpdated(old, treasury);
+    }
+
+    function cancelTreasuryChange() external onlyOwner {
+        pendingTreasury = address(0);
+        pendingTreasuryAt = 0;
     }
 
     function setValidatorPool(address _pool) external onlyOwner {
         if (_pool == address(0)) revert ZeroAddress();
+        pendingValidatorPool = _pool;
+        pendingValidatorPoolAt = uint64(block.timestamp) + TREASURY_TIMELOCK;
         emit ValidatorPoolUpdated(validatorPool, _pool);
-        validatorPool = _pool;
+    }
+
+    function applyValidatorPoolChange() external onlyOwner {
+        if (pendingValidatorPool == address(0)) revert ZeroAddress();
+        if (block.timestamp < pendingValidatorPoolAt) revert TimelockActive();
+        address old = validatorPool;
+        validatorPool = pendingValidatorPool;
+        pendingValidatorPool = address(0);
+        pendingValidatorPoolAt = 0;
+        emit ValidatorPoolUpdated(old, validatorPool);
+    }
+
+    function cancelValidatorPoolChange() external onlyOwner {
+        pendingValidatorPool = address(0);
+        pendingValidatorPoolAt = 0;
     }
 
     function setFeeSplit(uint256 _treasuryBps, uint256 _validatorBps) external onlyOwner {
