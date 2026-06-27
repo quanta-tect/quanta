@@ -4,10 +4,12 @@ pragma solidity =0.8.24;
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Permit.sol";
 import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol";
+import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import "@openzeppelin/contracts/access/Ownable2Step.sol";
 import "@openzeppelin/contracts/utils/Pausable.sol";
 
 contract QuantaToken is ERC20, ERC20Permit, ERC20Burnable, Ownable2Step, Pausable {
+    using SafeERC20 for IERC20;
 
     uint256 public constant MAX_SUPPLY      = 1_000_000_000e18;
     uint16  public constant MAX_TAX_BPS     = 100;
@@ -37,6 +39,7 @@ contract QuantaToken is ERC20, ERC20Permit, ERC20Burnable, Ownable2Step, Pausabl
     event AITaxCollected(address indexed collector, uint256 amount, uint256 taxed);
     event BridgeMint(address indexed to, uint256 amount);
     event BridgeBurn(address indexed from, uint256 amount);
+    event TokensRecovered(address indexed token, address indexed to, uint256 amount);
 
     constructor(address _initialOwner)
         ERC20("Quanta", "QTA")
@@ -98,6 +101,12 @@ contract QuantaToken is ERC20, ERC20Permit, ERC20Burnable, Ownable2Step, Pausabl
         if (newBps > MAX_TAX_BPS) revert InvalidTaxRate(newBps);
         emit AITaxBpsUpdated(aiUsageTaxBps, newBps);
         aiUsageTaxBps = newBps;
+    }
+
+    function recoverTokens(address tokenAddress, uint256 amount) external onlyOwner {
+        if (tokenAddress == address(this)) revert ZeroAddress(tokenAddress);
+        IERC20(tokenAddress).safeTransfer(owner(), amount);
+        emit TokensRecovered(tokenAddress, owner(), amount);
     }
 
     function collectAITax(uint256 amount) external returns (uint256 taxed) {
