@@ -306,6 +306,36 @@ contract QuantaV12SecurityTests is Test {
         token.bridgeMint(alice, 100 ether);
     }
 
+    function test_Token_BridgeMint_ZeroToReverts() public {
+        vm.prank(owner);
+        token.queueBridgeChange(address(this));
+        vm.warp(block.timestamp + 48 hours + 1);
+        vm.prank(owner);
+        token.applyBridgeChange();
+
+        vm.prank(address(this));
+        vm.expectRevert(abi.encodeWithSelector(QuantaToken.ZeroAddress.selector, address(0)));
+        token.bridgeMint(address(0), 100 ether);
+    }
+
+    function test_Token_BridgeBurn_ZeroFromReverts() public {
+        vm.prank(owner);
+        token.queueBridgeChange(address(this));
+        vm.warp(block.timestamp + 48 hours + 1);
+        vm.prank(owner);
+        token.applyBridgeChange();
+
+        vm.prank(address(this));
+        vm.expectRevert(abi.encodeWithSelector(QuantaToken.ZeroAddress.selector, address(0)));
+        token.bridgeBurn(address(0), 100 ether);
+    }
+
+    function test_Token_RecoverTokens_RevertsOnQTA() public {
+        vm.prank(owner);
+        vm.expectRevert(abi.encodeWithSelector(QuantaToken.ZeroAddress.selector, address(token)));
+        token.recoverTokens(address(token), 100 ether);
+    }
+
     function test_Token_Permit() public {
         // EIP-2612 permit test
         uint256 nonce = token.nonces(aliceSigner);
@@ -383,15 +413,15 @@ contract QuantaV12SecurityTests is Test {
         // Register MAX_AGENTS_PER_OWNER agents
         for (uint256 i = 0; i < 500; i++) {
             vm.prank(alice);
-            bytes32 id = keccak256(abi.encode(alice, string(abi.encodePacked("Bot", i))));
-            registry.registerAgent(id, "ipfs://m", 1 ether, 10 ether);
+            bytes32 botId = keccak256(abi.encode(alice, string(abi.encodePacked("Bot", i))));
+            registry.registerAgent(botId, "ipfs://m", 1 ether, 10 ether);
         }
 
         // 501st should fail
         vm.prank(alice);
-        bytes32 id = keccak256(abi.encode(alice, "BotOverflow"));
+        bytes32 botId = keccak256(abi.encode(alice, "BotOverflow"));
         vm.expectRevert(AIAgentRegistry.TooManyAgents.selector);
-        registry.registerAgent(id, "ipfs://m", 1 ether, 10 ether);
+        registry.registerAgent(botId, "ipfs://m", 1 ether, 10 ether);
     }
 
     function test_Registry_DeactivateAgent() public {
@@ -1256,5 +1286,234 @@ contract QuantaV12SecurityTests is Test {
 
         (, , uint256 actualDeposit, , , , , ) = channel.channels(cid);
         assertEq(actualDeposit, deposit);
+    }
+
+
+    // ===================================================================
+    // Missing branch / edge coverage boost
+    // ===================================================================
+    function test_Registry_DeactivateAgent_NotOwnerAndNotAgentOwner() public {
+        bytes32 agentId = keccak256(abi.encode(alice, "Bot"));
+        vm.startPrank(alice);
+        registry.registerAgent(agentId, "ipfs://m", 1 ether, 10 ether);
+        vm.stopPrank();
+
+        vm.startPrank(bob);
+        vm.expectRevert();
+        registry.deactivateAgent(agentId);
+        vm.stopPrank();
+    }
+
+    function test_Registry_AdjustReputation_AgentNotFound() public {
+        vm.startPrank(oracle);
+        vm.expectRevert();
+        registry.adjustReputation(keccak256("missing"), 100);
+        vm.stopPrank();
+    }
+
+    function test_Registry_CheckAndRecordSpend_PausedReverts() public {
+        bytes32 agentId = keccak256(abi.encode(alice, "Bot"));
+        vm.startPrank(alice);
+        registry.registerAgent(agentId, "ipfs://m", 1 ether, 10 ether);
+        vm.stopPrank();
+
+        vm.startPrank(owner);
+        registry.pause();
+        vm.stopPrank();
+
+        vm.startPrank(alice);
+        vm.expectRevert();
+        registry.checkAndRecordSpend(agentId, 0.1 ether);
+        vm.stopPrank();
+
+        vm.startPrank(owner);
+        registry.unpause();
+        vm.stopPrank();
+    }
+
+    function test_Registry_RegisterAgent_PausedReverts() public {
+        vm.startPrank(owner);
+        registry.pause();
+        vm.stopPrank();
+
+        vm.startPrank(alice);
+        vm.expectRevert();
+        registry.registerAgent(keccak256("paused"), "ipfs://m", 1 ether, 10 ether);
+        vm.stopPrank();
+
+        vm.startPrank(owner);
+        registry.unpause();
+        vm.stopPrank();
+    }
+
+    function test_Marketplace_RegisterModel_WhenPaused() public {
+        vm.startPrank(owner);
+        market.pause();
+        vm.stopPrank();
+
+        vm.startPrank(alice);
+        token.approve(address(market), 1 ether);
+        vm.expectRevert();
+        market.registerModel(0.1 ether, 7000, "ipfs://m");
+        vm.stopPrank();
+
+        vm.startPrank(owner);
+        market.unpause();
+        vm.stopPrank();
+    }
+
+    function test_Marketplace_PayForInference_GraceExpired() public {
+        vm.startPrank(alice);
+        token.approve(address(market), 10 ether);
+        uint256 modelId = market.registerModel(0.5 ether, 8000, "ipfs://m");
+        vm.stopPrank();
+
+        vm.startPrank(owner);
+        market.deactivateModel(modelId);
+        vm.stopPrank();
+
+        vm.warp(block.timestamp + 25 hours + 1);
+
+        vm.startPrank(bob);
+        vm.expectRevert(AIModelMarketplace.ModelUnavailable.selector);
+        market.payForInference(modelId, 1 ether);
+        vm.stopPrank();
+    }
+
+    function test_Marketplace_ApplyValidatorPool_TimelockActive() public {
+        vm.startPrank(owner);
+        market.setValidatorPool(address(0xDead));
+        vm.stopPrank();
+
+        vm.startPrank(owner);
+        vm.expectRevert();
+        market.applyValidatorPoolChange();
+        vm.stopPrank();
+    }
+
+    function test_Marketplace_ApplyTreasury_TimelockActive() public {
+        vm.startPrank(owner);
+        market.setTreasury(address(0xFeed));
+        vm.stopPrank();
+
+        vm.startPrank(owner);
+        vm.expectRevert();
+        market.applyTreasuryChange();
+        vm.stopPrank();
+    }
+
+    function test_Channel_Close_NotPayee() public {
+        vm.startPrank(alice);
+        token.approve(address(channel), 1 ether);
+        bytes32 cid = channel.openChannel(bob, 1, 1 ether, uint64(7 days));
+        vm.stopPrank();
+
+        vm.startPrank(alice);
+        vm.expectRevert(AIPaymentChannel.NotPayee.selector);
+        channel.closeChannel(cid, 0.5 ether, 0, "0x");
+        vm.stopPrank();
+    }
+
+    function test_Channel_InitiateForceClose_NotOpen() public {
+        vm.startPrank(aliceSigner);
+        token.approve(address(channel), 1 ether);
+        bytes32 cid = channel.openChannel(bob, 1, 1 ether, uint64(7 days));
+        vm.stopPrank();
+
+        // bob (payee) closes with aliceSigner's (payer) signature
+        vm.startPrank(bob);
+        bytes32 structHash = keccak256(abi.encode(channel.TICKET_TYPEHASH(), cid, 0.3 ether, uint256(0)));
+        bytes32 digest = channel.domainSeparator();
+        bytes32 fullDigest = keccak256(abi.encodePacked("\x19\x01", digest, structHash));
+        (uint8 v, bytes32 r, bytes32 s) = vm.sign(alicePk, fullDigest);
+        bytes memory sig = abi.encodePacked(r, s, v);
+        channel.closeChannel(cid, 0.3 ether, 0, sig);
+        vm.stopPrank();
+
+        vm.startPrank(aliceSigner);
+        vm.expectRevert("Channel: not open");
+        channel.initiateForceClose(cid);
+        vm.stopPrank();
+    }
+
+    function test_Channel_ExecuteForceClose_NotAfterTimeout() public {
+        vm.startPrank(alice);
+        token.approve(address(channel), 1 ether);
+        bytes32 cid = channel.openChannel(bob, 1, 1 ether, uint64(7 days));
+        vm.stopPrank();
+
+        vm.startPrank(alice);
+        channel.initiateForceClose(cid);
+        vm.stopPrank();
+
+        vm.startPrank(alice);
+        vm.expectRevert(AIPaymentChannel.TimeoutActive.selector);
+        channel.executeForceClose(cid);
+        vm.stopPrank();
+    }
+
+    function test_Channel_Open_WhenPaused() public {
+        vm.startPrank(owner);
+        channel.pause();
+        vm.stopPrank();
+
+        vm.startPrank(alice);
+        token.approve(address(channel), 1 ether);
+        vm.expectRevert();
+        channel.openChannel(bob, 2, 1 ether, uint64(7 days));
+        vm.stopPrank();
+
+        vm.startPrank(owner);
+        channel.unpause();
+        vm.stopPrank();
+    }
+
+    function test_Token_BridgeBurn_Paused() public {
+        // Set a valid bridge via timelock
+        vm.startPrank(owner);
+        token.queueBridgeChange(address(this));
+        vm.warp(block.timestamp + 49 hours);
+        token.applyBridgeChange();
+        vm.stopPrank();
+
+        vm.startPrank(owner);
+        token.pause();
+        vm.stopPrank();
+
+        vm.startPrank(address(this));
+        vm.expectRevert();
+        token.bridgeBurn(alice, 1 ether);
+        vm.stopPrank();
+
+        vm.startPrank(owner);
+        token.unpause();
+        vm.stopPrank();
+    }
+
+    function test_Token_Transfer_AmountExceedsBalance() public {
+        vm.startPrank(alice);
+        token.approve(address(this), type(uint256).max);
+        vm.expectRevert();
+        token.transfer(bob, type(uint256).max);
+        vm.stopPrank();
+    }
+
+    function test_Token_CollectAITax_AmountZero() public {
+        vm.startPrank(alice);
+        token.transfer(aliceSigner, 1 ether);
+        token.approve(address(channel), 1 ether);
+        vm.stopPrank();
+
+        vm.startPrank(aliceSigner);
+        vm.expectRevert();
+        token.collectAITax(0);
+        vm.stopPrank();
+    }
+
+    function test_Token_CollectAITax_BalanceInsufficient() public {
+        vm.startPrank(aliceSigner);
+        vm.expectRevert();
+        token.collectAITax(1);
+        vm.stopPrank();
     }
 }
