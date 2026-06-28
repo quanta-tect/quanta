@@ -2,10 +2,20 @@
 pragma solidity =0.8.24;
 
 import "forge-std/Test.sol";
+import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "../src-v2/QuantaTokenV2.sol";
 import "../src-v2/QuantaVestingWallet.sol";
 import "../src-v2/QuantaTreasuryController.sol";
 import "../src-v2/QuantaRewardsDistributor.sol";
+
+contract MockERC20 is ERC20 {
+    constructor() ERC20("Mock", "MCK") {
+        _mint(address(this), 1_000_000e18);
+    }
+    function mint(address to, uint256 amount) external {
+        _mint(to, amount);
+    }
+}
 
 contract QtaV2Tests is Test {
     // ===================================================================
@@ -616,6 +626,16 @@ contract QtaV2Tests is Test {
         assertEq(remaining, 999_900e18);
     }
 
+    function test_Rewards_RemainingWeekly() public {
+        vm.startPrank(treasury);
+        token.transfer(address(rewards), 100e18);
+        rewards.distribute(address(0x7777), 100e18, "first");
+        vm.stopPrank();
+
+        uint256 remaining = rewards.remainingWeekly();
+        assertEq(remaining, 4_999_900e18);
+    }
+
     // ===================================================================
     // AccessControl tests
     // ===================================================================
@@ -677,13 +697,40 @@ contract QtaV2Tests is Test {
         vm.stopPrank();
     }
 
+    function test_Treasury_RecoverNonQTA() public {
+        MockERC20 mock = new MockERC20();
+        mock.mint(address(treasuryCtrl), 100e18);
+        vm.startPrank(treasury);
+        treasuryCtrl.recoverTokens(address(mock), 100e18);
+        vm.stopPrank();
+    }
+
+    function test_Treasury_GetPendingTransfer_AfterQueue() public {
+        address recipient = address(0x1234);
+        uint256 amount = 100e18;
+
+        vm.startPrank(treasury);
+        token.transfer(address(treasuryCtrl), amount);
+        treasuryCtrl.queueTransfer(recipient, amount);
+        vm.stopPrank();
+
+        uint256 pendingAmt = treasuryCtrl.pendingAmount();
+        assertEq(pendingAmt, amount);
+    }
+
     // ===================================================================
     // Vesting: branch / edge coverage boost
     // ===================================================================
     function test_Vesting_SetToken_ZeroReverts() public {
+        QuantaVestingWallet fresh = new QuantaVestingWallet(
+            team,
+            uint64(block.timestamp),
+            94608000,
+            31536000
+        );
         vm.startPrank(team);
         vm.expectRevert();
-        vesting.setToken(address(0));
+        fresh.setToken(address(0));
         vm.stopPrank();
     }
 
@@ -694,7 +741,7 @@ contract QtaV2Tests is Test {
         vm.stopPrank();
     }
 
-    function test_Vesting_FundTwice_Reverts() public {
+    function test_Vesting_CannotFundTwice() public {
         vm.startPrank(team);
         vm.expectRevert();
         vesting.fund();
@@ -786,6 +833,23 @@ contract QtaV2Tests is Test {
         vm.stopPrank();
     }
 
+    function test_Rewards_NewWeek_ResetsWeekly() public {
+        vm.startPrank(treasury);
+        token.transfer(address(rewards), 6_000_000e18);
+        vm.stopPrank();
+
+        vm.startPrank(treasury);
+        // Distribute 1M (within daily cap)
+        rewards.distribute(deployer, 1_000_000e18, "week1");
+
+        // Warp past a full week boundary
+        vm.warp(block.timestamp + 7 days + 1 hours);
+
+        // Weekly counter should reset, so we can distribute again
+        rewards.distribute(deployer, 1_000_000e18, "week2");
+        vm.stopPrank();
+    }
+
     function test_Rewards_RecoverQTA_Reverts() public {
         vm.startPrank(treasury);
         vm.expectRevert();
@@ -814,10 +878,30 @@ contract QtaV2Tests is Test {
         vm.stopPrank();
     }
 
+    function test_Vesting_VestedAmount_LinearPath() public {
+        // Cover linear branch after cliff, before duration.
+        // setUp already funded vesting, so we only need to read vestedAmount
+        // before/after cliff to cover the timestamp branches.
+        uint64 cliff = vesting.cliffSeconds();
+        uint256 before = vesting.vestedAmount(cliff - 1);
+        assertEq(before, 0);
+        uint64 afterCliff = cliff + 1 days;
+        uint256 afterVal = vesting.vestedAmount(afterCliff);
+        assertGt(afterVal, 0);
+    }
+
     function test_Vesting_RecoverQTA_Reverts() public {
         vm.startPrank(team);
         vm.expectRevert();
         vesting.recoverTokens(address(token), 0);
+        vm.stopPrank();
+    }
+
+    function test_Vesting_RecoverNonQTA() public {
+        MockERC20 nonQta = new MockERC20();
+        nonQta.mint(address(vesting), 100e18);
+        vm.startPrank(team);
+        vesting.recoverTokens(address(nonQta), 100e18);
         vm.stopPrank();
     }
 
