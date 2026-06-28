@@ -2,7 +2,18 @@
 
 Last updated: June 21, 2026 (Session 4)
 
-## Smart Contracts (v1.2 Final — Deployed + Verified on Base Sepolia)
+## Smart Contracts
+
+### V2 (June 28, 2026 — Deployed on Base Sepolia)
+
+| Contract | Address |
+|---|---|
+| QuantaTokenV2 | `0x6d089d25035868358952b4d3644f8dAdcCc3295a` |
+| QuantaVestingWallet | `0xDc1B7aB0e7aE57bbB66ead2d9998bDA9127A291D` |
+| QuantaTreasuryController | `0xb8D10Ba1839597c0c76a60455E231Ac2bA837901` |
+| QuantaRewardsDistributor | `0x3bED931A6A4F0246d152c2532BB9015850657446` |
+
+### V1.2 Final — Deployed + Verified on Base Sepolia
 
 | Contract | Address |
 |---|---|

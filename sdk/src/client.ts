@@ -12,7 +12,7 @@ import { base, baseSepolia } from "viem/chains";
 import type { QuantaContracts } from "./types.js";
 import { QUANTA_CONTRACTS } from "./types.js";
 
-const CHAINS = { base, "base-sepolia": baseSepolia };
+const CHAINS = { base, "base-sepolia": baseSepolia, "base-sepolia-v2": baseSepolia };
 
 export type ChainName = keyof typeof CHAINS;
 
