@@ -13,7 +13,7 @@
 
 - Network: Base Sepolia (84532)
 - Compiler: Solc 0.8.24
-- Verification: Sourcify pending
+- Verification: Sourcify exact_match on Blockscout
 - Treasury Multisig: 0x1d6a9512fF4A98C192A99Adea934ac3f83035953
 - Team Multisig: 0x1d6a9512fF4A98C192A99Adea934ac3f83035953
 
