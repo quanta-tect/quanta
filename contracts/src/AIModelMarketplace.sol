@@ -141,6 +141,7 @@ contract AIModelMarketplace is ReentrancyGuard, Ownable2Step, Pausable {
         if (pricePerCall == 0) revert ZeroPrice();
         if (royaltyBps > MAX_ROYALTY_BPS) revert InvalidRoyalty(royaltyBps);
         if (modelCountByCreator[msg.sender] >= MAX_MODELS_PER_USER) revert TooManyModels();
+        if (treasury == address(0)) revert ZeroAddress();
 
         modelId = nextModelId++;
         modelCountByCreator[msg.sender]++;
@@ -184,6 +185,8 @@ contract AIModelMarketplace is ReentrancyGuard, Ownable2Step, Pausable {
         require(m.registeredAt != 0, "Market: model not found");
         if (!(m.active || (m.deactivatedAt > 0 && block.timestamp <= m.deactivatedAt + DEACTIVATION_GRACE))) revert ModelUnavailable();
         if (m.pricePerCall > maxPrice) revert PriceSlipped();
+        if (treasury == address(0)) revert ZeroAddress();
+        if (validatorPool == address(0)) revert ZeroAddress();
 
         uint256 price = m.pricePerCall;
 

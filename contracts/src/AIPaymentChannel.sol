@@ -24,8 +24,6 @@ contract AIPaymentChannel is EIP712, ReentrancyGuard, Ownable2Step, Pausable {
         "PaymentTicket(bytes32 channelId,uint256 amount,uint256 nonce)"
     );
 
-    bytes32 private _cachedDomainSeparator;
-
     enum ChannelState { Open, Closing, Closed }
 
     struct Channel {
@@ -64,7 +62,6 @@ contract AIPaymentChannel is EIP712, ReentrancyGuard, Ownable2Step, Pausable {
     {
         require(_token != address(0), "Channel: zero token");
         token = IQuantaToken(_token);
-        _cachedDomainSeparator = _domainSeparatorV4();
     }
 
     function openChannel(
@@ -190,7 +187,7 @@ contract AIPaymentChannel is EIP712, ReentrancyGuard, Ownable2Step, Pausable {
     }
 
     function domainSeparator() external view returns (bytes32) {
-        return _cachedDomainSeparator;
+        return _domainSeparatorV4();
     }
 
     function pause() external onlyOwner { _pause(); }
