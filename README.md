@@ -156,6 +156,13 @@ This project takes security seriously:
 
 ## 🤝 Contributing
 
+## AgentPay Demo
+
+A minimal dashboard demo is available in `demo/agentpay-dashboard`.
+It shows agent registration, spending policies, authorized spenders, simulated payments, and receipts.
+
+## 🤝 Contributing
+
 We need:
 - 🔐 Cryptographers (Dilithium / Kyber experience)
 - 🦀 Rust developers (Substrate / Cosmos SDK)
