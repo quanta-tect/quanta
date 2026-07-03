@@ -1,6 +1,6 @@
-# ⚛️ QUANTA — Quantum-resistant Universal Agent Network for Transactions & AI
+# ⚛ QUANTA - Quantum-resistant Universal Agent Network for Transactions & AI
 
-> "Money for the future isn't just quantum-resistant — it speaks AI's language."
+> "Money for the future isn't just quantum-resistant - it speaks AI's language."
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)]()
 [![Quantum Safe](https://img.shields.io/badge/Quantum-Safe-purple.svg)]()
@@ -35,7 +35,7 @@ quanta/
 │   ├── ROADMAP.md
 │   └── MARKETING.md
 │
-├── docs-security/            # 🛡️ Security playbook (most important!)
+├── docs-security/            # 🛡 Security playbook (most important!)
 │   ├── BRIDGE_SECURITY_REVIEW.md
 │   ├── INCIDENT_RESPONSE.md
 │   └── AUDIT_OPTIONS_COMPARISON.md
@@ -93,7 +93,7 @@ open explorer/index.html                        # Live explorer (simulated)
 open wallet-ui/index.html                       # Safe wallet with tx simulation
 ```
 
-## 🗺️ Deployment roadmap
+## 🗺 Deployment roadmap
 
 ### ✅ Current Implementation Status
 
@@ -115,19 +115,19 @@ The following items are roadmap/research unless explicitly marked otherwise:
 - QuantumGuard
 - QuantaStaking (V2 contracts are experimental/tokenomics only)
 
-### 🔨 Phase 1 — Next 30 days
+### 🔨 Phase 1 - Next 30 days
 1. **Week 1**: Deploy v1.2 smart contracts to Base Sepolia (testnet)
 2. **Week 2**: Set up Twitter, Discord, Mirror blog
 3. **Week 3**: Publish launch thread + viral demo video
 4. **Week 4**: Deploy to Base mainnet + Uniswap V3 pool
 
-### 🚀 Phase 2 — Months 2-3
+### 🚀 Phase 2 - Months 2-3
 - Audit smart contracts (Code4rena / Sherlock / Cantina)
 - Deploy across L2s (Arbitrum, Optimism, Polygon)
 - Hackathon $50K prize pool
 - First 1000 AI agents registered
 
-### 🌌 Phase 3 — Months 4-12
+### 🌌 Phase 3 - Months 4-12
 - Rust L1 implementation
 - Devnet → Testnet → Mainnet
 - AI Council formation
@@ -154,7 +154,7 @@ The following items are roadmap/research unless explicitly marked otherwise:
 - **50,000+ TPS** target throughput
 - **2 seconds** finality
 
-## 🛡️ Security First
+## 🛡 Security First
 
 This project takes security seriously:
 
@@ -170,6 +170,11 @@ This project takes security seriously:
 
 **Read `SECURITY_AUDIT.md` and `docs-security/` before any mainnet deployment.**
 
+## AgentPay Demo
+
+A minimal dashboard demo is available in `demo/agentpay-dashboard`.
+It shows agent registration, spending policies, authorized spenders, simulated payments, and receipts.
+
 ## 🤝 Contributing
 
 We need:
@@ -179,7 +184,7 @@ We need:
 - 🎨 Designers (UI/UX for wallet + explorer)
 - 📣 Community builders + memers
 
-## ⚠️ Disclaimer
+## ⚠ Disclaimer
 
 This is a proof-of-concept project for educational and research purposes.
 Not investment advice. Audit before deploying to mainnet with real value.
@@ -190,6 +195,6 @@ MIT © QUANTA Foundation
 
 All funds go toward:
 - 🔐 Smart contract audits
-- 🛠️ Developer grants
+- 🛠 Developer grants
 - 🎓 Educational content
 - ☕ Coffee for late-night coding
