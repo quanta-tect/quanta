@@ -64,6 +64,10 @@ contract AIModelMarketplace is ReentrancyGuard, Ownable2Step, Pausable {
     event TreasuryUpdated(address indexed oldTreasury, address indexed newTreasury);
     event ValidatorPoolUpdated(address indexed old_, address indexed new_);
     event FeeSplitUpdated(uint256 treasuryBps, uint256 validatorBps);
+    event TreasuryChangeQueued(address indexed oldTreasury, address indexed newTreasury, uint256 executeAfter);
+    event TreasuryChangeApplied(address indexed oldTreasury, address indexed newTreasury);
+    event ValidatorPoolChangeQueued(address indexed oldValidatorPool, address indexed newValidatorPool, uint256 executeAfter);
+    event ValidatorPoolChangeApplied(address indexed oldValidatorPool, address indexed newValidatorPool);
 
     constructor(
         address _token,
@@ -84,6 +88,7 @@ contract AIModelMarketplace is ReentrancyGuard, Ownable2Step, Pausable {
         pendingTreasury = _treasury;
         pendingTreasuryAt = uint64(block.timestamp) + TREASURY_TIMELOCK;
         emit TreasuryUpdated(treasury, _treasury);
+        emit TreasuryChangeQueued(treasury, _treasury, uint64(block.timestamp) + TREASURY_TIMELOCK);
     }
 
     function applyTreasuryChange() external onlyOwner {
@@ -94,6 +99,7 @@ contract AIModelMarketplace is ReentrancyGuard, Ownable2Step, Pausable {
         pendingTreasury = address(0);
         pendingTreasuryAt = 0;
         emit TreasuryUpdated(old, treasury);
+        emit TreasuryChangeApplied(old, treasury);
     }
 
     function cancelTreasuryChange() external onlyOwner {
@@ -106,6 +112,7 @@ contract AIModelMarketplace is ReentrancyGuard, Ownable2Step, Pausable {
         pendingValidatorPool = _pool;
         pendingValidatorPoolAt = uint64(block.timestamp) + TREASURY_TIMELOCK;
         emit ValidatorPoolUpdated(validatorPool, _pool);
+        emit ValidatorPoolChangeQueued(validatorPool, _pool, uint64(block.timestamp) + TREASURY_TIMELOCK);
     }
 
     function applyValidatorPoolChange() external onlyOwner {
@@ -116,6 +123,7 @@ contract AIModelMarketplace is ReentrancyGuard, Ownable2Step, Pausable {
         pendingValidatorPool = address(0);
         pendingValidatorPoolAt = 0;
         emit ValidatorPoolUpdated(old, validatorPool);
+        emit ValidatorPoolChangeApplied(old, validatorPool);
     }
 
     function cancelValidatorPoolChange() external onlyOwner {
@@ -171,7 +179,7 @@ contract AIModelMarketplace is ReentrancyGuard, Ownable2Step, Pausable {
         m.pricePerCall = newPrice;
     }
 
-    function deactivateModel(uint256 modelId) external {
+    function deactivateModel(uint256 modelId) external nonReentrant {
         Model storage m = models[modelId];
         if (m.creator != msg.sender && msg.sender != owner()) revert NotAuthorized();
         require(m.active, "Market: already inactive");

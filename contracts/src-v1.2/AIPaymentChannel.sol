@@ -102,7 +102,7 @@ contract AIPaymentChannel is EIP712, ReentrancyGuard, Ownable2Step, Pausable {
         uint256 amount,
         uint256 nonce,
         bytes calldata signature
-    ) external nonReentrant whenNotPaused {
+    ) external nonReentrant {
         Channel storage c = channels[channelId];
         require(c.openedAt != 0, "Channel: not found");
         require(c.state == ChannelState.Open || c.state == ChannelState.Closing, "Channel: already closed");
@@ -153,11 +153,11 @@ contract AIPaymentChannel is EIP712, ReentrancyGuard, Ownable2Step, Pausable {
         emit ForceCloseChallenged(channelId, amount);
     }
 
-    function executeForceClose(bytes32 channelId) external nonReentrant whenNotPaused {
+    function executeForceClose(bytes32 channelId) external nonReentrant {
         Channel storage c = channels[channelId];
         require(c.state == ChannelState.Closing, "Channel: not closing");
         if (msg.sender != c.payer) revert NotPayer();
-        if (block.timestamp < c.closeInitiatedAt + CHALLENGE_WINDOW + c.timeout) revert TimeoutActive();
+        if (block.timestamp < c.closeInitiatedAt + CHALLENGE_WINDOW) revert TimeoutActive();
 
         uint256 toPayee = c.settledAmount;
         uint256 toRefund = c.deposit - c.settledAmount;

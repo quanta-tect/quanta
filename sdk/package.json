@@ -3,9 +3,20 @@
   "version": "0.1.0",
   "description": "QUANTA SDK — quantum-safe + AI-native blockchain client",
   "type": "module",
-  "main": "src/index.ts",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "files": [
+    "dist"
+  ],
   "scripts": {
-    "build": "tsc",
+    "build": "tsc -p tsconfig.json",
+    "prepack": "npm run build",
     "demo:agent": "tsx examples/autonomous-agent.ts",
     "demo:micropay": "tsx examples/micropayment.ts",
     "demo:marketplace": "tsx examples/buy-inference.ts"
@@ -13,7 +24,7 @@
   "dependencies": {
     "dotenv": "^17.4.2",
     "openai": "^4.70.0",
-    "viem": "^2.53.1",
+    "viem": "^2.54.2",
     "ws": "^8.21.0"
   },
   "devDependencies": {
