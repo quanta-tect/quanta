@@ -154,8 +154,6 @@ This project takes security seriously:
 
 **Read `SECURITY_AUDIT.md` and `docs-security/` before any mainnet deployment.**
 
-## 🤝 Contributing
-
 ## AgentPay Demo
 
 A minimal dashboard demo is available in `demo/agentpay-dashboard`.
