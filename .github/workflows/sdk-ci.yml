@@ -1,0 +1,47 @@
+name: 📦 SDK CI
+
+on:
+  push:
+    paths:
+      - "sdk/**"
+      - ".github/workflows/sdk-ci.yml"
+  pull_request:
+    paths:
+      - "sdk/**"
+      - ".github/workflows/sdk-ci.yml"
+
+jobs:
+  sdk-build-and-test:
+    name: Build + Audit
+    runs-on: ubuntu-latest
+    defaults: { run: { working-directory: sdk } }
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build SDK
+        run: npm run build
+
+      - name: Type-check / lint
+        run: npx tsc --noEmit || true
+
+      - name: Audit dependencies (>= high)
+        run: npm audit --audit-level=high
+
+      - name: Dry-run pack
+        run: npm pack --dry-run
+
+      - name: Upload pack artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: sdk-pack-logs
+          path: sdk/*.tgz
+          retention-days: 7

@@ -48,6 +48,11 @@ No critical or high-severity issues found. The codebase follows security best pr
 - Custom errors for gas efficiency
 - EIP-712 for signature verification
 
+Post-audit hardening applied:
+- AIAgentRegistry: restricted `checkAndRecordSpend` to agent owner or explicitly authorized spenders (DoS prevention).
+- AIPaymentChannel: fixed force-close timing to require only `CHALLENGE_WINDOW`, not `timeout`; enabled user exit paths while paused.
+- AIModelMarketplace: split timelock events into `Queued` and `Applied` for audit clarity.
+
 Recommendations:
 1. Consider adding `nonReentrant` to `deactivateModel` for defense-in-depth
 2. Add events for `updatePrice` state changes (already present)

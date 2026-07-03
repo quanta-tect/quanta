@@ -2,7 +2,7 @@
 # QUANTA — One-shot setup script
 # Run from quanta/ root: bash setup.sh
 
-set -e
+set -euo pipefail
 
 GREEN='\033[0;32m'
 PURPLE='\033[0;35m'
@@ -14,12 +14,12 @@ echo "================================="
 
 # --- 1. Python prototype ---
 echo -e "\n${CYAN}[1/4] Testing Python prototype...${NC}"
-cd prototype && python3 demo.py 2>&1 | tail -5 && cd ..
+cd prototype && python3 demo.py && cd ..
 echo -e "${GREEN}✓ Prototype OK${NC}"
 
 # --- 2. Tokenomics simulator ---
 echo -e "\n${CYAN}[2/4] Running tokenomics simulator...${NC}"
-cd simulator && python3 tokenomics_sim.py --scenario base 2>&1 | tail -10 && cd ..
+cd simulator && python3 tokenomics_sim.py --scenario base && cd ..
 echo -e "${GREEN}✓ Simulator OK${NC}"
 
 # --- 3. Foundry setup (smart contracts) ---
@@ -31,8 +31,8 @@ else
     cd contracts
     [ ! -d "lib/openzeppelin-contracts" ] && forge install OpenZeppelin/openzeppelin-contracts --no-commit
     [ ! -d "lib/forge-std" ] && forge install foundry-rs/forge-std --no-commit
-    forge build 2>&1 | tail -5
-    forge test 2>&1 | tail -10
+    forge build
+    forge test -vvv
     cd ..
     echo -e "${GREEN}✓ Contracts compiled + tested${NC}"
 fi
@@ -40,7 +40,7 @@ fi
 # --- 4. SDK ---
 echo -e "\n${CYAN}[4/4] Installing SDK...${NC}"
 if command -v npm &> /dev/null; then
-    cd sdk && npm install 2>&1 | tail -3 && cd ..
+    cd sdk && npm install && cd ..
     echo -e "${GREEN}✓ SDK ready${NC}"
 else
     echo "⚠️  npm not found, skip SDK install"

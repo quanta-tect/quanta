@@ -83,12 +83,13 @@ jobs:
           sarif_file: ${{ steps.slither.outputs.sarif }}
 
   # ===================================================================
-  # 3. Mythril symbolic execution (slower, only on PR)
+  # 3. Mythril symbolic execution (informational, not blocking)
   # ===================================================================
   mythril:
-    name: Mythril symbolic execution
+    name: Mythril symbolic execution (informational)
     runs-on: ubuntu-latest
     if: github.event_name == 'pull_request'
+    continue-on-error: true
     steps:
       - uses: actions/checkout@v4
         with: { submodules: recursive }
@@ -105,7 +106,7 @@ jobs:
           myth analyze src-v1.2/QuantaToken.sol \
             --solv 0.8.24 \
             --execution-timeout 120 \
-            --max-depth 12 || true
+            --max-depth 12 | tee mythril-quanta-token.log
 
       - name: Analyze AIAgentRegistry (v1.2)
         run: |
@@ -113,7 +114,31 @@ jobs:
           myth analyze src-v1.2/AIAgentRegistry.sol \
             --solv 0.8.24 \
             --execution-timeout 120 \
-            --max-depth 12 || true
+            --max-depth 12 | tee mythril-registry.log
+
+      - name: Analyze AIPaymentChannel (v1.2)
+        run: |
+          cd contracts
+          myth analyze src-v1.2/AIPaymentChannel.sol \
+            --solv 0.8.24 \
+            --execution-timeout 120 \
+            --max-depth 12 | tee mythril-channel.log
+
+      - name: Analyze AIModelMarketplace (v1.2)
+        run: |
+          cd contracts
+          myth analyze src-v1.2/AIModelMarketplace.sol \
+            --solv 0.8.24 \
+            --execution-timeout 120 \
+            --max-depth 12 | tee mythril-marketplace.log
+
+      - name: Upload Mythril logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: mythril-logs
+          path: contracts/mythril-*.log
+          retention-days: 7
 
   # ===================================================================
   # 4. Secret scanning (prevent .env / private key leaks)

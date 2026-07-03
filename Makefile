@@ -7,12 +7,16 @@ test:
 	cd contracts && forge test -vvv
 
 deploy:
+	@echo "⚠️  Prefer Foundry keystore/account over raw private keys in shell history/CI."
+	@echo "   Example: cast wallet import deployer --interactive"
+	@echo "            forge script script/Deploy.s.sol --account deployer --broadcast"
 	cd contracts && forge script script/Deploy.s.sol --rpc-url $(BASE_SEPOLIA_RPC) --broadcast
 
 demo:
 	cd sdk && npx tsx examples/autonomous-agent.ts
 
 approve:
+	@echo "⚠️  Passing raw private keys via CLI is insecure. Use --account deployer instead."
 	cast send 0x312137fb6943F8f89F5eF0f221aA102035a16625 "approve(address,uint256)" 0xF146e95b97fce1d1800F5F922AE99155711A4314 115792089237316195423570985008687907853269984665640564039457584007913129639935 --rpc-url https://sepolia.base.org --private-key $(DEPLOYER_KEY)
 
 balance:

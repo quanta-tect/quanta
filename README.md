@@ -43,8 +43,12 @@ quanta/
 ├── prototype/                # 🐍 Python L1 prototype (educational)
 │
 ├── contracts/                # 🔗 Solidity smart contracts
-│   ├── src-v1.1/             # Production (all security fixes applied)
-│   ├── test-v1.1/            # Security regression tests
+│   ├── src-v1.2/             # Current production (v1.2 hardened)
+│   ├── test-v1.2/            # v1.2 security regression tests
+│   ├── src-v1.1/             # Legacy v1.1
+│   ├── test-v1.1/            # Legacy regression tests
+│   ├── src-v2/               # V2 experimental (token/vesting/treasury/rewards)
+│   ├── test-v2/              # V2 tests
 │   ├── test-invariant/       # Foundry + Echidna invariants
 │   └── test-formal/          # Halmos formal verification
 │
@@ -91,16 +95,28 @@ open wallet-ui/index.html                       # Safe wallet with tx simulation
 
 ## 🗺️ Deployment roadmap
 
-### ✅ Phase 0 — Now (Done in this repo)
-- Whitepaper, tokenomics, full prototype, landing page, simulator
-- Smart contracts (Solidity v1.1 with all security fixes)
-- TypeScript SDK with examples
-- Marketing content kit (launch thread + 30-day calendar)
-- Block explorer mockup
-- Complete security suite (audit, war games, training, etc.)
+### ✅ Current Implementation Status
+
+The current v1.2 release is an EVM smart-contract protocol for AI-agent payments and marketplace coordination. It includes:
+
+- QTA ERC-20 token (QuantaToken)
+- AI agent registry (AIAgentRegistry)
+- Spending policy controls
+- Payment channel contract (AIPaymentChannel)
+- AI model marketplace (AIModelMarketplace)
+- TypeScript SDK
+
+The following items are roadmap/research unless explicitly marked otherwise:
+
+- Native QUANTA L1 runtime
+- Post-quantum signature integration (Dilithium / Kyber)
+- Proof of Useful Work (PoUW) consensus
+- Full validator network
+- QuantumGuard
+- QuantaStaking (V2 contracts are experimental/tokenomics only)
 
 ### 🔨 Phase 1 — Next 30 days
-1. **Week 1**: Deploy v1.1 smart contracts to Base Sepolia (testnet)
+1. **Week 1**: Deploy v1.2 smart contracts to Base Sepolia (testnet)
 2. **Week 2**: Set up Twitter, Discord, Mirror blog
 3. **Week 3**: Publish launch thread + viral demo video
 4. **Week 4**: Deploy to Base mainnet + Uniswap V3 pool
