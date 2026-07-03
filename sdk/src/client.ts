@@ -47,13 +47,13 @@ export class QuantaClient {
     this.publicClient = createPublicClient({
       chain,
       transport: http(opts.rpcUrl),
-    });
+    }) as PublicClient;
 
     this.walletClient = createWalletClient({
       account,
       chain,
       transport: http(opts.rpcUrl),
-    });
+    }) as WalletClient;
 
     this.contracts = {
       ...QUANTA_CONTRACTS[opts.chain],
