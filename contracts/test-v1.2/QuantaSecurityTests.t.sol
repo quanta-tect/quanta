@@ -529,7 +529,9 @@ contract QuantaV12SecurityTests is Test {
         registry.registerAgent(agentId, "ipfs://m", 1 ether, 10 ether);
 
         // Spend within limit
+        vm.prank(alice);
         registry.checkAndRecordSpend(agentId, 0.5 ether);
+        vm.prank(alice);
         registry.checkAndRecordSpend(agentId, 0.5 ether);
 
         uint256 total = registry.getRolling24hSpend(agentId);
@@ -541,6 +543,7 @@ contract QuantaV12SecurityTests is Test {
         bytes32 agentId = keccak256(abi.encode(alice, "Bot"));
         registry.registerAgent(agentId, "ipfs://m", 1 ether, 10 ether);
 
+        vm.prank(alice);
         vm.expectRevert(AIAgentRegistry.ExceedsMaxPerTx.selector);
         registry.checkAndRecordSpend(agentId, 2 ether); // > maxPerTx (1 ether)
     }
@@ -552,10 +555,12 @@ contract QuantaV12SecurityTests is Test {
 
         // Spend 10 ether (max per day)
         for (uint256 i = 0; i < 10; i++) {
+            vm.prank(alice);
             registry.checkAndRecordSpend(agentId, 1 ether);
         }
 
         // 11th should fail
+        vm.prank(alice);
         vm.expectRevert(AIAgentRegistry.ExceedsMaxPerDay.selector);
         registry.checkAndRecordSpend(agentId, 1 ether);
     }
@@ -567,6 +572,7 @@ contract QuantaV12SecurityTests is Test {
 
         // Spend 5 ether
         for (uint256 i = 0; i < 5; i++) {
+            vm.prank(alice);
             registry.checkAndRecordSpend(agentId, 1 ether);
         }
 
@@ -575,6 +581,7 @@ contract QuantaV12SecurityTests is Test {
 
         // Old spend should be expired, can spend again
         for (uint256 i = 0; i < 5; i++) {
+            vm.prank(alice);
             registry.checkAndRecordSpend(agentId, 1 ether);
         }
     }
@@ -1209,6 +1216,7 @@ contract QuantaV12SecurityTests is Test {
 
         // 4. Alice records spend (must respect maxPerTx = 1 ether)
         for (uint256 i = 0; i < 50; i++) {
+            vm.prank(alice);
             registry.checkAndRecordSpend(agentId, 1 ether);
         }
 
@@ -1515,5 +1523,213 @@ contract QuantaV12SecurityTests is Test {
         vm.expectRevert();
         token.collectAITax(1);
         vm.stopPrank();
+    }
+
+    // ===================================================================
+    // REGISTRY AUTHORIZED SPENDER TESTS
+    // ===================================================================
+
+    function test_Registry_OwnerCanRecordSpend() public {
+        vm.prank(alice);
+        bytes32 agentId = keccak256(abi.encode(alice, "Bot"));
+        registry.registerAgent(agentId, "ipfs://m", 1 ether, 10 ether);
+
+        vm.prank(alice);
+        registry.checkAndRecordSpend(agentId, 0.5 ether);
+
+        uint256 total = registry.getRolling24hSpend(agentId);
+        assertEq(total, 0.5 ether);
+    }
+
+    function test_Registry_AuthorizedSpenderCanRecordSpend() public {
+        vm.prank(alice);
+        bytes32 agentId = keccak256(abi.encode(alice, "Bot"));
+        registry.registerAgent(agentId, "ipfs://m", 1 ether, 10 ether);
+
+        vm.prank(owner);
+        registry.setAuthorizedSpender(attacker, true);
+        vm.stopPrank();
+
+        vm.prank(attacker);
+        registry.checkAndRecordSpend(agentId, 0.5 ether);
+
+        uint256 total = registry.getRolling24hSpend(agentId);
+        assertEq(total, 0.5 ether);
+    }
+
+    function test_Registry_RandomCannotRecordSpend() public {
+        vm.prank(alice);
+        bytes32 agentId = keccak256(abi.encode(alice, "Bot"));
+        registry.registerAgent(agentId, "ipfs://m", 1 ether, 10 ether);
+
+        vm.prank(attacker);
+        vm.expectRevert(AIAgentRegistry.NotAuthorizedSpender.selector);
+        registry.checkAndRecordSpend(agentId, 0.5 ether);
+    }
+
+    function test_Registry_AuthorizedSpenderRespectsDailyLimit() public {
+        vm.prank(alice);
+        bytes32 agentId = keccak256(abi.encode(alice, "Bot"));
+        registry.registerAgent(agentId, "ipfs://m", 1 ether, 10 ether);
+
+        vm.prank(owner);
+        registry.setAuthorizedSpender(attacker, true);
+        vm.stopPrank();
+
+        for (uint256 i = 0; i < 10; i++) {
+            vm.prank(attacker);
+            registry.checkAndRecordSpend(agentId, 1 ether);
+        }
+
+        vm.prank(attacker);
+        vm.expectRevert(AIAgentRegistry.ExceedsMaxPerDay.selector);
+        registry.checkAndRecordSpend(agentId, 1 ether);
+    }
+
+    function test_Registry_CheckAndRecordSpend_PausedRevertsForOwner() public {
+        bytes32 agentId = keccak256(abi.encode(alice, "Bot"));
+        vm.startPrank(alice);
+        registry.registerAgent(agentId, "ipfs://m", 1 ether, 10 ether);
+        vm.stopPrank();
+
+        vm.startPrank(owner);
+        registry.pause();
+        vm.stopPrank();
+
+        vm.startPrank(alice);
+        vm.expectRevert();
+        registry.checkAndRecordSpend(agentId, 0.1 ether);
+        vm.stopPrank();
+
+        vm.startPrank(owner);
+        registry.unpause();
+        vm.stopPrank();
+    }
+
+    // ===================================================================
+    // PAYMENT CHANNEL FORCE CLOSE TIMING + PAUSE TESTS
+    // ===================================================================
+
+    function test_Channel_ForceClose_ExecuteAfterExactChallengeWindow() public {
+        vm.startPrank(aliceSigner);
+        token.approve(address(channel), 10 ether);
+        bytes32 cid = channel.openChannel(bob, 1, 10 ether, 0);
+        vm.stopPrank();
+
+        vm.prank(aliceSigner);
+        channel.initiateForceClose(cid);
+
+        // Advance exactly CHALLENGE_WINDOW (24h)
+        vm.warp(block.timestamp + 24 hours + 1);
+
+        uint256 aliceBalBefore = token.balanceOf(aliceSigner);
+        vm.prank(aliceSigner);
+        channel.executeForceClose(cid);
+
+        assertEq(token.balanceOf(aliceSigner) - aliceBalBefore, 10 ether);
+    }
+
+    function test_Channel_ForceClose_ExecuteBeforeChallengeWindowReverts() public {
+        vm.startPrank(aliceSigner);
+        token.approve(address(channel), 10 ether);
+        bytes32 cid = channel.openChannel(bob, 1, 10 ether, 0);
+        vm.stopPrank();
+
+        vm.prank(aliceSigner);
+        channel.initiateForceClose(cid);
+
+        // Try to execute before challenge window
+        vm.warp(block.timestamp + 12 hours);
+        vm.prank(aliceSigner);
+        vm.expectRevert(AIPaymentChannel.TimeoutActive.selector);
+        channel.executeForceClose(cid);
+    }
+
+    function test_Channel_ForceClose_UsableWhenPaused() public {
+        vm.startPrank(aliceSigner);
+        token.approve(address(channel), 10 ether);
+        bytes32 cid = channel.openChannel(bob, 1, 10 ether, 0);
+        vm.stopPrank();
+
+        vm.prank(aliceSigner);
+        channel.initiateForceClose(cid);
+
+        vm.startPrank(owner);
+        channel.pause();
+        vm.stopPrank();
+
+        vm.warp(block.timestamp + 24 hours + 1);
+
+        uint256 aliceBalBefore = token.balanceOf(aliceSigner);
+        vm.prank(aliceSigner);
+        channel.executeForceClose(cid);
+
+        assertEq(token.balanceOf(aliceSigner) - aliceBalBefore, 10 ether);
+    }
+
+    function test_Channel_Close_UsableWhenPaused() public {
+        vm.startPrank(aliceSigner);
+        token.approve(address(channel), 10 ether);
+        bytes32 cid = channel.openChannel(bob, 1, 1 ether, 0);
+        vm.stopPrank();
+
+        vm.startPrank(owner);
+        channel.pause();
+        vm.stopPrank();
+
+        uint256 bobBalBefore = token.balanceOf(bob);
+
+        // Sign ticket
+        bytes32 structHash = keccak256(
+            abi.encode(
+                channel.TICKET_TYPEHASH(),
+                cid,
+                0.5 ether,
+                uint256(1)
+            )
+        );
+        bytes32 digest = channel.domainSeparator();
+        bytes32 fullDigest = keccak256(abi.encodePacked("\x19\x01", digest, structHash));
+        (uint8 v, bytes32 r, bytes32 s) = vm.sign(alicePk, fullDigest);
+        bytes memory sig = abi.encodePacked(r, s, v);
+
+        vm.prank(bob);
+        channel.closeChannel(cid, 0.5 ether, 1, sig);
+
+        uint256 bobReceived = token.balanceOf(bob) - bobBalBefore;
+        assertGt(bobReceived, 0);
+    }
+
+    // ===================================================================
+    // MARKETPLACE TIMELOCK EVENT TESTS
+    // ===================================================================
+
+    function test_Marketplace_TreasuryTimelock_EmitsQueuedAndApplied() public {
+        vm.startPrank(owner);
+        market.setTreasury(address(0x1234));
+        vm.stopPrank();
+
+        // Warp to exactly when timelock expires
+        vm.warp(block.timestamp + 48 hours);
+
+        vm.startPrank(owner);
+        market.applyTreasuryChange();
+        vm.stopPrank();
+
+        assertEq(market.treasury(), address(0x1234));
+    }
+
+    function test_Marketplace_ValidatorPoolTimelock_EmitsQueuedAndApplied() public {
+        vm.startPrank(owner);
+        market.setValidatorPool(address(0x5678));
+        vm.stopPrank();
+
+        vm.warp(block.timestamp + 48 hours);
+
+        vm.startPrank(owner);
+        market.applyValidatorPoolChange();
+        vm.stopPrank();
+
+        assertEq(market.validatorPool(), address(0x5678));
     }
 }
