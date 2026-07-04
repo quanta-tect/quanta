@@ -190,6 +190,65 @@ button.primary:hover {
   border: 1px solid rgba(62,230,138,0.25);
 }
 
+.badge-mock {
+  background: rgba(118,148,255,0.12);
+  color: #7c94ff;
+  border: 1px solid rgba(118,148,255,0.25);
+}
+
+.badge-configured {
+  background: rgba(62,230,138,0.12);
+  color: #3ee68a;
+  border: 1px solid rgba(62,230,138,0.25);
+}
+
+.badge-warn {
+  background: rgba(255,170,60,0.12);
+  color: #ffb347;
+  border: 1px solid rgba(255,170,60,0.25);
+}
+
+.status-pills {
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.alert {
+  padding: 12px 14px;
+  border-radius: 14px;
+  margin-bottom: 14px;
+  font-size: 13px;
+}
+
+.alert.warn {
+  background: rgba(255,170,60,0.10);
+  border: 1px solid rgba(255,170,60,0.30);
+  color: #ffdca6;
+}
+
+.alert.info {
+  background: rgba(118,148,255,0.10);
+  border: 1px solid rgba(118,148,255,0.30);
+  color: #cfe0ff;
+}
+
+.alert code {
+  background: #0c1014;
+  padding: 2px 6px;
+  border-radius: 6px;
+  border: 1px solid #2a313c;
+}
+
 .muted {
   color: #8a919c;
+}
+
+button.secondary {
+  background: #1d232c;
+  color: #e6e8eb;
+  border: 1px solid #2a313c;
+  padding: 8px 12px;
+  border-radius: 12px;
+  cursor: pointer;
 }
