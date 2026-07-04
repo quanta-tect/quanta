@@ -173,7 +173,13 @@ This project takes security seriously:
 ## AgentPay Demo
 
 A minimal dashboard demo is available in `demo/agentpay-dashboard`.
-It shows agent registration, spending policies, authorized spenders, simulated payments, and receipts.
+
+It shows:
+- Agent setup
+- Spending policies
+- Authorized spenders
+- Simulated payments
+- Receipt history
 
 The demo supports two modes:
 - Mock mode: runnable without private keys or contract addresses.
