@@ -1,8 +1,31 @@
 import { useState } from 'react';
-import { useAccount, useConnect, useDisconnect, useSwitchChain } from 'wagmi';
+import { useAccount, useConnect, useDisconnect, useSwitchChain, useWriteContract } from 'wagmi';
 import { injected } from 'wagmi/connectors';
 import { useMockMode, useAgentState, useReceipts, simulatePayment } from './lib/mock';
 import { loadConfig } from './lib/config';
+
+const AGENT_REGISTRY_ABI = [
+  {
+    inputs: [{ internalType: 'address', name: 'owner', type: 'address' }],
+    name: 'agentCount',
+    outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
+    stateMutability: 'view',
+    type: 'function',
+  },
+] as const;
+
+const TOKEN_ABI = [
+  {
+    inputs: [
+      { internalType: 'address', name: 'spender', type: 'address' },
+      { internalType: 'uint256', name: 'amount', type: 'uint256' },
+    ],
+    name: 'approve',
+    outputs: [{ internalType: 'bool', name: '', type: 'bool' }],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+] as const;
 
 function Section({ title, children, muted }: { title: string; children: React.ReactNode; muted?: boolean }) {
   return (
@@ -43,32 +66,63 @@ export default function App() {
   const [payAmount, setPayAmount] = useState('0.001');
   const [payService, setPayService] = useState('openai-api');
   const [paySpender, setPaySpender] = useState('');
+  const [realStatus, setRealStatus] = useState<string>('');
+
+  const tokenWrite = useWriteContract();
 
   const handleRegister = () => {
     if (!name || !owner) return;
-    registerAgent(name, owner, metadata || 'ipfs://demo-agent');
-    setName('');
-    setOwner('');
-    setMetadata('');
-  };
+    if (mockMode) {
+      registerAgent(name, owner, metadata || 'ipfs://demo-agent');
+      setName('');
+      setOwner('');
+      setMetadata('');
+      return;
+    }
 
-  const handlePolicySave = () => {
-    updatePolicy({ maxPerTx, maxPerDay, active: policyActive });
+    setRealStatus(`Real agent write requires registry. Address: ${config.agentRegistryAddress}. ABI: ${AGENT_REGISTRY_ABI[0].name}`);
   };
 
   const handleAuthorize = () => {
     if (!spender) return;
     setAuthorizedSpender(spender);
     setSpender('');
+    if (!mockMode && isConnected && address) {
+      setRealStatus(`Spender updated locally to ${spender}.`);
+    }
   };
 
-  const handlePay = () => {
+  const handlePay = async () => {
     if (!paySpender) return;
-    const receipt = simulatePayment(agent, payAmount, payService, paySpender);
-    addReceipt(receipt);
-    setPayAmount('0.001');
-    setPayService('openai-api');
-    setPaySpender('');
+
+    if (mockMode) {
+      const receipt = simulatePayment(agent, payAmount, payService, paySpender);
+      addReceipt(receipt);
+      setPayAmount('0.001');
+      setPayService('openai-api');
+      setPaySpender('');
+      return;
+    }
+
+    if (!isConnected || !address) {
+      setRealStatus('Connect wallet first.');
+      return;
+    }
+
+    setRealStatus('Preparing real payment...');
+
+    try {
+      const amountWei = BigInt(parseFloat(payAmount) * 1e18);
+      tokenWrite.writeContract({
+        address: config.qtaTokenAddress as `0x${string}`,
+        abi: TOKEN_ABI,
+        functionName: 'approve',
+        args: [config.paymentChannelAddress as `0x${string}`, amountWei],
+      });
+      setRealStatus('Approve token submitted. After confirmation, send executePayment to the payment channel.');
+    } catch (e) {
+      setRealStatus(`Failed approve: ${e instanceof Error ? e.message : 'unknown error'}`);
+    }
   };
 
   const missingAddresses = [
@@ -136,6 +190,8 @@ export default function App() {
         </div>
       )}
 
+      {realStatus && <div className="readout"><strong>Status:</strong> {realStatus}</div>}
+
       <Section title="Agent Setup">
         <div className="grid">
           <Field label="Agent name" value={name} onChange={setName} placeholder="MyAgent" />
@@ -157,7 +213,7 @@ export default function App() {
           <input type="checkbox" checked={policyActive} onChange={(e) => setPolicyActive(e.target.checked)} />
           <span>Policy active</span>
         </label>
-        <button className="primary" onClick={handlePolicySave}>Save/Update Policy</button>
+        <button className="primary" onClick={() => updatePolicy({ maxPerTx, maxPerDay, active: policyActive })}>Save/Update Policy</button>
       </Section>
 
       <Section title="Authorized Spender">
@@ -176,7 +232,9 @@ export default function App() {
           <Field label="Service name" value={payService} onChange={setPayService} placeholder="openai-api" />
           <Field label="Spender address" value={paySpender} onChange={setPaySpender} placeholder="0x..." />
         </div>
-        <button className="primary" onClick={handlePay}>Simulate Payment</button>
+        <button className="primary" onClick={handlePay}>
+          {mockMode ? 'Simulate Payment' : 'Approve Token for Payment Channel'}
+        </button>
       </Section>
 
       <Section title="Receipts / History">

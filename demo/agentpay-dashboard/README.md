@@ -18,9 +18,16 @@ npm run dev
 
 Open http://localhost:5173. No private key required.
 
-## Base Sepolia mode
+## Run in Base Sepolia real mode
 
-Update `.env` with real contract addresses and RPC URL. The UI exposes a mock/real toggle.
+Copy `.env.example` to `.env`, set `VITE_DEMO_MODE=real`, and fill in the contract addresses already published in `.env.example`:
+
+- QuantaToken: `0x6d089d25035868358952b4d3644f8dAdcCc3295a`
+- AIAgentRegistry: `0x10aE5f83F1CF20331186Ea1aD089D8fd3EbA5EEB`
+- AIPaymentChannel: `0xF146e95b97fce1d1800F5F922AE99155711A4314`
+- AIModelMarketplace: `0xFf584b30b2D00Bf0aB694683F06dC7E701fdfd49`
+
+Connect a wallet, ensure the network is Base Sepolia (chainId `84532`), and use the UI toggle or `.env` setting to switch from mock to real mode.
 
 ## What is implemented vs mock
 
