@@ -30,6 +30,45 @@ function Field({ label, value, onChange, placeholder, type = 'text' }: { label: 
   );
 }
 
+type ErrorReason =
+  | 'wallet_not_connected'
+  | 'wrong_network'
+  | 'missing_address'
+  | 'unauthorized_spender'
+  | 'policy_inactive'
+  | 'over_max_per_transaction'
+  | 'over_daily_budget'
+  | 'user_rejected'
+  | 'contract_revert'
+  | 'unknown_error';
+
+interface AppError {
+  reason: ErrorReason;
+  message: string;
+}
+
+function requireRealReady(
+  address?: string,
+  isConnected?: boolean,
+  chainId?: number,
+  config?: { chainId: number; agentRegistryAddress: string; qtaTokenAddress: string },
+): AppError | null {
+  if (!isConnected || !address) {
+    return { reason: 'wallet_not_connected', message: 'Connect wallet first.' };
+  }
+  if (chainId !== undefined && chainId !== config!.chainId) {
+    return { reason: 'wrong_network', message: `Wrong network. Switch to Base Sepolia (${config!.chainId}).` };
+  }
+  if (!config!.agentRegistryAddress || config!.agentRegistryAddress === '0x') {
+    return { reason: 'missing_address', message: 'AIAgentRegistry address missing in .env.' };
+  }
+  return null;
+}
+
+function errToReceiptReason(err: AppError): BaseReceipt['reason'] {
+  return err.reason as BaseReceipt['reason'];
+}
+
 export default function App() {
   const config = loadConfig();
   const { mockMode, setMockMode } = useMockMode();
@@ -65,7 +104,7 @@ export default function App() {
     ['Payment Channel', config.paymentChannelAddress],
     ['Marketplace', config.marketplaceAddress],
     ['QTA Token', config.qtaTokenAddress],
-  ].filter(([, address]) => !address || address === '0x');
+  ].filter(([, a]) => !a || a === '0x');
 
   const isWrongNetwork = !mockMode && isConnected && chainId != null && chainId !== config.chainId;
 
@@ -88,17 +127,19 @@ export default function App() {
       return;
     }
 
-    if (!address) {
-      setRealStatus('Connect wallet first.');
-      return;
-    }
-    if (missingAddresses.length > 0) {
-      setRealStatus('Missing contract addresses in .env.');
+    const err = requireRealReady(address, isConnected, chainId, config);
+    if (err) {
+      setRealStatus(err.message);
+      const receipt = createBaseReceipt('registerAgent');
+      receipt.status = 'FAILED';
+      receipt.reason = errToReceiptReason(err);
+      receipt.error = err.message;
+      pushRealReceipt(receipt);
       return;
     }
 
     setRealStatus('Submitting registerAgent...');
-    const agentId = bytes32AgentId(address, `${Date.now()}`);
+    const agentId = bytes32AgentId(address as string, `${Date.now()}`);
     setRealAgentId(agentId);
     const receipt = createBaseReceipt('registerAgent');
     pushRealReceipt(receipt);
@@ -113,7 +154,7 @@ export default function App() {
       receipt.status = 'SUCCESS';
       receipt.txHash = hash;
       receipt.explorerUrl = baseExplorerUrl(hash);
-      receipt.reason = undefined as any;
+      receipt.reason = undefined;
       setRealStatus(`Registered. AgentId: ${agentId}`);
     } catch (e) {
       receipt.status = 'FAILED';
@@ -129,12 +170,19 @@ export default function App() {
       return;
     }
 
-    if (!address || !realAgentId) {
+    if (!realAgentId) {
       setRealStatus('Register an agent first.');
       return;
     }
-    if (missingAddresses.length > 0) {
-      setRealStatus('Missing contract addresses in .env.');
+
+    const err = requireRealReady(address, isConnected, chainId, config);
+    if (err) {
+      setRealStatus(err.message);
+      const receipt = createBaseReceipt('updatePolicy');
+      receipt.status = 'FAILED';
+      receipt.reason = errToReceiptReason(err);
+      receipt.error = err.message;
+      pushRealReceipt(receipt);
       return;
     }
 
@@ -152,6 +200,7 @@ export default function App() {
       receipt.status = 'SUCCESS';
       receipt.txHash = hash;
       receipt.explorerUrl = baseExplorerUrl(hash);
+      receipt.reason = undefined;
       setRealStatus('Policy updated on-chain.');
     } catch (e) {
       receipt.status = 'FAILED';
@@ -170,8 +219,15 @@ export default function App() {
       return;
     }
 
-    if (missingAddresses.length > 0) {
-      setRealStatus('Missing contract addresses in .env.');
+    const err = requireRealReady(address, isConnected, chainId, config);
+    if (err) {
+      setRealStatus(err.message);
+      const receipt = createBaseReceipt('setAuthorizedSpender');
+      receipt.status = 'FAILED';
+      receipt.reason = errToReceiptReason(err);
+      receipt.error = err.message;
+      pushRealReceipt(receipt);
+      setSpender('');
       return;
     }
 
@@ -189,6 +245,7 @@ export default function App() {
       receipt.status = 'SUCCESS';
       receipt.txHash = hash;
       receipt.explorerUrl = baseExplorerUrl(hash);
+      receipt.reason = undefined;
       setSpender('');
       setRealStatus('Authorized spender set on-chain.');
     } catch (e) {
@@ -201,7 +258,7 @@ export default function App() {
     }
   };
 
-  const handlePay = async () => {
+  const handlePayment = async () => {
     if (!paySpender) return;
 
     if (mockMode) {
@@ -213,12 +270,63 @@ export default function App() {
       return;
     }
 
-    if (!address || !realAgentId) {
+    if (!realAgentId) {
       setRealStatus('Register an agent first.');
       return;
     }
-    if (missingAddresses.length > 0) {
-      setRealStatus('Missing contract addresses in .env.');
+
+    const err = requireRealReady(address, isConnected, chainId, config);
+    if (err) {
+      setRealStatus(err.message);
+      const receipt = createBaseReceipt('checkAndRecordSpend');
+      receipt.status = 'FAILED';
+      receipt.reason = errToReceiptReason(err);
+      receipt.error = err.message;
+      pushRealReceipt(receipt);
+      return;
+    }
+
+    const numAmount = parseFloat(payAmount);
+    const maxTx = parseFloat(agent.policy.maxPerTx);
+    const maxDay = parseFloat(agent.policy.maxPerDay);
+
+    if (!agent.policy.active) {
+      const receipt = createBaseReceipt('checkAndRecordSpend');
+      receipt.status = 'FAILED';
+      receipt.reason = 'policy_inactive';
+      receipt.error = 'Policy inactive.';
+      pushRealReceipt(receipt);
+      setRealStatus('Payment blocked: policy inactive.');
+      return;
+    }
+
+    if (paySpender.toLowerCase() !== agent.authorizedSpender.toLowerCase()) {
+      const receipt = createBaseReceipt('checkAndRecordSpend');
+      receipt.status = 'FAILED';
+      receipt.reason = 'unauthorized_spender';
+      receipt.error = 'Spender not authorized.';
+      pushRealReceipt(receipt);
+      setRealStatus('Payment blocked: unauthorized spender.');
+      return;
+    }
+
+    if (numAmount > maxTx) {
+      const receipt = createBaseReceipt('checkAndRecordSpend');
+      receipt.status = 'FAILED';
+      receipt.reason = 'over_max_per_transaction';
+      receipt.error = `Amount ${payAmount} exceeds max per tx ${agent.policy.maxPerTx}.`;
+      pushRealReceipt(receipt);
+      setRealStatus('Payment blocked: over max per transaction.');
+      return;
+    }
+
+    if (numAmount > maxDay) {
+      const receipt = createBaseReceipt('checkAndRecordSpend');
+      receipt.status = 'FAILED';
+      receipt.reason = 'over_daily_budget';
+      receipt.error = `Amount ${payAmount} exceeds daily budget ${agent.policy.maxPerDay}.`;
+      pushRealReceipt(receipt);
+      setRealStatus('Payment blocked: over daily budget.');
       return;
     }
 
@@ -236,6 +344,7 @@ export default function App() {
       receipt.status = 'SUCCESS';
       receipt.txHash = hash;
       receipt.explorerUrl = baseExplorerUrl(hash);
+      receipt.reason = undefined;
       setRealStatus('Spend recorded on-chain.');
     } catch (e) {
       receipt.status = 'FAILED';
@@ -264,9 +373,9 @@ export default function App() {
       {!mockMode && missingAddresses.length > 0 && (
         <div className="alert warn">
           <strong>Configuration warning:</strong> set contract addresses in <code>.env</code>.<br />
-          {missingAddresses.map(([name, address]) => (
+          {missingAddresses.map(([name, a]) => (
             <div key={name}>
-              {name}: {address || '<missing>'}
+              {name}: {a || '<missing>'}
             </div>
           ))}
         </div>
@@ -336,7 +445,7 @@ export default function App() {
           <Field label="Service name" value={payService} onChange={setPayService} placeholder="openai-api" />
           <Field label="Spender address" value={paySpender} onChange={setPaySpender} placeholder="0x..." />
         </div>
-        <button className="primary" onClick={handlePay}>
+        <button className="primary" onClick={handlePayment}>
           {mockMode ? 'Simulate Payment' : 'Record Spend'}
         </button>
       </Section>
@@ -358,7 +467,7 @@ export default function App() {
           <tbody>
             {[...receipts, ...realReceipts].map((r) => {
               const isReal = 'action' in r;
-              const agentId = isReal ? (r as BaseReceipt).action === 'registerAgent' ? (r as any).detail || realAgentId : realAgentId : (r as any).agentId;
+              const agentId = isReal ? realAgentId || '-' : (r as any).agentId;
               const amount = isReal ? '-' : (r as any).amount;
               const service = isReal ? (r as BaseReceipt).action : (r as any).service;
               const status = r.status;
