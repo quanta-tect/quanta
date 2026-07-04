@@ -3,29 +3,14 @@ import { useAccount, useConnect, useDisconnect, useSwitchChain, useWriteContract
 import { injected } from 'wagmi/connectors';
 import { useMockMode, useAgentState, useReceipts, simulatePayment } from './lib/mock';
 import { loadConfig } from './lib/config';
-
-const AGENT_REGISTRY_ABI = [
-  {
-    inputs: [{ internalType: 'address', name: 'owner', type: 'address' }],
-    name: 'agentCount',
-    outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
-    stateMutability: 'view',
-    type: 'function',
-  },
-] as const;
-
-const TOKEN_ABI = [
-  {
-    inputs: [
-      { internalType: 'address', name: 'spender', type: 'address' },
-      { internalType: 'uint256', name: 'amount', type: 'uint256' },
-    ],
-    name: 'approve',
-    outputs: [{ internalType: 'bool', name: '', type: 'bool' }],
-    stateMutability: 'nonpayable',
-    type: 'function',
-  },
-] as const;
+import {
+  AIAgentRegistryABI,
+  createBaseReceipt,
+  baseExplorerUrl,
+  weiFromQta,
+  bytes32AgentId,
+  BaseReceipt,
+} from './lib/contracts';
 
 function Section({ title, children, muted }: { title: string; children: React.ReactNode; muted?: boolean }) {
   return (
@@ -55,6 +40,7 @@ export default function App() {
   const { connect } = useConnect();
   const { disconnect } = useDisconnect();
   const { switchChain } = useSwitchChain();
+  const registryWrite = useWriteContract();
 
   const [name, setName] = useState('');
   const [owner, setOwner] = useState('');
@@ -67,62 +53,11 @@ export default function App() {
   const [payService, setPayService] = useState('openai-api');
   const [paySpender, setPaySpender] = useState('');
   const [realStatus, setRealStatus] = useState<string>('');
+  const [realAgentId, setRealAgentId] = useState<string>('');
+  const [realReceipts, setRealReceipts] = useState<BaseReceipt[]>([]);
 
-  const tokenWrite = useWriteContract();
-
-  const handleRegister = () => {
-    if (!name || !owner) return;
-    if (mockMode) {
-      registerAgent(name, owner, metadata || 'ipfs://demo-agent');
-      setName('');
-      setOwner('');
-      setMetadata('');
-      return;
-    }
-
-    setRealStatus(`Real agent write requires registry. Address: ${config.agentRegistryAddress}. ABI: ${AGENT_REGISTRY_ABI[0].name}`);
-  };
-
-  const handleAuthorize = () => {
-    if (!spender) return;
-    setAuthorizedSpender(spender);
-    setSpender('');
-    if (!mockMode && isConnected && address) {
-      setRealStatus(`Spender updated locally to ${spender}.`);
-    }
-  };
-
-  const handlePay = async () => {
-    if (!paySpender) return;
-
-    if (mockMode) {
-      const receipt = simulatePayment(agent, payAmount, payService, paySpender);
-      addReceipt(receipt);
-      setPayAmount('0.001');
-      setPayService('openai-api');
-      setPaySpender('');
-      return;
-    }
-
-    if (!isConnected || !address) {
-      setRealStatus('Connect wallet first.');
-      return;
-    }
-
-    setRealStatus('Preparing real payment...');
-
-    try {
-      const amountWei = BigInt(parseFloat(payAmount) * 1e18);
-      tokenWrite.writeContract({
-        address: config.qtaTokenAddress as `0x${string}`,
-        abi: TOKEN_ABI,
-        functionName: 'approve',
-        args: [config.paymentChannelAddress as `0x${string}`, amountWei],
-      });
-      setRealStatus('Approve token submitted. After confirmation, send executePayment to the payment channel.');
-    } catch (e) {
-      setRealStatus(`Failed approve: ${e instanceof Error ? e.message : 'unknown error'}`);
-    }
+  const pushRealReceipt = (r: BaseReceipt) => {
+    setRealReceipts(prev => [r, ...prev]);
   };
 
   const missingAddresses = [
@@ -141,6 +76,174 @@ export default function App() {
   const walletStatusClass = isWrongNetwork ? 'badge-warn' : isConnected ? 'badge-ok' : 'badge-configured';
 
   const shortAddress = address ? `${address.slice(0, 6)}...${address.slice(-4)}` : '';
+
+  const handleRegister = async () => {
+    if (!name) return;
+
+    if (mockMode) {
+      registerAgent(name, owner || (address || ''), metadata || 'ipfs://demo-agent');
+      setName('');
+      setOwner('');
+      setMetadata('');
+      return;
+    }
+
+    if (!address) {
+      setRealStatus('Connect wallet first.');
+      return;
+    }
+    if (missingAddresses.length > 0) {
+      setRealStatus('Missing contract addresses in .env.');
+      return;
+    }
+
+    setRealStatus('Submitting registerAgent...');
+    const agentId = bytes32AgentId(address, `${Date.now()}`);
+    setRealAgentId(agentId);
+    const receipt = createBaseReceipt('registerAgent');
+    pushRealReceipt(receipt);
+
+    try {
+      const hash = await registryWrite.writeContractAsync({
+        address: config.agentRegistryAddress as `0x${string}`,
+        abi: AIAgentRegistryABI,
+        functionName: 'registerAgent',
+        args: [agentId, metadata || 'ipfs://demo-agent', weiFromQta(maxPerTx), weiFromQta(maxPerDay)],
+      });
+      receipt.status = 'SUCCESS';
+      receipt.txHash = hash;
+      receipt.explorerUrl = baseExplorerUrl(hash);
+      receipt.reason = undefined as any;
+      setRealStatus(`Registered. AgentId: ${agentId}`);
+    } catch (e) {
+      receipt.status = 'FAILED';
+      receipt.reason = 'user_rejected';
+      receipt.error = e instanceof Error ? e.message : 'Transaction failed';
+      setRealStatus(`Register failed: ${receipt.error}`);
+    }
+  };
+
+  const handleUpdatePolicy = async () => {
+    if (mockMode) {
+      updatePolicy({ maxPerTx, maxPerDay, active: policyActive });
+      return;
+    }
+
+    if (!address || !realAgentId) {
+      setRealStatus('Register an agent first.');
+      return;
+    }
+    if (missingAddresses.length > 0) {
+      setRealStatus('Missing contract addresses in .env.');
+      return;
+    }
+
+    setRealStatus('Submitting updatePolicy...');
+    const receipt = createBaseReceipt('updatePolicy');
+    pushRealReceipt(receipt);
+
+    try {
+      const hash = await registryWrite.writeContractAsync({
+        address: config.agentRegistryAddress as `0x${string}`,
+        abi: AIAgentRegistryABI,
+        functionName: 'updatePolicy',
+        args: [realAgentId as `0x${string}`, weiFromQta(maxPerTx), weiFromQta(maxPerDay)],
+      });
+      receipt.status = 'SUCCESS';
+      receipt.txHash = hash;
+      receipt.explorerUrl = baseExplorerUrl(hash);
+      setRealStatus('Policy updated on-chain.');
+    } catch (e) {
+      receipt.status = 'FAILED';
+      receipt.reason = 'user_rejected';
+      receipt.error = e instanceof Error ? e.message : 'Transaction failed';
+      setRealStatus(`Policy update failed: ${receipt.error}`);
+    }
+  };
+
+  const handleAuthorize = async () => {
+    if (!spender) return;
+
+    if (mockMode) {
+      setAuthorizedSpender(spender);
+      setSpender('');
+      return;
+    }
+
+    if (missingAddresses.length > 0) {
+      setRealStatus('Missing contract addresses in .env.');
+      return;
+    }
+
+    setRealStatus('Submitting setAuthorizedSpender...');
+    const receipt = createBaseReceipt('setAuthorizedSpender');
+    pushRealReceipt(receipt);
+
+    try {
+      const hash = await registryWrite.writeContractAsync({
+        address: config.agentRegistryAddress as `0x${string}`,
+        abi: AIAgentRegistryABI,
+        functionName: 'setAuthorizedSpender',
+        args: [spender as `0x${string}`, true],
+      });
+      receipt.status = 'SUCCESS';
+      receipt.txHash = hash;
+      receipt.explorerUrl = baseExplorerUrl(hash);
+      setSpender('');
+      setRealStatus('Authorized spender set on-chain.');
+    } catch (e) {
+      receipt.status = 'FAILED';
+      receipt.reason = 'contract_revert';
+      receipt.error = e instanceof Error ? e.message : 'Transaction failed';
+      receipt.detail = 'Only owner can call setAuthorizedSpender. Expected in a public demo.';
+      setSpender('');
+      setRealStatus(`Authorize failed: ${receipt.error}`);
+    }
+  };
+
+  const handlePay = async () => {
+    if (!paySpender) return;
+
+    if (mockMode) {
+      const receipt = simulatePayment(agent, payAmount, payService, paySpender);
+      addReceipt(receipt);
+      setPayAmount('0.001');
+      setPayService('openai-api');
+      setPaySpender('');
+      return;
+    }
+
+    if (!address || !realAgentId) {
+      setRealStatus('Register an agent first.');
+      return;
+    }
+    if (missingAddresses.length > 0) {
+      setRealStatus('Missing contract addresses in .env.');
+      return;
+    }
+
+    setRealStatus('Submitting checkAndRecordSpend...');
+    const receipt = createBaseReceipt('checkAndRecordSpend');
+    pushRealReceipt(receipt);
+
+    try {
+      const hash = await registryWrite.writeContractAsync({
+        address: config.agentRegistryAddress as `0x${string}`,
+        abi: AIAgentRegistryABI,
+        functionName: 'checkAndRecordSpend',
+        args: [realAgentId as `0x${string}`, weiFromQta(payAmount)],
+      });
+      receipt.status = 'SUCCESS';
+      receipt.txHash = hash;
+      receipt.explorerUrl = baseExplorerUrl(hash);
+      setRealStatus('Spend recorded on-chain.');
+    } catch (e) {
+      receipt.status = 'FAILED';
+      receipt.reason = 'user_rejected';
+      receipt.error = e instanceof Error ? e.message : 'Transaction failed';
+      setRealStatus(`Spend record failed: ${receipt.error}`);
+    }
+  };
 
   return (
     <div className="app">
@@ -191,6 +294,7 @@ export default function App() {
       )}
 
       {realStatus && <div className="readout"><strong>Status:</strong> {realStatus}</div>}
+      {realAgentId && !mockMode && <div className="readout"><strong>AgentId:</strong> {realAgentId}</div>}
 
       <Section title="Agent Setup">
         <div className="grid">
@@ -213,7 +317,7 @@ export default function App() {
           <input type="checkbox" checked={policyActive} onChange={(e) => setPolicyActive(e.target.checked)} />
           <span>Policy active</span>
         </label>
-        <button className="primary" onClick={() => updatePolicy({ maxPerTx, maxPerDay, active: policyActive })}>Save/Update Policy</button>
+        <button className="primary" onClick={handleUpdatePolicy}>Save/Update Policy</button>
       </Section>
 
       <Section title="Authorized Spender">
@@ -233,12 +337,12 @@ export default function App() {
           <Field label="Spender address" value={paySpender} onChange={setPaySpender} placeholder="0x..." />
         </div>
         <button className="primary" onClick={handlePay}>
-          {mockMode ? 'Simulate Payment' : 'Approve Token for Payment Channel'}
+          {mockMode ? 'Simulate Payment' : 'Record Spend'}
         </button>
       </Section>
 
       <Section title="Receipts / History">
-        {receipts.length === 0 && <p className="muted">No receipts yet.</p>}
+        {receipts.length === 0 && realReceipts.length === 0 && <p className="muted">No receipts yet.</p>}
         <table className="table">
           <thead>
             <tr>
@@ -252,17 +356,33 @@ export default function App() {
             </tr>
           </thead>
           <tbody>
-            {receipts.map((r) => (
-              <tr key={r.id}>
-                <td>{new Date(r.timestamp).toLocaleString()}</td>
-                <td>{r.agentId}</td>
-                <td>{r.amount}</td>
-                <td>{r.service}</td>
-                <td><span className={`badge badge-${r.status.toLowerCase()}`}>{r.status}</span></td>
-                <td className="mono">{r.txHash || '-'}</td>
-                <td>{r.reason || '-'}</td>
-              </tr>
-            ))}
+            {[...receipts, ...realReceipts].map((r) => {
+              const isReal = 'action' in r;
+              const agentId = isReal ? (r as BaseReceipt).action === 'registerAgent' ? (r as any).detail || realAgentId : realAgentId : (r as any).agentId;
+              const amount = isReal ? '-' : (r as any).amount;
+              const service = isReal ? (r as BaseReceipt).action : (r as any).service;
+              const status = r.status;
+              const txHash = (r as any).txHash || '-';
+              const txCell = (r as BaseReceipt).txHash ? (
+                <a className="mono" href={(r as BaseReceipt).explorerUrl || `https://sepolia.basescan.org/tx/${(r as BaseReceipt).txHash}`} target="_blank" rel="noreferrer">
+                  {(r as BaseReceipt).txHash}
+                </a>
+              ) : (
+                <span className="mono">{txHash}</span>
+              );
+              const reason = (r as BaseReceipt).error || (r as BaseReceipt).detail || (r as any).reason || '-';
+              return (
+                <tr key={r.id}>
+                  <td>{new Date(r.timestamp).toLocaleString()}</td>
+                  <td className="mono">{agentId}</td>
+                  <td>{amount}</td>
+                  <td>{service}</td>
+                  <td><span className={`badge badge-${status.toLowerCase()}`}>{status}</span></td>
+                  <td>{txCell}</td>
+                  <td>{reason}</td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </Section>
