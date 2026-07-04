@@ -3,29 +3,14 @@ import { useAccount, useConnect, useDisconnect, useSwitchChain, useWriteContract
 import { injected } from 'wagmi/connectors';
 import { useMockMode, useAgentState, useReceipts, simulatePayment } from './lib/mock';
 import { loadConfig } from './lib/config';
-
-const AGENT_REGISTRY_ABI = [
-  {
-    inputs: [{ internalType: 'address', name: 'owner', type: 'address' }],
-    name: 'agentCount',
-    outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
-    stateMutability: 'view',
-    type: 'function',
-  },
-] as const;
-
-const TOKEN_ABI = [
-  {
-    inputs: [
-      { internalType: 'address', name: 'spender', type: 'address' },
-      { internalType: 'uint256', name: 'amount', type: 'uint256' },
-    ],
-    name: 'approve',
-    outputs: [{ internalType: 'bool', name: '', type: 'bool' }],
-    stateMutability: 'nonpayable',
-    type: 'function',
-  },
-] as const;
+import {
+  AIAgentRegistryABI,
+  createBaseReceipt,
+  baseExplorerUrl,
+  weiFromQta,
+  bytes32AgentId,
+  BaseReceipt,
+} from './lib/contracts';
 
 function Section({ title, children, muted }: { title: string; children: React.ReactNode; muted?: boolean }) {
   return (
@@ -45,6 +30,45 @@ function Field({ label, value, onChange, placeholder, type = 'text' }: { label: 
   );
 }
 
+type ErrorReason =
+  | 'wallet_not_connected'
+  | 'wrong_network'
+  | 'missing_address'
+  | 'unauthorized_spender'
+  | 'policy_inactive'
+  | 'over_max_per_transaction'
+  | 'over_daily_budget'
+  | 'user_rejected'
+  | 'contract_revert'
+  | 'unknown_error';
+
+interface AppError {
+  reason: ErrorReason;
+  message: string;
+}
+
+function requireRealReady(
+  address?: string,
+  isConnected?: boolean,
+  chainId?: number,
+  config?: { chainId: number; agentRegistryAddress: string; qtaTokenAddress: string },
+): AppError | null {
+  if (!isConnected || !address) {
+    return { reason: 'wallet_not_connected', message: 'Connect wallet first.' };
+  }
+  if (chainId !== undefined && chainId !== config!.chainId) {
+    return { reason: 'wrong_network', message: `Wrong network. Switch to Base Sepolia (${config!.chainId}).` };
+  }
+  if (!config!.agentRegistryAddress || config!.agentRegistryAddress === '0x') {
+    return { reason: 'missing_address', message: 'AIAgentRegistry address missing in .env.' };
+  }
+  return null;
+}
+
+function errToReceiptReason(err: AppError): BaseReceipt['reason'] {
+  return err.reason as BaseReceipt['reason'];
+}
+
 export default function App() {
   const config = loadConfig();
   const { mockMode, setMockMode } = useMockMode();
@@ -55,6 +79,7 @@ export default function App() {
   const { connect } = useConnect();
   const { disconnect } = useDisconnect();
   const { switchChain } = useSwitchChain();
+  const registryWrite = useWriteContract();
 
   const [name, setName] = useState('');
   const [owner, setOwner] = useState('');
@@ -67,32 +92,173 @@ export default function App() {
   const [payService, setPayService] = useState('openai-api');
   const [paySpender, setPaySpender] = useState('');
   const [realStatus, setRealStatus] = useState<string>('');
+  const [realAgentId, setRealAgentId] = useState<string>('');
+  const [realReceipts, setRealReceipts] = useState<BaseReceipt[]>([]);
 
-  const tokenWrite = useWriteContract();
+  const pushRealReceipt = (r: BaseReceipt) => {
+    setRealReceipts(prev => [r, ...prev]);
+  };
 
-  const handleRegister = () => {
-    if (!name || !owner) return;
+  const missingAddresses = [
+    ['Agent Registry', config.agentRegistryAddress],
+    ['Payment Channel', config.paymentChannelAddress],
+    ['Marketplace', config.marketplaceAddress],
+    ['QTA Token', config.qtaTokenAddress],
+  ].filter(([, a]) => !a || a === '0x');
+
+  const isWrongNetwork = !mockMode && isConnected && chainId != null && chainId !== config.chainId;
+
+  const envStatusLabel = mockMode ? 'Mock Mode' : missingAddresses.length === 0 ? 'Base Sepolia Configured' : 'Missing Addresses';
+  const envStatusClass = mockMode ? 'badge-mock' : missingAddresses.length === 0 ? 'badge-configured' : 'badge-warn';
+
+  const walletStatusLabel = isWrongNetwork ? 'Wrong Network' : isConnected ? 'Wallet Connected' : 'Base Sepolia Configured';
+  const walletStatusClass = isWrongNetwork ? 'badge-warn' : isConnected ? 'badge-ok' : 'badge-configured';
+
+  const shortAddress = address ? `${address.slice(0, 6)}...${address.slice(-4)}` : '';
+
+  const handleRegister = async () => {
+    if (!name) return;
+
     if (mockMode) {
-      registerAgent(name, owner, metadata || 'ipfs://demo-agent');
+      registerAgent(name, owner || (address || ''), metadata || 'ipfs://demo-agent');
       setName('');
       setOwner('');
       setMetadata('');
       return;
     }
 
-    setRealStatus(`Real agent write requires registry. Address: ${config.agentRegistryAddress}. ABI: ${AGENT_REGISTRY_ABI[0].name}`);
-  };
+    const err = requireRealReady(address, isConnected, chainId, config);
+    if (err) {
+      setRealStatus(err.message);
+      const receipt = createBaseReceipt('registerAgent');
+      receipt.status = 'FAILED';
+      receipt.reason = errToReceiptReason(err);
+      receipt.error = err.message;
+      pushRealReceipt(receipt);
+      return;
+    }
 
-  const handleAuthorize = () => {
-    if (!spender) return;
-    setAuthorizedSpender(spender);
-    setSpender('');
-    if (!mockMode && isConnected && address) {
-      setRealStatus(`Spender updated locally to ${spender}.`);
+    setRealStatus('Submitting registerAgent...');
+    const agentId = bytes32AgentId(address as string, `${Date.now()}`);
+    setRealAgentId(agentId);
+    const receipt = createBaseReceipt('registerAgent');
+    pushRealReceipt(receipt);
+
+    try {
+      const hash = await registryWrite.writeContractAsync({
+        address: config.agentRegistryAddress as `0x${string}`,
+        abi: AIAgentRegistryABI,
+        functionName: 'registerAgent',
+        args: [agentId, metadata || 'ipfs://demo-agent', weiFromQta(maxPerTx), weiFromQta(maxPerDay)],
+      });
+      receipt.status = 'SUCCESS';
+      receipt.txHash = hash;
+      receipt.explorerUrl = baseExplorerUrl(hash);
+      receipt.reason = undefined;
+      setRealStatus(`Registered. AgentId: ${agentId}`);
+    } catch (e) {
+      receipt.status = 'FAILED';
+      receipt.reason = 'user_rejected';
+      receipt.error = e instanceof Error ? e.message : 'Transaction failed';
+      setRealStatus(`Register failed: ${receipt.error}`);
     }
   };
 
-  const handlePay = async () => {
+  const handleUpdatePolicy = async () => {
+    if (mockMode) {
+      updatePolicy({ maxPerTx, maxPerDay, active: policyActive });
+      return;
+    }
+
+    if (!realAgentId) {
+      setRealStatus('Register an agent first.');
+      return;
+    }
+
+    const err = requireRealReady(address, isConnected, chainId, config);
+    if (err) {
+      setRealStatus(err.message);
+      const receipt = createBaseReceipt('updatePolicy');
+      receipt.status = 'FAILED';
+      receipt.reason = errToReceiptReason(err);
+      receipt.error = err.message;
+      pushRealReceipt(receipt);
+      return;
+    }
+
+    setRealStatus('Submitting updatePolicy...');
+    const receipt = createBaseReceipt('updatePolicy');
+    pushRealReceipt(receipt);
+
+    try {
+      const hash = await registryWrite.writeContractAsync({
+        address: config.agentRegistryAddress as `0x${string}`,
+        abi: AIAgentRegistryABI,
+        functionName: 'updatePolicy',
+        args: [realAgentId as `0x${string}`, weiFromQta(maxPerTx), weiFromQta(maxPerDay)],
+      });
+      receipt.status = 'SUCCESS';
+      receipt.txHash = hash;
+      receipt.explorerUrl = baseExplorerUrl(hash);
+      receipt.reason = undefined;
+      setRealStatus('Policy updated on-chain.');
+    } catch (e) {
+      receipt.status = 'FAILED';
+      receipt.reason = 'user_rejected';
+      receipt.error = e instanceof Error ? e.message : 'Transaction failed';
+      setRealStatus(`Policy update failed: ${receipt.error}`);
+    }
+  };
+
+  const handleAuthorize = async () => {
+    if (!spender) return;
+
+    if (mockMode) {
+      setAuthorizedSpender(spender);
+      setSpender('');
+      return;
+    }
+
+    const err = requireRealReady(address, isConnected, chainId, config);
+    if (err) {
+      setRealStatus(err.message);
+      const receipt = createBaseReceipt('setAuthorizedSpender');
+      receipt.status = 'FAILED';
+      receipt.reason = errToReceiptReason(err);
+      receipt.error = err.message;
+      pushRealReceipt(receipt);
+      setSpender('');
+      return;
+    }
+
+    setRealStatus('Submitting setAuthorizedSpender...');
+    const receipt = createBaseReceipt('setAuthorizedSpender');
+    pushRealReceipt(receipt);
+
+    try {
+      const hash = await registryWrite.writeContractAsync({
+        address: config.agentRegistryAddress as `0x${string}`,
+        abi: AIAgentRegistryABI,
+        functionName: 'setAuthorizedSpender',
+        args: [spender as `0x${string}`, true],
+      });
+      receipt.status = 'SUCCESS';
+      receipt.txHash = hash;
+      receipt.explorerUrl = baseExplorerUrl(hash);
+      receipt.reason = undefined;
+      setSpender('');
+      setRealStatus('Authorized spender set on-chain.');
+    } catch (e) {
+      receipt.status = 'FAILED';
+      receipt.reason = 'contract_revert';
+      receipt.error = e instanceof Error ? e.message : 'Transaction failed';
+      receipt.detail = 'Only owner can call setAuthorizedSpender. Expected in a public demo.';
+      setSpender('');
+      setRealStatus(`Authorize failed: ${receipt.error}`);
+    }
+  };
+
+  const handlePayment = async () => {
     if (!paySpender) return;
 
     if (mockMode) {
@@ -104,43 +270,89 @@ export default function App() {
       return;
     }
 
-    if (!isConnected || !address) {
-      setRealStatus('Connect wallet first.');
+    if (!realAgentId) {
+      setRealStatus('Register an agent first.');
       return;
     }
 
-    setRealStatus('Preparing real payment...');
+    const err = requireRealReady(address, isConnected, chainId, config);
+    if (err) {
+      setRealStatus(err.message);
+      const receipt = createBaseReceipt('checkAndRecordSpend');
+      receipt.status = 'FAILED';
+      receipt.reason = errToReceiptReason(err);
+      receipt.error = err.message;
+      pushRealReceipt(receipt);
+      return;
+    }
+
+    const numAmount = parseFloat(payAmount);
+    const maxTx = parseFloat(agent.policy.maxPerTx);
+    const maxDay = parseFloat(agent.policy.maxPerDay);
+
+    if (!agent.policy.active) {
+      const receipt = createBaseReceipt('checkAndRecordSpend');
+      receipt.status = 'FAILED';
+      receipt.reason = 'policy_inactive';
+      receipt.error = 'Policy inactive.';
+      pushRealReceipt(receipt);
+      setRealStatus('Payment blocked: policy inactive.');
+      return;
+    }
+
+    if (paySpender.toLowerCase() !== agent.authorizedSpender.toLowerCase()) {
+      const receipt = createBaseReceipt('checkAndRecordSpend');
+      receipt.status = 'FAILED';
+      receipt.reason = 'unauthorized_spender';
+      receipt.error = 'Spender not authorized.';
+      pushRealReceipt(receipt);
+      setRealStatus('Payment blocked: unauthorized spender.');
+      return;
+    }
+
+    if (numAmount > maxTx) {
+      const receipt = createBaseReceipt('checkAndRecordSpend');
+      receipt.status = 'FAILED';
+      receipt.reason = 'over_max_per_transaction';
+      receipt.error = `Amount ${payAmount} exceeds max per tx ${agent.policy.maxPerTx}.`;
+      pushRealReceipt(receipt);
+      setRealStatus('Payment blocked: over max per transaction.');
+      return;
+    }
+
+    if (numAmount > maxDay) {
+      const receipt = createBaseReceipt('checkAndRecordSpend');
+      receipt.status = 'FAILED';
+      receipt.reason = 'over_daily_budget';
+      receipt.error = `Amount ${payAmount} exceeds daily budget ${agent.policy.maxPerDay}.`;
+      pushRealReceipt(receipt);
+      setRealStatus('Payment blocked: over daily budget.');
+      return;
+    }
+
+    setRealStatus('Submitting checkAndRecordSpend...');
+    const receipt = createBaseReceipt('checkAndRecordSpend');
+    pushRealReceipt(receipt);
 
     try {
-      const amountWei = BigInt(parseFloat(payAmount) * 1e18);
-      tokenWrite.writeContract({
-        address: config.qtaTokenAddress as `0x${string}`,
-        abi: TOKEN_ABI,
-        functionName: 'approve',
-        args: [config.paymentChannelAddress as `0x${string}`, amountWei],
+      const hash = await registryWrite.writeContractAsync({
+        address: config.agentRegistryAddress as `0x${string}`,
+        abi: AIAgentRegistryABI,
+        functionName: 'checkAndRecordSpend',
+        args: [realAgentId as `0x${string}`, weiFromQta(payAmount)],
       });
-      setRealStatus('Approve token submitted. After confirmation, send executePayment to the payment channel.');
+      receipt.status = 'SUCCESS';
+      receipt.txHash = hash;
+      receipt.explorerUrl = baseExplorerUrl(hash);
+      receipt.reason = undefined;
+      setRealStatus('Spend recorded on-chain.');
     } catch (e) {
-      setRealStatus(`Failed approve: ${e instanceof Error ? e.message : 'unknown error'}`);
+      receipt.status = 'FAILED';
+      receipt.reason = 'user_rejected';
+      receipt.error = e instanceof Error ? e.message : 'Transaction failed';
+      setRealStatus(`Spend record failed: ${receipt.error}`);
     }
   };
-
-  const missingAddresses = [
-    ['Agent Registry', config.agentRegistryAddress],
-    ['Payment Channel', config.paymentChannelAddress],
-    ['Marketplace', config.marketplaceAddress],
-    ['QTA Token', config.qtaTokenAddress],
-  ].filter(([, address]) => !address || address === '0x');
-
-  const isWrongNetwork = !mockMode && isConnected && chainId != null && chainId !== config.chainId;
-
-  const envStatusLabel = mockMode ? 'Mock Mode' : missingAddresses.length === 0 ? 'Base Sepolia Configured' : 'Missing Addresses';
-  const envStatusClass = mockMode ? 'badge-mock' : missingAddresses.length === 0 ? 'badge-configured' : 'badge-warn';
-
-  const walletStatusLabel = isWrongNetwork ? 'Wrong Network' : isConnected ? 'Wallet Connected' : 'Base Sepolia Configured';
-  const walletStatusClass = isWrongNetwork ? 'badge-warn' : isConnected ? 'badge-ok' : 'badge-configured';
-
-  const shortAddress = address ? `${address.slice(0, 6)}...${address.slice(-4)}` : '';
 
   return (
     <div className="app">
@@ -161,9 +373,9 @@ export default function App() {
       {!mockMode && missingAddresses.length > 0 && (
         <div className="alert warn">
           <strong>Configuration warning:</strong> set contract addresses in <code>.env</code>.<br />
-          {missingAddresses.map(([name, address]) => (
+          {missingAddresses.map(([name, a]) => (
             <div key={name}>
-              {name}: {address || '<missing>'}
+              {name}: {a || '<missing>'}
             </div>
           ))}
         </div>
@@ -191,6 +403,7 @@ export default function App() {
       )}
 
       {realStatus && <div className="readout"><strong>Status:</strong> {realStatus}</div>}
+      {realAgentId && !mockMode && <div className="readout"><strong>AgentId:</strong> {realAgentId}</div>}
 
       <Section title="Agent Setup">
         <div className="grid">
@@ -213,7 +426,7 @@ export default function App() {
           <input type="checkbox" checked={policyActive} onChange={(e) => setPolicyActive(e.target.checked)} />
           <span>Policy active</span>
         </label>
-        <button className="primary" onClick={() => updatePolicy({ maxPerTx, maxPerDay, active: policyActive })}>Save/Update Policy</button>
+        <button className="primary" onClick={handleUpdatePolicy}>Save/Update Policy</button>
       </Section>
 
       <Section title="Authorized Spender">
@@ -232,13 +445,13 @@ export default function App() {
           <Field label="Service name" value={payService} onChange={setPayService} placeholder="openai-api" />
           <Field label="Spender address" value={paySpender} onChange={setPaySpender} placeholder="0x..." />
         </div>
-        <button className="primary" onClick={handlePay}>
-          {mockMode ? 'Simulate Payment' : 'Approve Token for Payment Channel'}
+        <button className="primary" onClick={handlePayment}>
+          {mockMode ? 'Simulate Payment' : 'Record Spend'}
         </button>
       </Section>
 
       <Section title="Receipts / History">
-        {receipts.length === 0 && <p className="muted">No receipts yet.</p>}
+        {receipts.length === 0 && realReceipts.length === 0 && <p className="muted">No receipts yet.</p>}
         <table className="table">
           <thead>
             <tr>
@@ -252,17 +465,33 @@ export default function App() {
             </tr>
           </thead>
           <tbody>
-            {receipts.map((r) => (
-              <tr key={r.id}>
-                <td>{new Date(r.timestamp).toLocaleString()}</td>
-                <td>{r.agentId}</td>
-                <td>{r.amount}</td>
-                <td>{r.service}</td>
-                <td><span className={`badge badge-${r.status.toLowerCase()}`}>{r.status}</span></td>
-                <td className="mono">{r.txHash || '-'}</td>
-                <td>{r.reason || '-'}</td>
-              </tr>
-            ))}
+            {[...receipts, ...realReceipts].map((r) => {
+              const isReal = 'action' in r;
+              const agentId = isReal ? realAgentId || '-' : (r as any).agentId;
+              const amount = isReal ? '-' : (r as any).amount;
+              const service = isReal ? (r as BaseReceipt).action : (r as any).service;
+              const status = r.status;
+              const txHash = (r as any).txHash || '-';
+              const txCell = (r as BaseReceipt).txHash ? (
+                <a className="mono" href={(r as BaseReceipt).explorerUrl || `https://sepolia.basescan.org/tx/${(r as BaseReceipt).txHash}`} target="_blank" rel="noreferrer">
+                  {(r as BaseReceipt).txHash}
+                </a>
+              ) : (
+                <span className="mono">{txHash}</span>
+              );
+              const reason = (r as BaseReceipt).error || (r as BaseReceipt).detail || (r as any).reason || '-';
+              return (
+                <tr key={r.id}>
+                  <td>{new Date(r.timestamp).toLocaleString()}</td>
+                  <td className="mono">{agentId}</td>
+                  <td>{amount}</td>
+                  <td>{service}</td>
+                  <td><span className={`badge badge-${status.toLowerCase()}`}>{status}</span></td>
+                  <td>{txCell}</td>
+                  <td>{reason}</td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </Section>
