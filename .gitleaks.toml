@@ -1,0 +1,5 @@
+[allowlist]
+paths = [
+  '''demo/agentpay-dashboard/\.env\.example''',
+  '''demo/agentpay-dashboard/README\.md'''
+]

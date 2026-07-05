@@ -1,42 +1,23 @@
-# Quanta AgentPay Dashboard Demo
+# AgentPay Dashboard Demo
 
-A minimal React + Vite dashboard that demonstrates the core Quanta AgentPay flow:
+React + Vite dashboard for Quanta AgentPay.
 
-- Create/register an AI agent
-- Set a daily spend policy
-- Authorize a spender contract/address
-- Simulate an agent payment
-- View receipts/history
+## Setup
 
-## Run in mock mode
+1. Copy `.env.example` to `.env.local`.
+2. Fill in your wallet / RPC if needed.
+3. Install deps: `npm install`
+4. Run: `npm run dev`
 
-```bash
-cd demo/agentpay-dashboard
-npm install
-npm run dev
-```
+## Base Sepolia Configuration
 
-Open http://localhost:5173. No private key required.
+ChainId: `84532`
+RPC: `https://sepolia.base.org`
 
-## Run in Base Sepolia real mode
+Contract addresses:
+- QuantaToken: `0xBfeC1E5574940E4132296819dd4953A3D990dA9a`
+- AIAgentRegistry: `0x37789b163F27a88e6B358c546C34e6d3d6CC6D0c`
+- AIPaymentChannel: `0x22B28618ef6424F253A4D76cEDF5ddD48C0c2EC8`
+- AIModelMarketplace: `0xBFE04AB65bEA2d0F0A2886C2eC06C5F7622884aA`
 
-Copy `.env.example` to `.env`, set `VITE_DEMO_MODE=real`, and fill in the contract addresses already published in `.env.example`:
-
-- QuantaToken: `0x6d089d25035868358952b4d3644f8dAdcCc3295a`
-- AIAgentRegistry: `0x10aE5f83F1CF20331186Ea1aD089D8fd3EbA5EEB`
-- AIPaymentChannel: `0xF146e95b97fce1d1800F5F922AE99155711A4314`
-- AIModelMarketplace: `0xFf584b30b2D00Bf0aB694683F06dC7E701fdfd49`
-
-Connect a wallet, ensure the network is Base Sepolia (chainId `84532`), and use the UI toggle or `.env` setting to switch from mock to real mode.
-
-## What is implemented vs mock
-
-- Agent registration is local state only.
-- Spending policy enforcement is simulated in the browser.
-- Payment receipt generation is mock-based.
-- No real transactions are sent unless you wire the env and toggle off mock mode.
-
-## Notes
-
-- Do not commit `.env`.
-- This demo intentionally does not touch `sdk/`, `contracts/`, or `.github/`.
+Connect the deployer/owner wallet `0x2060378AF1916eCFB1A6734405d4f4a62f1560FC`, ensure the network is Base Sepolia (chainId `84532`), then use the UI toggle or `.env.local` setting to switch to real mode.
