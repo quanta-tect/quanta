@@ -20,23 +20,23 @@ Open http://localhost:5173. No private key required.
 
 ## Run in Base Sepolia real mode
 
-Copy `.env.example` to `.env`, set `VITE_DEMO_MODE=real`, and fill in the contract addresses already published in `.env.example`:
+Copy `.env.example` to `.env.local` (do not commit `.env.local`), ensure `VITE_DEMO_MODE=real`, and use the deployed Base Sepolia addresses:
 
-- QuantaToken: `0x6d089d25035868358952b4d3644f8dAdcCc3295a`
-- AIAgentRegistry: `0x10aE5f83F1CF20331186Ea1aD089D8fd3EbA5EEB`
-- AIPaymentChannel: `0xF146e95b97fce1d1800F5F922AE99155711A4314`
-- AIModelMarketplace: `0xFf584b30b2D00Bf0aB694683F06dC7E701fdfd49`
+- QuantaToken: `0xBfeC1E5574940E4132296819dd4953A3D990dA9a`
+- AIAgentRegistry: `0x37789b163F27a88e6B358c546C34e6d3d6CC6D0c`
+- AIPaymentChannel: `0x22B28618ef6424F253A4D76cEDF5ddD48C0c2EC8`
+- AIModelMarketplace: `0xBFE04AB65bEA2d0F0A2886C2eC06C5F7622884aA`
 
-Connect a wallet, ensure the network is Base Sepolia (chainId `84532`), and use the UI toggle or `.env` setting to switch from mock to real mode.
+Connect the deployer/owner wallet `0x2060378AF1916eCFB1A6734405d4f4a62f1560FC`, ensure the network is Base Sepolia (chainId `84532`), then use the UI toggle or `.env.local` setting to switch to real mode.
 
 ## What is implemented vs mock
 
-- Agent registration is local state only.
+- Agent registration is local state in demo.
 - Spending policy enforcement is simulated in the browser.
-- Payment receipt generation is mock-based.
-- No real transactions are sent unless you wire the env and toggle off mock mode.
+- Payment receipt generation uses live contract calls only in real mode.
+- Real mode shows only-owner guidance when the connected wallet is not the registry owner.
 
 ## Notes
 
-- Do not commit `.env`.
+- Do not commit `.env.local`.
 - This demo intentionally does not touch `sdk/`, `contracts/`, or `.github/`.

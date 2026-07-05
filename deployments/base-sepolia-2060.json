@@ -1,0 +1,60 @@
+{
+  "chainId": 84532,
+  "chainName": "Base Sepolia",
+  "deployer": "0x2060378AF1916eCFB1A6734405d4f4a62f1560FC",
+  "contracts": {
+    "QuantaToken": {
+      "address": "0xBfeC1E5574940E4132296819dd4953A3D990dA9a",
+      "owner": "0x2060378AF1916eCFB1A6734405d4f4a62f1560FC",
+      "ownerVerified": true,
+      "deploymentTx": "0x92867dcd5eda39f3b89731291d827605ada04170cd9fdc203efb635fced67a98"
+    },
+    "AIAgentRegistry": {
+      "address": "0x37789b163F27a88e6B358c546C34e6d3d6CC6D0c",
+      "owner": "0x2060378AF1916eCFB1A6734405d4f4a62f1560FC",
+      "ownerVerified": true,
+      "deploymentTx": "0x2191311b42059752e27034f200e87684fc4a60e629487ce6ea652fb21342e347"
+    },
+    "AIPaymentChannel": {
+      "address": "0x22B28618ef6424F253A4D76cEDF5ddD48C0c2EC8",
+      "owner": "0x2060378AF1916eCFB1A6734405d4f4a62f1560FC",
+      "ownerVerified": true,
+      "deploymentTx": "0xfe2c0dd45f9fcc07ab4149451688f165ed8f05e98358d47d6c9dc1bae09e8eff"
+    },
+    "AIModelMarketplace": {
+      "address": "0xBFE04AB65bEA2d0F0A2886C2eC06C5F7622884aA",
+      "owner": "0x2060378AF1916eCFB1A6734405d4f4a62f1560FC",
+      "ownerVerified": true,
+      "deploymentTx": "0xc0c85f7321758dfd2e5c23def02989d1bbf35fb1f7f86328c06ba028debe8052"
+    }
+  },
+  "authorizedSpenders": {
+    "AIAgentRegistry": {
+      "spenders": [
+        {
+          "address": "0x22B28618ef6424F253A4D76cEDF5ddD48C0c2EC8",
+          "authorized": true,
+          "tx": "0x5de24c18cdffaf780faf721abc8a5950533bff358b07c640589618f7f3d97819"
+        },
+        {
+          "address": "0xBFE04AB65bEA2d0F0A2886C2eC06C5F7622884aA",
+          "authorized": true,
+          "tx": "0xe70d7d43529b1dcaa4801b6e09b51ed8408d4f46dae613526e38cba4b578ea99"
+        }
+      ]
+    }
+  },
+  "taxCollectors": {
+    "QuantaToken": [
+      {
+        "address": "0x22B28618ef6424F253A4D76cEDF5ddD48C0c2EC8",
+        "tx": "0x2366c047c5b31e530625757e302900f73c54ee7aa5159d8a6904eef0f680376e"
+      },
+      {
+        "address": "0xBFE04AB65bEA2d0F0A2886C2eC06C5F7622884aA",
+        "tx": "0xa03e3cca9b854281a9feb6d81aa26937a9197523f204d9d7eebd6d1c1330073f"
+      }
+    ]
+  },
+  "timestamp": "2026-07-05T22:17:42Z"
+}
