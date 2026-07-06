@@ -1,75 +1,115 @@
 # AgentPay Dashboard Demo
 
-React + Vite dashboard for Quanta AgentPay.
+React and Vite dashboard for Quanta AgentPay.
 
-## Setup
+Quanta AgentPay gives AI agents wallets with rules:
+- budgets
+- permissions
+- authorized spenders
+- on-chain receipts
 
-1. Copy `.env.example` to `.env.local`.
-2. Fill in your wallet / RPC if needed.
-3. Install deps: `npm install`
-4. Run: `npm run dev`
+## Run in mock mode
 
-## Base Sepolia Configuration
+Mock mode does not require a wallet, private key, contract address, or test ETH.
 
-ChainId: `84532`
-RPC: `https://sepolia.base.org`
+```bash
+cd demo/agentpay-dashboard
+npm install
+npm run dev
 
-Contract addresses:
-- QuantaToken: `0xBfeC1E5574940E4132296819dd4953A3D990dA9a`
-- AIAgentRegistry: `0x37789b163F27a88e6B358c546C34e6d3d6CC6D0c`
-- AIPaymentChannel: `0x22B28618ef6424F253A4D76cEDF5ddD48C0c2EC8`
-- AIModelMarketplace: `0xBFE04AB65bEA2d0F0A2886C2eC06C5F7622884aA`
+Open:
 
-Connect the deployer/owner wallet `0x2060378AF1916eCFB1A6734405d4f4a62f1560FC`, ensure the network is Base Sepolia (chainId `84532`), then use the UI toggle or `.env.local` setting to switch to real mode.
+http://localhost:5173
 
-## Demo walkthrough
+Keep Mock mode enabled in the UI.
 
-### Mock mode
+## Run in Base Sepolia real mode
 
-1. Open http://localhost:5173 after `npm run dev`.
-2. Keep Mock mode on.
-3. Register an agent, save a policy, authorize a spender, and simulate a payment.
-4. Receipts are labeled `Mock`.
+Create .env.local from .env.example:
 
-No wallet is required in mock mode.
+```bash
+cp .env.example .env.local
+```
 
-### Real mode
+Use these values:
 
-1. Copy `.env.example` to `.env.local`.
-2. Set `VITE_DEMO_MODE=real` and fill contract addresses.
-3. Connect a wallet with Base Sepolia selected.
-4. Verify the owner status: only the registry owner can authorize spenders.
-5. Register an agent, save/update a policy, authorize a spender, then record spend.
-6. Each successful receipt includes a BaseScan link.
+```bash
+VITE_CHAIN_ID=84532
+VITE_CHAIN_NAME=Base Sepolia
+VITE_RPC_URL=https://sepolia.base.org
 
-### Required `.env.local` values
+VITE_AGENT_REGISTRY_ADDRESS=0x37789b163F27a88e6B358c546C34e6d3d6CC6D0c
+VITE_PAYMENT_CHANNEL_ADDRESS=0x22B28618ef6424F253A4D76cEDF5ddD48C0c2EC8
+VITE_MARKETPLACE_ADDRESS=0xBFE04AB65bEA2d0F0A2886C2eC06C5F7622884aA
+VITE_QTA_TOKEN_ADDRESS=0xBfeC1E5574940E4132296819dd4953A3D990dA9a
 
-- VITE_DEMO_MODE=real
-- VITE_AGENT_REGISTRY_ADDRESS
-- VITE_PAYMENT_CHANNEL_ADDRESS
-- VITE_MARKETPLACE_ADDRESS
-- VITE_QTA_TOKEN_ADDRESS
-- VITE_OWNER_ADDRESS
+VITE_DEMO_MODE=real
+```
 
-## Test flow
+Then restart the dev server:
 
-1. Connect wallet
-2. Switch to Base Sepolia
-3. Register agent
-4. Save/update policy
-5. Authorize spender
-6. Record spend
-7. Open tx hash on BaseScan
+```bash
+npm run dev
+```
+
+## Base Sepolia contracts
+
+QuantaToken:
+
+0xBfeC1E5574940E4132296819dd4953A3D990dA9a
+
+AIAgentRegistry:
+
+0x37789b163F27a88e6B358c546C34e6d3d6CC6D0c
+
+AIPaymentChannel:
+
+0x22B28618ef6424F253A4D76cEDF5ddD48C0c2EC8
+
+AIModelMarketplace:
+
+0xBFE04AB65bEA2d0F0A2886C2eC06C5F7622884aA
+
+Owner and deployer wallet:
+
+0x2060378AF1916eCFB1A6734405d4f4a62f1560FC
+
+## Real mode walkthrough
+
+1. Connect wallet.
+2. Switch to Base Sepolia.
+3. Make sure Mock mode is off.
+4. Register an agent.
+5. Save or update the spending policy.
+6. Authorize a spender.
+7. Record spend.
+8. Open the transaction hash on BaseScan.
 
 ## Troubleshooting
 
-- Missing addresses: fill contract addresses in `.env.local`.
-- Wrong network: switch wallet to Base Sepolia (chainId 84532).
-- Wallet not owner: only the registry owner can authorize global spenders.
-- User rejected transaction: confirm the transaction in the wallet popup.
-- Not enough test ETH: get Base Sepolia ETH from a faucet.
+Missing addresses:
+Check .env.local, then restart npm run dev.
 
-## Notes
+Wrong network:
+Switch your wallet to Base Sepolia.
 
-- Do not commit `.env.local`.
-- This demo intentionally does not touch `sdk/`, `contracts/`, or `.github/`.
+Wallet is not owner:
+Only the registry owner can authorize global spenders.
+
+Transaction rejected:
+The wallet user rejected the transaction.
+
+Not enough test ETH:
+Get Base Sepolia ETH from a faucet.
+
+## Security notes
+
+Do not commit:
+
+- .env.local
+- private keys
+- mnemonics
+- RPC secrets
+- wallet keystores
+
+Only public testnet contract addresses should be committed.
