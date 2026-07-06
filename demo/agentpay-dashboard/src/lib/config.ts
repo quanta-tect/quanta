@@ -6,6 +6,7 @@ export interface DemoConfig {
   paymentChannelAddress: string;
   marketplaceAddress: string;
   qtaTokenAddress: string;
+  ownerAddress: string;
   demoMode: boolean;
 }
 
@@ -23,6 +24,7 @@ export function loadConfig(): DemoConfig {
   const paymentChannelAddress = cleanAddress(import.meta.env.VITE_PAYMENT_CHANNEL_ADDRESS, '0x');
   const marketplaceAddress = cleanAddress(import.meta.env.VITE_MARKETPLACE_ADDRESS, '0x');
   const qtaTokenAddress = cleanAddress(import.meta.env.VITE_QTA_TOKEN_ADDRESS, '0x');
+  const ownerAddress = cleanAddress(import.meta.env.VITE_OWNER_ADDRESS, '');
   const demoMode = String(import.meta.env.VITE_DEMO_MODE || 'mock').toLowerCase() !== 'real';
 
   return {
@@ -33,6 +35,7 @@ export function loadConfig(): DemoConfig {
     paymentChannelAddress,
     marketplaceAddress,
     qtaTokenAddress,
+    ownerAddress,
     demoMode,
   };
 }

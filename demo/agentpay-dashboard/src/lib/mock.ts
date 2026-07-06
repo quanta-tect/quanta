@@ -24,6 +24,10 @@ export interface Receipt {
   status: string;
   txHash?: string;
   reason?: string;
+  isMock?: boolean;
+  action?: string;
+  error?: string;
+  detail?: string;
 }
 
 const INITIAL_AGENT: AgentRecord = {
@@ -47,8 +51,9 @@ const INITIAL_RECEIPTS: Receipt[] = [
     amount: '0.002',
     service: 'openai-api',
     status: 'SUCCESS',
-    txHash: '0xabc123',
+    txHash: 'mock-abc123',
     reason: 'authorized_spender',
+    isMock: true,
   },
 ];
 
@@ -110,6 +115,7 @@ export function simulatePayment(
       service,
       status: 'FAILED',
       reason: 'policy_inactive',
+      isMock: true,
     };
   }
 
@@ -122,6 +128,7 @@ export function simulatePayment(
       service,
       status: 'FAILED',
       reason: 'unauthorized_spender',
+      isMock: true,
     };
   }
 
@@ -134,6 +141,7 @@ export function simulatePayment(
       service,
       status: 'FAILED',
       reason: 'over_max_per_transaction',
+      isMock: true,
     };
   }
 
@@ -146,6 +154,7 @@ export function simulatePayment(
       service,
       status: 'FAILED',
       reason: 'over_daily_budget',
+      isMock: true,
     };
   }
 
@@ -156,7 +165,8 @@ export function simulatePayment(
     amount,
     service,
     status: 'SUCCESS',
-    txHash: `0x${Math.random().toString(16).slice(2, 14)}`,
+    txHash: `mock-${Math.random().toString(16).slice(2, 14)}`,
     reason: 'authorized_spender',
+    isMock: true,
   };
 }
