@@ -1,8 +1,40 @@
-# Quanta
+<p align="center">
+  <img src="./assets/quanta-mark.svg" alt="Quanta mark" width="96" height="96">
+</p>
 
-Quanta is an open-source payment and trust layer for autonomous AI agents.
+<h1 align="center">Quanta</h1>
 
-Wallets with rules for AI agents.
+<p align="center">
+  Open-source payment and trust layer for autonomous AI agents.
+</p>
+
+<p align="center">
+  <strong>Wallets with rules for AI agents.</strong>
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="MIT License">
+  <img src="https://img.shields.io/badge/release-v0.1.0-blue.svg" alt="Release v0.1.0">
+  <img src="https://img.shields.io/badge/tests-176%20passing-brightgreen.svg" alt="176 tests passing">
+  <img src="https://img.shields.io/badge/network-Base%20Sepolia-blueviolet.svg" alt="Base Sepolia">
+  <img src="https://img.shields.io/badge/audit-0%20high-green.svg" alt="SDK audit 0 high">
+  <img src="https://img.shields.io/badge/status-experimental-yellow.svg" alt="Experimental">
+</p>
+
+---
+
+## Overview
+
+Quanta provides on-chain agent identity, spending policies, authorized spenders, payment channels, marketplace primitives, and receipts for AI agents.
+
+Current status:
+
+- EVM contracts v1.2
+- Base Sepolia deployment
+- AgentPay dashboard demo
+- TypeScript SDK
+- 176 contract tests passing
+- real-wallet test completed on Base Sepolia
 
 ## Problem
 
@@ -12,6 +44,7 @@ But giving autonomous agents unrestricted wallets is unsafe.
 ## Solution
 
 Quanta adds:
+
 - agent identity
 - spending policies
 - authorized spenders
@@ -19,15 +52,6 @@ Quanta adds:
 - model marketplace primitives
 - on-chain receipts
 - open-source SDK and demo dashboard
-
-## Current status
-
-- EVM contracts v1.2
-- Base Sepolia deployment
-- AgentPay dashboard demo
-- TypeScript SDK
-- 176 contract tests passing
-- real-wallet test completed on Base Sepolia
 
 ## Architecture
 
@@ -40,23 +64,28 @@ Quanta consists of the following components:
 - TypeScript SDK: client library for interacting with Quanta contracts
 - AgentPay Dashboard: React dashboard demo for the AgentPay flow
 
-## Base Sepolia deployment
+## Base Sepolia Deployment
 
 Quanta v1.2 contracts are deployed on Base Sepolia, chain ID 84532.
 
 QuantaToken:
+
 0xBfeC1E5574940E4132296819dd4953A3D990dA9a
 
 AIAgentRegistry:
+
 0x37789b163F27a88e6B358c546C34e6d3d6CC6D0c
 
 AIPaymentChannel:
+
 0x22B28618ef6424F253A4D76cEDF5ddD48C0c2EC8
 
 AIModelMarketplace:
+
 0xBFE04AB65bEA2d0F0A2886C2eC06C5F7622884aA
 
 Owner and deployer wallet:
+
 0x2060378AF1916eCFB1A6734405d4f4a62f1560FC
 
 ## Quickstart
@@ -102,33 +131,25 @@ The AgentPay dashboard demo is in demo/agentpay-dashboard.
 - This is experimental open-source software.
 - Do not use with mainnet funds yet.
 
-## Repository layout
+## Repository Layout
 
-contracts/
-Solidity smart contracts and Foundry tests.
+contracts/ - Solidity smart contracts and Foundry tests.
 
-sdk/
-TypeScript SDK and build configuration.
+sdk/ - TypeScript SDK and build configuration.
 
-demo/agentpay-dashboard/
-React dashboard demo for the AgentPay flow.
+demo/agentpay-dashboard/ - React dashboard demo for the AgentPay flow.
 
-deployments/
-Deployment records.
+deployments/ - Deployment records.
 
-docs/
-Additional documentation.
+docs/ - Additional documentation.
 
-.github/
-CI workflows and project settings.
+.github/ - CI workflows and project settings.
 
-setup.sh
-One-shot setup script for contracts and SDK.
+setup.sh - One-shot setup script for contracts and SDK.
 
-Makefile
-Common build and test commands.
+Makefile - Common build and test commands.
 
-## Development checks
+## Development Checks
 
 cd contracts && forge build && forge test -vvv
 cd sdk && npm audit --audit-level=high && npm run build && npm pack --dry-run
