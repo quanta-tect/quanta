@@ -185,15 +185,16 @@ demo/agentpay-dashboard/README.md
 ## Repository Layout
 
 ```text
-contracts/                 Solidity smart contracts and Foundry tests
-sdk/                       TypeScript SDK
-demo/agentpay-dashboard/   React AgentPay dashboard demo
-deployments/               Deployment records
-docs/                      Additional documentation
-.github/                   CI workflows and project settings
-assets/                    Branding assets
-setup.sh                   One-shot setup script
-Makefile                   Common build and test commands
+contracts/                       Solidity smart contracts and Foundry tests
+sdk/                             TypeScript SDK
+examples/api-metering-server/    API metering server example for AI agents
+demo/agentpay-dashboard/         React AgentPay dashboard demo
+deployments/                     Deployment records
+docs/                            Additional documentation
+.github/                         CI workflows and project settings
+assets/                          Branding assets
+setup.sh                         One-shot setup script
+Makefile                         Common build and test commands
 ```
 
 ## Development Checks
