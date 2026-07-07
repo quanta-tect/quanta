@@ -1,200 +1,150 @@
-# QUANTA - Quantum-resistant Universal Agent Network for Transactions & AI
+# Quanta
 
-> "Money for the future isn't just quantum-resistant - it speaks AI's language."
+Quanta is an open-source payment and trust layer for autonomous AI agents.
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)]()
-[![Quantum Safe](https://img.shields.io/badge/Quantum-Safe-purple.svg)]()
-[![AI Native](https://img.shields.io/badge/AI-Native-blue.svg)]()
-[![PoUW](https://img.shields.io/badge/Consensus-PoUW-green.svg)]()
+Wallets with rules for AI agents.
 
----
+## Problem
 
-## Summary
+AI agents will need to pay for APIs, tools, models, data, and other agents.
+But giving autonomous agents unrestricted wallets is unsafe.
 
-**QUANTA** is a next-generation Layer-1 blockchain designed from the ground up for the post-quantum era and the AI agent economy:
+## Solution
 
-- **Quantum-Safe**: CRYSTALS-Dilithium signatures (NIST FIPS 204)
-- **Proof of Useful Work**: AI inference instead of meaningless hashing
-- **AI Agent Native**: dedicated agent wallets, x402 micropayments, on-chain spending policies
-- **On-chain AI Marketplace**: tokenized models, datasets, and compute
-- **50,000+ TPS** with sharding + zk-rollups
-- **Deflationary** through AI inference fee burns
+Quanta adds:
+- agent identity
+- spending policies
+- authorized spenders
+- payment channels
+- model marketplace primitives
+- on-chain receipts
+- open-source SDK and demo dashboard
 
-## Project structure
+## Current status
 
-```
-quanta/
-    README.md
-    INDEX.md                  # Master file map (read this!)
-    LAUNCH_GUIDE_7_DAYS.md    # Day-by-day launch plan
-    setup.sh                  # One-shot setup
-
-    docs/                     # Strategy & design docs
-        WHITEPAPER.md
-        TOKENOMICS.md
-        ROADMAP.md
-        MARKETING.md
-
-    docs-security/            # Security playbook (most important!)
-        BRIDGE_SECURITY_REVIEW.md
-        INCIDENT_RESPONSE.md
-        AUDIT_OPTIONS_COMPARISON.md
-
-    prototype/                # Python L1 prototype (educational)
-
-    contracts/                # Solidity smart contracts
-        src-v1.2/             # Current production (v1.2 hardened)
-        test-v1.2/            # v1.2 security regression tests
-        src-v1.1/             # Legacy v1.1
-        test-v1.1/            # Legacy regression tests
-        src-v2/               # V2 experimental (token/vesting/treasury/rewards)
-        test-v2/              # V2 tests
-        test-invariant/       # Foundry + Echidna invariants
-        test-formal/          # Halmos formal verification
-
-    bridge/                   # Hyperlane bridge implementation
-
-    sdk/                      # TypeScript SDK
-
-    forta-bot/                # Real-time security monitoring
-
-    multisig-setup/           # Gnosis Safe ceremony + scripts
-
-    wargames/                 # 6 incident response drills
-
-    audit-applications/       # Ready-to-submit audit applications
-
-    security-training/        # 7-course curriculum
-
-    wallet-ui/                # Wallet with tx simulation
-
-    content/                  # Marketing assets
-
-    explorer/                 # Live block explorer mockup
-
-    landing/                  # Marketing landing page
-
-    simulator/                # Tokenomics simulator
-```
-
-## Quick start
-
-```bash
-# All-in-one
-bash setup.sh
-
-# Or individually:
-cd prototype && python3 demo.py                 # Python L1 demo
-cd simulator && python3 tokenomics_sim.py --all # 50-year tokenomics
-cd contracts && forge test                      # Solidity tests
-cd sdk && npm install && npm run demo:agent     # AI agent demo
-open landing/index.html                         # Marketing site
-open explorer/index.html                        # Live explorer (simulated)
-open wallet-ui/index.html                       # Safe wallet with tx simulation
-```
-
-## Deployment roadmap
-
-### Current Implementation Status
-
-The current v1.2 release is an EVM smart-contract protocol for AI-agent payments and marketplace coordination. It includes:
-
-- QTA ERC-20 token (QuantaToken)
-- AI agent registry (AIAgentRegistry)
-- Spending policy controls
-- Payment channel contract (AIPaymentChannel)
-- AI model marketplace (AIModelMarketplace)
+- EVM contracts v1.2
+- Base Sepolia deployment
+- AgentPay dashboard demo
 - TypeScript SDK
+- 176 contract tests passing
+- real-wallet test completed on Base Sepolia
 
-The following items are roadmap/research unless explicitly marked otherwise:
+## Architecture
 
-- Native QUANTA L1 runtime
-- Post-quantum signature integration (Dilithium / Kyber)
-- Proof of Useful Work (PoUW) consensus
-- Full validator network
-- QuantumGuard
-- QuantaStaking (V2 contracts are experimental/tokenomics only)
+Quanta consists of the following components:
 
-### Phase 1 - Next 30 days
-1. **Week 1**: Deploy v1.2 smart contracts to Base Sepolia (testnet)
-2. **Week 2**: Set up Twitter, Discord, Mirror blog
-3. **Week 3**: Publish launch thread + viral demo video
-4. **Week 4**: Deploy to Base mainnet + Uniswap V3 pool
+- QuantaToken: ERC-20 token used for payments and policy enforcement
+- AIAgentRegistry: on-chain agent identity with spending policy controls
+- AIPaymentChannel: payment channel primitive for agent transactions
+- AIModelMarketplace: on-chain marketplace primitives for models and data
+- TypeScript SDK: client library for interacting with Quanta contracts
+- AgentPay Dashboard: React dashboard demo for the AgentPay flow
 
-### Phase 2 - Months 2-3
-- Audit smart contracts (Code4rena / Sherlock / Cantina)
-- Deploy across L2s (Arbitrum, Optimism, Polygon)
-- Hackathon $50K prize pool
-- First 1000 AI agents registered
+## Base Sepolia deployment
 
-### Phase 3 - Months 4-12
-- Rust L1 implementation
-- Devnet -> Testnet -> Mainnet
-- AI Council formation
-- Full DAO governance
+Quanta v1.2 contracts are deployed on Base Sepolia, chain ID 84532.
 
-## Killer use cases
+QuantaToken:
+0xBfeC1E5574940E4132296819dd4953A3D990dA9a
 
-| For Humans | For AI Agents |
-|------------|---------------|
-| Quantum-safe savings | Self-sovereign wallet from birth |
-| DeFi resistant to Q-Day | Earn from selling inference/data |
-| Earn from AI inference royalties | Pay other AIs micro-cents for services |
-| Stake to validate useful AI work | Operate 24/7 with policy guardrails |
-| Cheap remittance via L2 | Cross-agent reputation |
-| NFT model creator monetization | Death-switch + insurance |
+AIAgentRegistry:
+0x37789b163F27a88e6B358c546C34e6d3d6CC6D0c
 
-## Key numbers
+AIPaymentChannel:
+0x22B28618ef6424F253A4D76cEDF5ddD48C0c2EC8
 
-- **1B QTA** hard cap
-- **70%** royalty to model creators (highest in industry)
-- **50%** tx fee burned + **30%** AI fee burned
-- **Net deflation** from year 7 (base case scenario)
-- **$0.000001** target fee for AI micropayments
-- **50,000+ TPS** target throughput
-- **2 seconds** finality
+AIModelMarketplace:
+0xBFE04AB65bEA2d0F0A2886C2eC06C5F7622884aA
 
-## Security First
+Owner and deployer wallet:
+0x2060378AF1916eCFB1A6734405d4f4a62f1560FC
 
-This project takes security seriously:
+## Quickstart
 
-- Internal audit complete (30 findings, all fixed in v1.1)
-- Echidna + Foundry invariant fuzz testing
-- Halmos formal verification of critical properties
-- CI: Slither + Mythril + secret scanning
-- Real-time Forta monitoring bot
-- Gnosis Safe multisig setup guide
-- 6 war game scenarios for incident response
-- 7-course security training curriculum
-- Bug bounty + audit application templates
+Clone the repository:
 
-**Read `SECURITY_AUDIT.md` and `docs-security/` before any mainnet deployment.**
+git clone https://github.com/quanta-tect/quanta.git
+cd quanta
 
-## AgentPay Demo
+Run contract checks:
 
-A minimal dashboard demo is available in `demo/agentpay-dashboard`.
-It shows agent registration, spending policies, authorized spenders, simulated payments, and receipts.
+cd contracts
+forge build
+forge test -vvv
+cd ..
 
-## Contributing
+Build the SDK:
 
-We need:
-- Cryptographers (Dilithium / Kyber experience)
-- Rust developers (Substrate / Cosmos SDK)
-- AI engineers (PoUW verification, zkML)
-- Designers (UI/UX for wallet + explorer)
-- Community builders + memers
+cd sdk
+npm install
+npm run build
+cd ..
 
-## Disclaimer
+Run the AgentPay dashboard:
 
-This is a proof-of-concept project for educational and research purposes.
-Not investment advice. Audit before deploying to mainnet with real value.
+cd demo/agentpay-dashboard
+npm install
+npm run dev
+
+## Demo
+
+The AgentPay dashboard demo is in demo/agentpay-dashboard.
+
+- Mock mode requires no wallet.
+- Real mode uses Base Sepolia.
+- See demo/agentpay-dashboard/README.md for detailed setup and real-wallet instructions.
+
+## Security
+
+- No private keys are committed in this repository.
+- .env.local is ignored.
+- Testnet deployment addresses are public.
+- This is experimental open-source software.
+- Do not use with mainnet funds yet.
+
+## Repository layout
+
+contracts/
+Solidity smart contracts and Foundry tests.
+
+sdk/
+TypeScript SDK and build configuration.
+
+demo/agentpay-dashboard/
+React dashboard demo for the AgentPay flow.
+
+deployments/
+Deployment records.
+
+docs/
+Additional documentation.
+
+.github/
+CI workflows and project settings.
+
+setup.sh
+One-shot setup script for contracts and SDK.
+
+Makefile
+Common build and test commands.
+
+## Development checks
+
+cd contracts && forge build && forge test -vvv
+cd sdk && npm audit --audit-level=high && npm run build && npm pack --dry-run
+cd demo/agentpay-dashboard && npm run build && npm run typecheck
+bash -n setup.sh
+git diff --check
+
+## Roadmap
+
+- improve AgentPay UX
+- add more SDK examples
+- add agent-to-agent payment examples
+- expand marketplace flows
+- prepare audited mainnet-ready version
+- improve docs and developer onboarding
 
 ## License
 
-MIT QUANTA Foundation
-
-All funds go toward:
-- Smart contract audits
-- Developer grants
-- Educational content
-- Coffee for late-night coding
+MIT
