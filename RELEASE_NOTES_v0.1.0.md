@@ -1,69 +1,84 @@
-# Quanta v0.1.0 - AgentPay Testnet Release
+<p align="center">
+  <img src="https://img.shields.io/badge/Quanta-AgentPay-0052FF?style=for-the-badge" alt="Quanta AgentPay">
+  <img src="https://img.shields.io/badge/Release-v0.1.0-black?style=for-the-badge" alt="Release v0.1.0">
+  <img src="https://img.shields.io/badge/Network-Base%20Sepolia-0052FF?style=for-the-badge" alt="Base Sepolia">
+</p>
 
-Quanta is an open-source payment and trust layer for autonomous AI agents.
+<p align="center">
+  <img src="https://img.shields.io/badge/Contracts-EVM-627EEA?style=flat-square" alt="EVM Contracts">
+  <img src="https://img.shields.io/badge/SDK-TypeScript-3178C6?style=flat-square" alt="TypeScript SDK">
+  <img src="https://img.shields.io/badge/Tests-176%20Passing-2EA44F?style=flat-square" alt="176 tests passing">
+  <img src="https://img.shields.io/badge/Status-Testnet%20Experimental-F59E0B?style=flat-square" alt="Testnet Experimental">
+</p>
 
-This release includes EVM smart contracts, a TypeScript SDK, and the AgentPay dashboard demo deployed and tested on Base Sepolia.
+<h1 align="center">Quanta v0.1.0</h1>
 
-## What is included in v0.1.0
+<p align="center">
+  <strong>AgentPay Testnet Release</strong>
+</p>
+
+<p align="center">
+  Open-source payment and trust layer for autonomous AI agents.
+</p>
+
+<p align="center">
+  <strong>Wallets with rules for AI agents.</strong>
+</p>
+
+---
+
+## Overview
+
+Quanta v0.1.0 is the first public testnet release of the AgentPay stack.
+
+This release includes:
+
+- EVM smart contracts
+- TypeScript SDK
+- AgentPay dashboard demo
+- Base Sepolia deployment
+- Real-wallet test flow
+- On-chain spending policy and receipt flow
+
+The goal is simple:
+
+AI agents should not just have wallets.  
+They need budgets, permissions, spend limits, authorized spenders, and on-chain receipts.
+
+---
+
+## What is included
+
+### Smart contracts
 
 - QuantaToken ERC-20
 - AIAgentRegistry for agent identity, spending policies, and authorized spenders
 - AIPaymentChannel payment channel primitive
 - AIModelMarketplace model and data marketplace primitives
+
+### Developer tools
+
 - TypeScript SDK
-- AgentPay dashboard demo with mock mode and real-wallet mode
+- AgentPay dashboard demo
+- Mock mode for simple demos
+- Real mode for Base Sepolia testing
+- Public deployment records
+
+### Testing status
+
+- 176 Solidity tests passing
+- SDK build passing
+- SDK audit passing
+- AgentPay dashboard build passing
+- AgentPay dashboard typecheck passing
 - Base Sepolia real-wallet test completed
 
-## Base Sepolia contract addresses
+---
 
-QuantaToken:
-0xBfeC1E5574940E4132296819dd4953A3D990dA9a
+## Base Sepolia deployment
 
-AIAgentRegistry:
-0x37789b163F27a88e6B358c546C34e6d3d6CC6D0c
+Network:
 
-AIPaymentChannel:
-0x22B28618ef6424F253A4D76cEDF5ddD48C0c2EC8
-
-AIModelMarketplace:
-0xBFE04AB65bEA2d0F0A2886C2eC06C5F7622884aA
-
-Owner and deployer wallet:
-0x2060378AF1916eCFB1A6734405d4f4a62f1560FC
-
-## How to run the demo
-
-Run contract checks:
-
-cd contracts
-forge build
-forge test -vvv
-cd ..
-
-Build the SDK:
-
-cd sdk
-npm install
-npm run build
-cd ..
-
-Run the dashboard:
-
-cd demo/agentpay-dashboard
-npm install
-npm run dev
-
-Mock mode requires no wallet.
-For real mode, see demo/agentpay-dashboard/README.md.
-
-## Security note
-
-This is testnet and experimental software.
-Do not use with mainnet funds.
-No private keys are committed.
-.env.local is ignored.
-
-## Links
-
-- README: README.md
-- Demo guide: demo/agentpay-dashboard/README.md
+```text
+Base Sepolia
+Chain ID: 84532
