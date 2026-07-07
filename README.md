@@ -188,6 +188,7 @@ demo/agentpay-dashboard/README.md
 contracts/                 Solidity smart contracts and Foundry tests
 sdk/                       TypeScript SDK
 demo/agentpay-dashboard/   React AgentPay dashboard demo
+examples/api-metering-server/ API metering server example for AI agents
 deployments/               Deployment records
 docs/                      Additional documentation
 .github/                   CI workflows and project settings
