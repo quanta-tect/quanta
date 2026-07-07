@@ -1,8 +1,31 @@
+<div align="center">
+
+<img src="./assets/quanta-mark.svg" alt="Quanta mark" width="80" height="80"/>
+
 # Quanta
 
 Quanta is an open-source payment and trust layer for autonomous AI agents.
 
 Wallets with rules for AI agents.
+
+</div>
+
+![License](https://img.shields.io/badge/license-MIT-blue.svg) &nbsp; ![Release](https://img.shields.io/badge/release-v0.1.0-blue.svg) &nbsp; ![Tests](https://img.shields.io/badge/tests-176%20passing-brightgreen.svg) &nbsp; ![Network](https://img.shields.io/badge/network-Base%20Sepolia-blueviolet.svg) &nbsp; ![Audit](https://img.shields.io/badge/audit-0%20high-green.svg) &nbsp; ![Status](https://img.shields.io/badge/status-experimental-yellow.svg)
+
+---
+
+## Overview
+
+Quanta provides on-chain agent identity, spending policies, authorized spenders, payment channels, marketplace primitives, and receipts for AI agents.
+
+Current status:
+
+- EVM contracts v1.2
+- Base Sepolia deployment
+- AgentPay dashboard demo
+- TypeScript SDK
+- 176 contract tests passing
+- real-wallet test completed on Base Sepolia
 
 ## Problem
 
@@ -20,15 +43,6 @@ Quanta adds:
 - on-chain receipts
 - open-source SDK and demo dashboard
 
-## Current status
-
-- EVM contracts v1.2
-- Base Sepolia deployment
-- AgentPay dashboard demo
-- TypeScript SDK
-- 176 contract tests passing
-- real-wallet test completed on Base Sepolia
-
 ## Architecture
 
 Quanta consists of the following components:
@@ -40,7 +54,7 @@ Quanta consists of the following components:
 - TypeScript SDK: client library for interacting with Quanta contracts
 - AgentPay Dashboard: React dashboard demo for the AgentPay flow
 
-## Base Sepolia deployment
+## Base Sepolia Deployment
 
 Quanta v1.2 contracts are deployed on Base Sepolia, chain ID 84532.
 
@@ -63,78 +77,80 @@ Owner and deployer wallet:
 
 Clone the repository:
 
+```bash
 git clone https://github.com/quanta-tect/quanta.git
 cd quanta
+```
 
 Run contract checks:
 
+```bash
 cd contracts
 forge build
 forge test -vvv
 cd ..
+```
 
 Build the SDK:
 
+```bash
 cd sdk
 npm install
 npm run build
 cd ..
+```
 
 Run the AgentPay dashboard:
 
+```bash
 cd demo/agentpay-dashboard
 npm install
 npm run dev
+```
 
 ## Demo
 
-The AgentPay dashboard demo is in demo/agentpay-dashboard.
+The AgentPay dashboard demo is in `demo/agentpay-dashboard`.
 
 - Mock mode requires no wallet.
 - Real mode uses Base Sepolia.
-- See demo/agentpay-dashboard/README.md for detailed setup and real-wallet instructions.
+- See `demo/agentpay-dashboard/README.md` for detailed setup and real-wallet instructions.
 
 ## Security
 
 - No private keys are committed in this repository.
-- .env.local is ignored.
+- `.env.local` is ignored.
 - Testnet deployment addresses are public.
 - This is experimental open-source software.
 - Do not use with mainnet funds yet.
 
-## Repository layout
+## Repository Layout
 
-contracts/
-Solidity smart contracts and Foundry tests.
+`contracts/` - Solidity smart contracts and Foundry tests.
 
-sdk/
-TypeScript SDK and build configuration.
+`sdk/` - TypeScript SDK and build configuration.
 
-demo/agentpay-dashboard/
-React dashboard demo for the AgentPay flow.
+`demo/agentpay-dashboard/` - React dashboard demo for the AgentPay flow.
 
-deployments/
-Deployment records.
+`deployments/` - Deployment records.
 
-docs/
-Additional documentation.
+`docs/` - Additional documentation.
 
-.github/
-CI workflows and project settings.
+`.github/` - CI workflows and project settings.
 
-setup.sh
-One-shot setup script for contracts and SDK.
+`setup.sh` - One-shot setup script for contracts and SDK.
 
-Makefile
-Common build and test commands.
+`Makefile` - Common build and test commands.
 
-## Development checks
+## Development Checks
 
+```bash
 cd contracts && forge build && forge test -vvv
 cd sdk && npm audit --audit-level=high && npm run build && npm pack --dry-run
 cd demo/agentpay-dashboard && npm run build && npm run typecheck
 bash -n setup.sh
 git diff --check
+```
 
 ## Roadmap
 
