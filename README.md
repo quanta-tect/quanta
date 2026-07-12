@@ -1,50 +1,47 @@
 # ⚛️ Quanta — Payment & Trust Layer for Autonomous AI Agents
 
-**Wallets with rules cho AI agents.** Built on Base.
+**Wallets with rules for AI agents.** Built on Base.
 
-Open-source payment và trust layer giúp AI agents thanh toán an toàn cho APIs, models, tools, data và các agent khác.
+Open-source payment and trust layer for autonomous AI agents.
 
 ---
 
 ## Overview
 
-Quanta cung cấp cho AI agents những chiếc **wallet có quy tắc** (spending policies, budgets, authorized spenders, payment channels, on-chain receipts).
+Quanta is an open-source payment and trust layer designed for autonomous AI agents.
 
-**Ý tưởng cốt lõi:**
-> AI agents nên có khả năng thanh toán.  
-> Nhưng chúng không được phép chi tiêu mà không có quy tắc.
-
-Quanta giải quyết vấn đề an ninh khi cho agent sử dụng wallet on-chain.
+AI agents need to pay for APIs, models, tools, data, infrastructure, and other agents. Quanta provides them with **controlled wallets** featuring identity, budgets, spending policies, authorized spenders, payment channels, marketplace primitives, and on-chain receipts.
 
 ## Why Quanta?
 
-- Tránh rủi ro agent bị drain toàn bộ wallet
-- Hỗ trợ micropayments (x402 style)
-- Agent identity + spending policies on-chain
-- Model marketplace primitives
-- Dễ tích hợp với LangChain, AutoGPT, CrewAI...
+Giving an AI agent an unrestricted wallet is dangerous.
+
+Quanta is built around one core principle:
+
+> **AI agents should be able to pay — but they should not be able to spend without rules.**
+
+---
 
 ## Current Status (v0.1.0)
 
-- **EVM Contracts v1.2** (security hardened)
+- EVM Smart Contracts v1.2 (security hardened)
 - Deployed on **Base Sepolia**
 - TypeScript SDK
 - AgentPay Dashboard (Mock + Real mode)
-- 176+ contract tests passing
+- 176+ passing contract tests
 - SDK security audit: 0 high vulnerabilities
-- Real wallet test completed
-
-**Quantum-safe features** đang được nghiên cứu (Dilithium signatures) và sẽ được tích hợp dần.
+- Real wallet integration tested on Base Sepolia
+- Public testnet release
 
 ---
 
 ## Core Features
 
-- Agent Identity & Registration
-- Spending Policies & Budgets
+- Agent Identity & Registry
+- Spending Policies & Budget Controls
 - Authorized Spenders
-- Payment Channels (x402 micropayments)
-- AI Model Marketplace primitives
+- Payment Channels (x402-style micropayments)
+- AI Model / Tool / Data Marketplace primitives
 - On-chain Transaction Receipts
 - TypeScript SDK
 - AgentPay Dashboard Demo
@@ -53,33 +50,32 @@ Quanta giải quyết vấn đề an ninh khi cho agent sử dụng wallet on-ch
 
 ## Architecture
 
-| Component            | Description |
-|----------------------|-----------|
-| QuantaToken          | ERC-20 token với AI tax & burn mechanics |
-| AIAgentRegistry      | Agent identity, policies, authorized spenders |
-| AIPaymentChannel     | Payment channel cho micropayments |
-| AIModelMarketplace   | Marketplace cho models, tools, data |
-| TypeScript SDK       | Client library cho developers |
-| AgentPay Dashboard   | React demo (mock + real) |
+| Component              | Description |
+|------------------------|-----------|
+| **QuantaToken**        | ERC-20 token with payment and policy enforcement |
+| **AIAgentRegistry**    | On-chain agent identity, spending limits, and authorized spender controls |
+| **AIPaymentChannel**   | Payment channel primitive for efficient agent transactions |
+| **AIModelMarketplace** | Marketplace primitives for AI models, tools, and data |
+| **TypeScript SDK**     | Developer-friendly client library |
+| **AgentPay Dashboard** | React demo for testing (mock + live on Base Sepolia) |
 
 ---
 
 ## Base Sepolia Deployment
 
-**Network**: Base Sepolia (Chain ID: 84532)
+**Network**: Base Sepolia  
+**Chain ID**: 84532
 
-**Contract Addresses** (v1.2):
+| Contract               | Address                                      |
+|------------------------|----------------------------------------------|
+| QuantaToken            | `0xBfeC1E5574940E4132296819dd4953A3D990dA9a` |
+| AIAgentRegistry        | `0x37789b163F27a88e6B358c546C34e6d3d6CC6D0c` |
+| AIPaymentChannel       | `0x22B28618ef6424F253A4D76cEDF5ddD48C0c2EC8` |
+| AIModelMarketplace     | `0xBFE04AB65bEA2d0F0A2886C2eC06C5F7622884aA` |
 
-| Contract              | Address                                      |
-|-----------------------|----------------------------------------------|
-| QuantaToken           | `0xBfeC1E5574940E4132296819dd4953A3D990dA9a` |
-| AIAgentRegistry       | `0x37789b163F27a88e6B358c546C34e6d3d6CC6D0c` |
-| AIPaymentChannel      | `0x22B28618ef6424F253A4D76cEDF5ddD48C0c2EC8` |
-| AIModelMarketplace    | `0xBFE04AB65bEA2d0F0A2886C2eC06C5F7622884aA` |
+**Deployer / Owner**: `0x2060378AF1916eCFB1A6734405d4f4a62f1560FC`
 
-**Owner/Deployer**: `0x2060378AF1916eCFB1A6734405d4f4a62f1560FC`
-
-> ⚠️ **Lưu ý**: Đây là testnet. Chưa dùng cho mainnet funds.
+> ⚠️ **Security Notice**: This is experimental testnet software. Do not use with real funds.
 
 ---
 
