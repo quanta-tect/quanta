@@ -1,116 +1,98 @@
-<p align="center">
-  <img src="./assets/quanta-mark.svg" alt="Quanta mark" width="96" height="96">
-</p>
+# ⚛️ Quanta — Payment & Trust Layer for Autonomous AI Agents
 
-<h1 align="center">Quanta</h1>
+**Wallets with rules cho AI agents.** Built on Base.
 
-<p align="center">
-  Open-source payment and trust layer for autonomous AI agents.
-</p>
-
-<p align="center">
-  <strong>Wallets with rules for AI agents.</strong>
-</p>
-
-<p align="center">
-  <img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="MIT License">
-  <img src="https://img.shields.io/badge/release-v0.1.0-blue.svg" alt="Release v0.1.0">
-  <img src="https://img.shields.io/badge/tests-176%20passing-brightgreen.svg" alt="176 tests passing">
-  <img src="https://img.shields.io/badge/network-Base%20Sepolia-blueviolet.svg" alt="Base Sepolia">
-  <img src="https://img.shields.io/badge/audit-0%20high-green.svg" alt="SDK audit 0 high">
-  <img src="https://img.shields.io/badge/status-experimental-yellow.svg" alt="Experimental">
-</p>
+Open-source payment và trust layer giúp AI agents thanh toán an toàn cho APIs, models, tools, data và các agent khác.
 
 ---
 
 ## Overview
 
-Quanta is an open-source payment and trust layer for autonomous AI agents.
+Quanta cung cấp cho AI agents những chiếc **wallet có quy tắc** (spending policies, budgets, authorized spenders, payment channels, on-chain receipts).
 
-AI agents will need to pay for APIs, tools, models, data, infrastructure, and other agents. Quanta gives them wallets with rules: identity, budgets, permissions, authorized spenders, payment channels, marketplace primitives, and on-chain receipts.
+**Ý tưởng cốt lõi:**
+> AI agents nên có khả năng thanh toán.  
+> Nhưng chúng không được phép chi tiêu mà không có quy tắc.
 
-## Why Quanta
+Quanta giải quyết vấn đề an ninh khi cho agent sử dụng wallet on-chain.
 
-Giving an AI agent an unrestricted wallet is unsafe.
+## Why Quanta?
 
-Quanta is designed around a simple idea:
+- Tránh rủi ro agent bị drain toàn bộ wallet
+- Hỗ trợ micropayments (x402 style)
+- Agent identity + spending policies on-chain
+- Model marketplace primitives
+- Dễ tích hợp với LangChain, AutoGPT, CrewAI...
 
-```text
-AI agents should be able to pay.
-But they should not be able to spend without rules.
-```
+## Current Status (v0.1.0)
 
-Quanta adds the missing control layer between autonomous agents and on-chain payments.
-
-## Current Status
-
-- EVM contracts v1.2
-- Base Sepolia deployment
-- AgentPay dashboard demo
+- **EVM Contracts v1.2** (security hardened)
+- Deployed on **Base Sepolia**
 - TypeScript SDK
-- 176 contract tests passing
-- SDK audit with 0 high vulnerabilities
-- Real-wallet test completed on Base Sepolia
-- Public testnet release v0.1.0
+- AgentPay Dashboard (Mock + Real mode)
+- 176+ contract tests passing
+- SDK security audit: 0 high vulnerabilities
+- Real wallet test completed
+
+**Quantum-safe features** đang được nghiên cứu (Dilithium signatures) và sẽ được tích hợp dần.
+
+---
 
 ## Core Features
 
-- Agent identity
-- Spending policies
-- Authorized spenders
-- Payment channels
-- Model marketplace primitives
-- On-chain transaction receipts
+- Agent Identity & Registration
+- Spending Policies & Budgets
+- Authorized Spenders
+- Payment Channels (x402 micropayments)
+- AI Model Marketplace primitives
+- On-chain Transaction Receipts
 - TypeScript SDK
-- AgentPay dashboard demo
+- AgentPay Dashboard Demo
+
+---
 
 ## Architecture
 
-Quanta consists of six main components:
+| Component            | Description |
+|----------------------|-----------|
+| QuantaToken          | ERC-20 token với AI tax & burn mechanics |
+| AIAgentRegistry      | Agent identity, policies, authorized spenders |
+| AIPaymentChannel     | Payment channel cho micropayments |
+| AIModelMarketplace   | Marketplace cho models, tools, data |
+| TypeScript SDK       | Client library cho developers |
+| AgentPay Dashboard   | React demo (mock + real) |
 
-| Component | Description |
-|---|---|
-| QuantaToken | ERC-20 token used for payments and policy enforcement |
-| AIAgentRegistry | On-chain agent identity, spending limits, and authorized spender controls |
-| AIPaymentChannel | Payment channel primitive for agent transactions |
-| AIModelMarketplace | Marketplace primitive for AI models, tools, and data |
-| TypeScript SDK | Client library for apps and developers |
-| AgentPay Dashboard | React demo for testing mock mode and Base Sepolia real mode |
+---
 
 ## Base Sepolia Deployment
 
-Quanta v1.2 contracts are deployed on Base Sepolia.
+**Network**: Base Sepolia (Chain ID: 84532)
 
-```text
-Network: Base Sepolia
-Chain ID: 84532
-```
+**Contract Addresses** (v1.2):
 
-| Contract | Address |
-|---|---|
-| QuantaToken | 0xBfeC1E5574940E4132296819dd4953A3D990dA9a |
-| AIAgentRegistry | 0x37789b163F27a88e6B358c546C34e6d3d6CC6D0c |
-| AIPaymentChannel | 0x22B28618ef6424F253A4D76cEDF5ddD48C0c2EC8 |
-| AIModelMarketplace | 0xBFE04AB65bEA2d0F0A2886C2eC06C5F7622884aA |
+| Contract              | Address                                      |
+|-----------------------|----------------------------------------------|
+| QuantaToken           | `0xBfeC1E5574940E4132296819dd4953A3D990dA9a` |
+| AIAgentRegistry       | `0x37789b163F27a88e6B358c546C34e6d3d6CC6D0c` |
+| AIPaymentChannel      | `0x22B28618ef6424F253A4D76cEDF5ddD48C0c2EC8` |
+| AIModelMarketplace    | `0xBFE04AB65bEA2d0F0A2886C2eC06C5F7622884aA` |
 
-Owner and deployer wallet:
+**Owner/Deployer**: `0x2060378AF1916eCFB1A6734405d4f4a62f1560FC`
 
-```text
-0x2060378AF1916eCFB1A6734405d4f4a62f1560FC
-```
+> ⚠️ **Lưu ý**: Đây là testnet. Chưa dùng cho mainnet funds.
+
+---
 
 ## Quickstart
-
-Clone the repository:
 
 ```bash
 git clone https://github.com/quanta-tect/quanta.git
 cd quanta
-```
 
 Run contract checks:
 
-```bash
+Bash
+
 cd contracts
 forge build
 forge test -vvv
