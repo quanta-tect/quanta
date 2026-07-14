@@ -2,27 +2,38 @@
 
 ## Base Sepolia Testnet
 
-### V2 Contracts (Deployed June 28, 2026)
+### V2 Contracts (Deployed June 27, 2026)
 
-| Contract | Address |
-|---|---|
-| QuantaTokenV2 | `0x6d089d25035868358952b4d3644f8dAdcCc3295a` |
-| QuantaVestingWallet | `0xDc1B7aB0e7aE57bbB66ead2d9998bDA9127A291D` |
-| QuantaTreasuryController | `0xb8D10Ba1839597c0c76a60455E231Ac2bA837901` |
-| QuantaRewardsDistributor | `0x3bED931A6A4F0246d152c2532BB9015850657446` |
+| Contract | Address | Verified |
+|---|---|---|
+| QuantaTokenV2 | `0x6d089d25035868358952b4d3644f8dAdcCc3295a` | Sourcify exact_match |
+| QuantaVestingWallet | `0xDc1B7aB0e7aE57bbB66ead2d9998bDA9127A291D` | Sourcify exact_match |
+| QuantaTreasuryController | `0xb8D10Ba1839597c0c76a60455E231Ac2bA837901` | Sourcify exact_match |
+| QuantaRewardsDistributor | `0x3bED931A6A4F0246d152c2532BB9015850657446` | Sourcify exact_match |
 
 - Network: Base Sepolia (84532)
 - Compiler: Solc 0.8.24
-- Verification: Sourcify exact_match on Blockscout
-- Treasury Multisig: 0x1d6a9512fF4A98C192A99Adea934ac3f83035953
-- Team Multisig: 0x1d6a9512fF4A98C192A99Adea934ac3f83035953
 
-### V1.2 Contracts (Previous)
+### V1.2 Contracts (Security Hardened)
 
-| Contract | Address |
+| Contract | Address | Verified |
+|---|---|---|
+| QuantaToken | `0xBfeC1E5574940E4132296819dd4953A3D990dA9a` | Sourcify exact_match |
+| AIAgentRegistry | `0x37789b163F27a88e6B358c546C34e6d3d6CC6D0c` | Sourcify exact_match |
+| AIPaymentChannel | `0x22B28618ef6424F253A4D76cEDF5ddD48C0c2EC8` | Sourcify exact_match |
+| AIModelMarketplace | `0xBFE04AB65bEA3d0F0A2886C2eC06C5F7622884aA` | Sourcify exact_match |
+
+- Network: Base Sepolia (84532)
+- Compiler: Solc 0.8.24
+
+### Multisig
+
+| Role | Address |
 |---|---|
-| QuantaToken | 0x312137fb6943F8f89F5eF0f221aA102035a16625 |
-| AIAgentRegistry | 0x10aE5f83F1CF20331186Ea1aD089D8fd3EbA5EEB |
-| AIPaymentChannel | 0xF146e95b97fce1d1800F5F922AE99155711A4314 |
-| AIModelMarketplace | 0xFf584b30b2D00Bf0aB694683F06dC7E701fdfd49 |
+| Treasury Multisig | `0x1d6a9512fF4A98C192A99Adea934ac3f83035953` |
+| Team Multisig | `0x1d6a9512fF4A98C192A99Adea934ac3f83035953` |
+| Deployer / Current Owner | `0x2060378AF1916eCFB1A6734405d4f4a62f1560FC` |
 
+### Ownership Status
+
+- V1.2 contracts ownership transfer to multisig: **pending**
