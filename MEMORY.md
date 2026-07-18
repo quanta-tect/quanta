@@ -228,3 +228,20 @@ Append-only. Add new entries at the top.
 - Fixed: git filter-branch --force + .gitignore updated with .env*
 - ALWAYS check `git ls-files | grep -i env` before pushing
 - On mainnet: if key leaks, rotate IMMEDIATELY — don't wait
+
+## Session 8 — July 18, 2026 — Security verification + marketplace tests
+### Verification findings
+- Issue #1 AIModelMarketplace treasury/validatorPool timelock: gov protection already implemented in
+  `contracts/src/AIModelMarketplace.sol` and `contracts/src-v1.2/AIModelMarketplace.sol` on `origin/main`.
+  Added missing timelock event tests: queue/apply/cancel for treasury and validatorPool.
+- Issue #2 AIPaymentChannel EIP-712 domain separator: already cached by OpenZeppelin `EIP712`
+  (`_cachedDomainSeparator` / `_cachedChainId` / `_cachedThis`), so no contract change required.
+  Verified cache path via source; no volatile domain fields present.
+
+### Tests
+- `forge test -vvv`: 180/180 PASS
+  - `test-v1.2/QtaV2Tests.t.sol`: 59/59 PASS
+  - `test-v1.2/QuantaSecurityTests.t.sol`: 121/121 PASS
+
+### Commit
+- `62d4a90` security: fix marketplace governance + verify EIP-712 caching
