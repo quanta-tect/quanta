@@ -1732,4 +1732,64 @@ contract QuantaV12SecurityTests is Test {
 
         assertEq(market.validatorPool(), address(0x5678));
     }
+
+    function test_Marketplace_SetTreasury_EmitsQueuedAndAppliedEvents() public {
+        vm.startPrank(owner);
+        vm.expectEmit();
+        emit AIModelMarketplace.TreasuryChangeQueued(market.treasury(), address(0x1234), uint64(block.timestamp) + market.TREASURY_TIMELOCK());
+        market.setTreasury(address(0x1234));
+        vm.stopPrank();
+
+        vm.warp(block.timestamp + 48 hours + 1);
+
+        vm.startPrank(owner);
+        vm.expectEmit();
+        emit AIModelMarketplace.TreasuryChangeApplied(market.treasury(), address(0x1234));
+        market.applyTreasuryChange();
+        vm.stopPrank();
+    }
+
+    function test_Marketplace_SetValidatorPool_EmitsQueuedAndAppliedEvents() public {
+        vm.startPrank(owner);
+        vm.expectEmit();
+        emit AIModelMarketplace.ValidatorPoolChangeQueued(market.validatorPool(), address(0x5678), uint64(block.timestamp) + market.TREASURY_TIMELOCK());
+        market.setValidatorPool(address(0x5678));
+        vm.stopPrank();
+
+        vm.warp(block.timestamp + 48 hours + 1);
+
+        vm.startPrank(owner);
+        vm.expectEmit();
+        emit AIModelMarketplace.ValidatorPoolChangeApplied(market.validatorPool(), address(0x5678));
+        market.applyValidatorPoolChange();
+        vm.stopPrank();
+    }
+
+    function test_Marketplace_CancelTreasuryChange_ClearsPending() public {
+        vm.startPrank(owner);
+        market.setTreasury(address(0x1234));
+        market.cancelTreasuryChange();
+        vm.stopPrank();
+
+        vm.warp(block.timestamp + 48 hours + 1);
+
+        vm.startPrank(owner);
+        vm.expectRevert(AIModelMarketplace.ZeroAddress.selector);
+        market.applyTreasuryChange();
+        vm.stopPrank();
+    }
+
+    function test_Marketplace_CancelValidatorPoolChange_ClearsPending() public {
+        vm.startPrank(owner);
+        market.setValidatorPool(address(0x5678));
+        market.cancelValidatorPoolChange();
+        vm.stopPrank();
+
+        vm.warp(block.timestamp + 48 hours + 1);
+
+        vm.startPrank(owner);
+        vm.expectRevert(AIModelMarketplace.ZeroAddress.selector);
+        market.applyValidatorPoolChange();
+        vm.stopPrank();
+    }
 }
