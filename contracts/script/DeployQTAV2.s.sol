@@ -2,13 +2,13 @@
 pragma solidity ^0.8.24;
 
 import "forge-std/Script.sol";
-import "../src-v2/QuantaTokenV2.sol";
-import "../src-v2/QuantaVestingWallet.sol";
-import "../src-v2/QuantaTreasuryController.sol";
-import "../src-v2/QuantaRewardsDistributor.sol";
+import "../src-v2/ZeusyxaTokenV2.sol";
+import "../src-v2/ZeusyxaVestingWallet.sol";
+import "../src-v2/ZeusyxaTreasuryController.sol";
+import "../src-v2/ZeusyxaRewardsDistributor.sol";
 
 /**
- * @title Deploy QTA v2 — Base mainnet
+ * @title Deploy ZYX v2 — Base mainnet
  *
  * Pre-flight (env vars):
  *   BASE_MAINNET_RPC   — Base mainnet RPC
@@ -17,20 +17,20 @@ import "../src-v2/QuantaRewardsDistributor.sol";
  *   TEAM_MULTISIG      — Team Safe address (vesting beneficiary)
  *
  * Usage:
- *   forge script script/DeployQTAV2.s.sol \
+ *   forge script script/DeployZYXV2.s.sol \
  *     --rpc-url $BASE_MAINNET_RPC \
  *     --private-key $DEPLOYER_KEY \
  *     --broadcast --verify
  *
  * Post-deploy:
  *   1. Verify all contracts on Basescan
- *   2. Check totalSupply == 1e27 (1B QTA)
+ *   2. Check totalSupply == 1e27 (1B ZYX)
  *   3. Confirm owner() == TREASURY_MULTISIG
  *   4. Verify 0 MINTER_ROLE holders
- *   5. Transfer vesting allocation to QuantaVestingWallet.fund()
+ *   5. Transfer vesting allocation to ZeusyxaVestingWallet.fund()
  *   6. Publish DEPLOYMENTS.md + tag v2.0.0-mainnet
  */
-contract DeployQTAV2 is Script {
+contract DeployZYXV2 is Script {
     function run() external {
         address treasuryMultisig = vm.envAddress("TREASURY_MULTISIG");
         address teamMultisig     = vm.envAddress("TEAM_MULTISIG");
@@ -40,41 +40,41 @@ contract DeployQTAV2 is Script {
         vm.startBroadcast();
 
         // =========================================================
-        // 1. QuantaVestingWallet — team 10% — 36mo — 12mo cliff
+        // 1. ZeusyxaVestingWallet — team 10% — 36mo — 12mo cliff
         // =========================================================
-        QuantaVestingWallet vesting = new QuantaVestingWallet(
+        ZeusyxaVestingWallet vesting = new ZeusyxaVestingWallet(
             teamMultisig,           // beneficiary
             deployTimestamp,        // start
             94608000,               // 36 months in seconds
             31536000                 // 12 months cliff in seconds
         );
-        console.log("QuantaVestingWallet:", address(vesting));
+        console.log("ZeusyxaVestingWallet:", address(vesting));
 
         // =========================================================
-        // 2. QuantaTreasuryController — treasury ops
+        // 2. ZeusyxaTreasuryController — treasury ops
         // =========================================================
-        QuantaTreasuryController treasuryCtrl = new QuantaTreasuryController(
+        ZeusyxaTreasuryController treasuryCtrl = new ZeusyxaTreasuryController(
             treasuryMultisig,   // admin
             treasuryMultisig,   // proposer
             treasuryMultisig    // executor
         );
-        console.log("QuantaTreasuryController:", address(treasuryCtrl));
+        console.log("ZeusyxaTreasuryController:", address(treasuryCtrl));
 
         // =========================================================
-        // 3. QuantaRewardsDistributor — ecosystem rewards
+        // 3. ZeusyxaRewardsDistributor — ecosystem rewards
         // =========================================================
-        QuantaRewardsDistributor rewards = new QuantaRewardsDistributor(
+        ZeusyxaRewardsDistributor rewards = new ZeusyxaRewardsDistributor(
             treasuryMultisig    // admin + distributor role
         );
-        console.log("QuantaRewardsDistributor:", address(rewards));
+        console.log("ZeusyxaRewardsDistributor:", address(rewards));
 
         // =========================================================
-        // 4. QuantaTokenV2 — mint 1B QTA — ONCE — mint disabled
+        // 4. ZeusyxaTokenV2 — mint 1B ZYX — ONCE — mint disabled
         // =========================================================
         // NOTE: tokenomics allocation per playbook:
         //   15% Treasury ops, 10% Team vesting, 30% Ecosystem,
         //   10% Liquidity, 15% Community, 15% Reserve, 5% Partnerships
-        QuantaTokenV2 token = new QuantaTokenV2(
+        ZeusyxaTokenV2 token = new ZeusyxaTokenV2(
             treasuryMultisig,          // treasury ops mint recipient
             address(vesting),          // team vesting
             address(0x000000000000000000000000000000000000dEaD), // liquidity lock (placeholder)
@@ -84,7 +84,7 @@ contract DeployQTAV2 is Script {
             address(0x000000000000000000000000000000000000dEaD), // partnerships (placeholder)
             treasuryMultisig           // initial owner (renounced after role grant)
         );
-        console.log("QuantaTokenV2:", address(token));
+        console.log("ZeusyxaTokenV2:", address(token));
 
         // =========================================================
         // 5. Post-deploy: set token address on support contracts
@@ -111,15 +111,15 @@ contract DeployQTAV2 is Script {
         // =========================================================
         // 8. Output summary
         // =========================================================
-        console.log("\n=== QTA v2 Mainnet Deploy Complete ===");
+        console.log("\n=== ZYX v2 Mainnet Deploy Complete ===");
         console.log("Network chainId:", block.chainid);
         console.log("Deploy timestamp:", deployTimestamp);
         console.log("Treasury Multisig:",  treasuryMultisig);
         console.log("Team Multisig:",      teamMultisig);
         console.log("\nNext steps:");
         console.log("1. Verify contracts on Basescan");
-        console.log("2. Transfer QTA to vesting/treasury/rewards from treasury multisig");
-        console.log("3. Renounce DEFAULT_ADMIN of QuantaTokenV2 (already done in constructor)");
+        console.log("2. Transfer ZYX to vesting/treasury/rewards from treasury multisig");
+        console.log("3. Renounce DEFAULT_ADMIN of ZeusyxaTokenV2 (already done in constructor)");
         console.log("4. Setup pauser role to emergency multisig");
         console.log("5. Publish addresses to DEPLOYMENTS.md");
     }

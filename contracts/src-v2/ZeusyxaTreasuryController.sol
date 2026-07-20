@@ -4,12 +4,12 @@ pragma solidity =0.8.24;
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import "@openzeppelin/contracts/access/AccessControl.sol";
-import "./QuantaTokenV2.sol";
+import "./ZeusyxaTokenV2.sol";
 
-/// @title QuantaTreasuryController
+/// @title ZeusyxaTreasuryController
 /// @notice Gnosis Safe-governed treasury operations with timelock
 /// @dev Executes transfers after timelock — multisig only — no single key
-contract QuantaTreasuryController is AccessControl {
+contract ZeusyxaTreasuryController is AccessControl {
     using SafeERC20 for IERC20;
 
     IERC20 public token;
@@ -28,7 +28,7 @@ contract QuantaTreasuryController is AccessControl {
     event TransferExecuted(address indexed to, uint256 amount);
     event TransferCancelled(address indexed to, uint256 amount);
 
-    /// @param _treasury   Gnosis Safe 3/5 — holds QTA
+    /// @param _treasury   Gnosis Safe 3/5 — holds ZYX
     /// @param _proposer    Treasury Safe (can queue)
     /// @param _executor    Treasury Safe (can execute after timelock)
     constructor(
@@ -44,7 +44,7 @@ contract QuantaTreasuryController is AccessControl {
         _grantRole(EXECUTOR_ROLE,    _executor);
     }
 
-    /// @notice Set QTA token address (one-time)
+    /// @notice Set ZYX token address (one-time)
     function setToken(address _token) external onlyRole(DEFAULT_ADMIN_ROLE) {
         if (tokenSet) revert();
         if (_token == address(0)) revert();
@@ -94,9 +94,9 @@ contract QuantaTreasuryController is AccessControl {
         emit TransferCancelled(to, amount);
     }
 
-    /// @notice Emergency sweep non-QTA tokens (e.g. stray ERC20 sent by mistake)
+    /// @notice Emergency sweep non-ZYX tokens (e.g. stray ERC20 sent by mistake)
     function recoverTokens(address tokenAddress, uint256 amount) external onlyRole(DEFAULT_ADMIN_ROLE) {
-        if (tokenAddress == address(token)) revert(); // protect QTA
+        if (tokenAddress == address(token)) revert(); // protect ZYX
         IERC20(tokenAddress).safeTransfer(msg.sender, amount);
     }
 }

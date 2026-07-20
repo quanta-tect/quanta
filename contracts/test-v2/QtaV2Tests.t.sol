@@ -3,10 +3,10 @@ pragma solidity =0.8.24;
 
 import "forge-std/Test.sol";
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
-import "../src-v2/QuantaTokenV2.sol";
-import "../src-v2/QuantaVestingWallet.sol";
-import "../src-v2/QuantaTreasuryController.sol";
-import "../src-v2/QuantaRewardsDistributor.sol";
+import "../src-v2/ZeusyxaTokenV2.sol";
+import "../src-v2/ZeusyxaVestingWallet.sol";
+import "../src-v2/ZeusyxaTreasuryController.sol";
+import "../src-v2/ZeusyxaRewardsDistributor.sol";
 
 contract MockERC20 is ERC20 {
     constructor() ERC20("Mock", "MCK") {
@@ -33,10 +33,10 @@ contract QtaV2Tests is Test {
     // ===================================================================
     // Contracts
     // ===================================================================
-    QuantaTokenV2         token;
-    QuantaVestingWallet   vesting;
-    QuantaTreasuryController treasuryCtrl;
-    QuantaRewardsDistributor rewards;
+    ZeusyxaTokenV2         token;
+    ZeusyxaVestingWallet   vesting;
+    ZeusyxaTreasuryController treasuryCtrl;
+    ZeusyxaRewardsDistributor rewards;
 
     // ===================================================================
     // Setup
@@ -45,7 +45,7 @@ contract QtaV2Tests is Test {
         vm.startPrank(deployer);
 
         // 1. Vesting — deploy first (no token yet)
-        vesting = new QuantaVestingWallet(
+        vesting = new ZeusyxaVestingWallet(
             team,                    // beneficiary
             uint64(block.timestamp), // start
             94608000,                // 36mo
@@ -53,19 +53,19 @@ contract QtaV2Tests is Test {
         );
 
         // 2. Treasury controller — no token yet
-        treasuryCtrl = new QuantaTreasuryController(
+        treasuryCtrl = new ZeusyxaTreasuryController(
             treasury,    // admin
             treasury,    // proposer
             treasury     // executor
         );
 
         // 3. Rewards — no token yet
-        rewards = new QuantaRewardsDistributor(treasury);
+        rewards = new ZeusyxaRewardsDistributor(treasury);
 
         // 4. TokenV2 — mint 1B — to addresses above
         // Note: vesting/treasuryCtrl/rewards don't have token set yet,
-        // but constructor mints QTA to them anyway.
-        token = new QuantaTokenV2(
+        // but constructor mints ZYX to them anyway.
+        token = new ZeusyxaTokenV2(
             treasury,      // treasury ops 15%
             address(vesting),      // team vesting 10%
             liquidity,    // liquidity 10%
@@ -90,7 +90,7 @@ contract QtaV2Tests is Test {
     }
 
     // ===================================================================
-    // QuantaTokenV2 tests
+    // ZeusyxaTokenV2 tests
     // ===================================================================
     function test_TokenV2_TotalSupply_1B() public {
         assertEq(token.totalSupply(), 1_000_000_000e18);
@@ -118,12 +118,12 @@ contract QtaV2Tests is Test {
 
     function test_Rewards_Constructor_RevertsOnZeroTreasury() public {
         vm.expectRevert();
-        new QuantaRewardsDistributor(address(0));
+        new ZeusyxaRewardsDistributor(address(0));
     }
 
     function test_TokenV2_Constructor_RevertsOnZeroTreasury() public {
         vm.expectRevert();
-        new QuantaTokenV2(
+        new ZeusyxaTokenV2(
             address(0),
             address(vesting),
             liquidity,
@@ -137,7 +137,7 @@ contract QtaV2Tests is Test {
 
     function test_TokenV2_Constructor_RevertsOnZeroVesting() public {
         vm.expectRevert();
-        new QuantaTokenV2(
+        new ZeusyxaTokenV2(
             treasury,
             address(0),
             liquidity,
@@ -151,7 +151,7 @@ contract QtaV2Tests is Test {
 
     function test_TokenV2_Constructor_RevertsOnZeroLiquidity() public {
         vm.expectRevert();
-        new QuantaTokenV2(
+        new ZeusyxaTokenV2(
             treasury,
             address(vesting),
             address(0),
@@ -165,7 +165,7 @@ contract QtaV2Tests is Test {
 
     function test_TokenV2_Constructor_RevertsOnZeroEcosystem() public {
         vm.expectRevert();
-        new QuantaTokenV2(
+        new ZeusyxaTokenV2(
             treasury,
             address(vesting),
             liquidity,
@@ -179,7 +179,7 @@ contract QtaV2Tests is Test {
 
     function test_TokenV2_Constructor_RevertsOnZeroCommunity() public {
         vm.expectRevert();
-        new QuantaTokenV2(
+        new ZeusyxaTokenV2(
             treasury,
             address(vesting),
             liquidity,
@@ -193,7 +193,7 @@ contract QtaV2Tests is Test {
 
     function test_TokenV2_Constructor_RevertsOnZeroReserve() public {
         vm.expectRevert();
-        new QuantaTokenV2(
+        new ZeusyxaTokenV2(
             treasury,
             address(vesting),
             liquidity,
@@ -207,7 +207,7 @@ contract QtaV2Tests is Test {
 
     function test_TokenV2_Constructor_RevertsOnZeroPartners() public {
         vm.expectRevert();
-        new QuantaTokenV2(
+        new ZeusyxaTokenV2(
             treasury,
             address(vesting),
             liquidity,
@@ -403,7 +403,7 @@ contract QtaV2Tests is Test {
     }
 
     // ===================================================================
-    // QuantaVestingWallet tests
+    // ZeusyxaVestingWallet tests
     // ===================================================================
     function test_Vesting_Cliff_ZeroUnlock() public {
         // At start + cliff - 1 second = 0 releasable
@@ -457,17 +457,17 @@ contract QtaV2Tests is Test {
 
     function test_Vesting_Constructor_RevertsOnZeroBeneficiary() public {
         vm.expectRevert();
-        new QuantaVestingWallet(address(0), uint64(block.timestamp), 94608000, 31536000);
+        new ZeusyxaVestingWallet(address(0), uint64(block.timestamp), 94608000, 31536000);
     }
 
     function test_Vesting_Constructor_DurationZeroReverts() public {
         vm.expectRevert();
-        new QuantaVestingWallet(team, uint64(block.timestamp), 0, 31536000);
+        new ZeusyxaVestingWallet(team, uint64(block.timestamp), 0, 31536000);
     }
 
     function test_Vesting_Constructor_CliffGTE_DurationReverts() public {
         vm.expectRevert();
-        new QuantaVestingWallet(team, uint64(block.timestamp), 94608000, 94608000);
+        new ZeusyxaVestingWallet(team, uint64(block.timestamp), 94608000, 94608000);
     }
 
     function test_Vesting_SetToken_SecondCallReverts() public {
@@ -478,7 +478,7 @@ contract QtaV2Tests is Test {
     }
 
     // ===================================================================
-    // QuantaTreasuryController tests
+    // ZeusyxaTreasuryController tests
     // ===================================================================
     function test_Treasury_SetToken() public {
         assertEq(address(treasuryCtrl.token()), address(token));
@@ -492,7 +492,7 @@ contract QtaV2Tests is Test {
     }
 
     function test_Treasury_SetToken_ZeroReverts() public {
-        QuantaTreasuryController fresh = new QuantaTreasuryController(
+        ZeusyxaTreasuryController fresh = new ZeusyxaTreasuryController(
             treasury,
             treasury,
             treasury
@@ -505,17 +505,17 @@ contract QtaV2Tests is Test {
 
     function test_Treasury_Constructor_RevertsOnZeroTreasury() public {
         vm.expectRevert();
-        new QuantaTreasuryController(address(0), treasury, treasury);
+        new ZeusyxaTreasuryController(address(0), treasury, treasury);
     }
 
     function test_Treasury_Constructor_RevertsOnZeroProposer() public {
         vm.expectRevert();
-        new QuantaTreasuryController(treasury, address(0), treasury);
+        new ZeusyxaTreasuryController(treasury, address(0), treasury);
     }
 
     function test_Treasury_Constructor_RevertsOnZeroExecutor() public {
         vm.expectRevert();
-        new QuantaTreasuryController(treasury, treasury, address(0));
+        new ZeusyxaTreasuryController(treasury, treasury, address(0));
     }
 
     function test_Treasury_QueueTransfer_ZeroAmountReverts() public {
@@ -577,7 +577,7 @@ contract QtaV2Tests is Test {
     }
 
     // ===================================================================
-    // QuantaRewardsDistributor tests
+    // ZeusyxaRewardsDistributor tests
     // ===================================================================
     function test_Rewards_SetToken() public {
         assertEq(address(rewards.token()), address(token));
@@ -690,14 +690,14 @@ contract QtaV2Tests is Test {
         vm.stopPrank();
     }
 
-    function test_Treasury_RecoverQTA_Reverts() public {
+    function test_Treasury_RecoverZYX_Reverts() public {
         vm.startPrank(treasury);
         vm.expectRevert();
         treasuryCtrl.recoverTokens(address(token), 1e18);
         vm.stopPrank();
     }
 
-    function test_Treasury_RecoverNonQTA() public {
+    function test_Treasury_RecoverNonZYX() public {
         MockERC20 mock = new MockERC20();
         mock.mint(address(treasuryCtrl), 100e18);
         vm.startPrank(treasury);
@@ -722,7 +722,7 @@ contract QtaV2Tests is Test {
     // Vesting: branch / edge coverage boost
     // ===================================================================
     function test_Vesting_SetToken_ZeroReverts() public {
-        QuantaVestingWallet fresh = new QuantaVestingWallet(
+        ZeusyxaVestingWallet fresh = new ZeusyxaVestingWallet(
             team,
             uint64(block.timestamp),
             94608000,
@@ -749,7 +749,7 @@ contract QtaV2Tests is Test {
     }
 
     function test_Vesting_FundZeroBalance_Reverts() public {
-        QuantaVestingWallet fresh = new QuantaVestingWallet(
+        ZeusyxaVestingWallet fresh = new ZeusyxaVestingWallet(
             team,
             uint64(block.timestamp),
             94608000,
@@ -766,7 +766,7 @@ contract QtaV2Tests is Test {
     // Rewards: branch / edge coverage boost
     // ===================================================================
     function test_Rewards_SetToken_ZeroReverts() public {
-        QuantaRewardsDistributor fresh = new QuantaRewardsDistributor(treasury);
+        ZeusyxaRewardsDistributor fresh = new ZeusyxaRewardsDistributor(treasury);
         vm.startPrank(treasury);
         vm.expectRevert();
         fresh.setToken(address(0));
@@ -850,7 +850,7 @@ contract QtaV2Tests is Test {
         vm.stopPrank();
     }
 
-    function test_Rewards_RecoverQTA_Reverts() public {
+    function test_Rewards_RecoverZYX_Reverts() public {
         vm.startPrank(treasury);
         vm.expectRevert();
         rewards.recoverTokens(address(token), 1e18);
@@ -864,9 +864,9 @@ contract QtaV2Tests is Test {
     }
 
     function test_Vesting_Fund_ZeroBalanceReverts() public {
-        // Vesting already funded in setUp. Create a fresh vesting that holds no QTA
+        // Vesting already funded in setUp. Create a fresh vesting that holds no ZYX
         // to exercise the fund() zero-balance revert path.
-        QuantaVestingWallet fresh = new QuantaVestingWallet(
+        ZeusyxaVestingWallet fresh = new ZeusyxaVestingWallet(
             team,
             uint64(block.timestamp),
             94608000,
@@ -890,14 +890,14 @@ contract QtaV2Tests is Test {
         assertGt(afterVal, 0);
     }
 
-    function test_Vesting_RecoverQTA_Reverts() public {
+    function test_Vesting_RecoverZYX_Reverts() public {
         vm.startPrank(team);
         vm.expectRevert();
         vesting.recoverTokens(address(token), 0);
         vm.stopPrank();
     }
 
-    function test_Vesting_RecoverNonQTA() public {
+    function test_Vesting_RecoverNonZYX() public {
         MockERC20 nonQta = new MockERC20();
         nonQta.mint(address(vesting), 100e18);
         vm.startPrank(team);

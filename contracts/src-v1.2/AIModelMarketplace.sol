@@ -6,10 +6,10 @@ import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 import "@openzeppelin/contracts/access/Ownable2Step.sol";
 import "@openzeppelin/contracts/utils/Pausable.sol";
-import "./interfaces/IQuantaToken.sol";
+import "./interfaces/IZeusyxaToken.sol";
 
 contract AIModelMarketplace is ReentrancyGuard, Ownable2Step, Pausable {
-    using SafeERC20 for IQuantaToken;
+    using SafeERC20 for IZeusyxaToken;
 
     uint256 public constant REGISTRATION_FEE    = 1e18;
     uint64  public constant DEACTIVATION_GRACE  = 24 hours;
@@ -28,7 +28,7 @@ contract AIModelMarketplace is ReentrancyGuard, Ownable2Step, Pausable {
         string  metadataURI;
     }
 
-    IQuantaToken public immutable token;
+    IZeusyxaToken public immutable token;
     address public treasury;
     address public validatorPool;
 
@@ -78,7 +78,7 @@ contract AIModelMarketplace is ReentrancyGuard, Ownable2Step, Pausable {
         if (_token == address(0)) revert ZeroAddress();
         if (_treasury == address(0)) revert ZeroAddress();
         if (_validatorPool == address(0)) revert ZeroAddress();
-        token = IQuantaToken(_token);
+        token = IZeusyxaToken(_token);
         treasury = _treasury;
         validatorPool = _validatorPool;
     }

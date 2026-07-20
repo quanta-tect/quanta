@@ -1,15 +1,15 @@
 # 📋 GRANT PROPOSAL — Optimism RetroPGF (Retroactive Public Goods Funding)
 
-**Project:** QUANTA Protocol — Open-Source Payment Infrastructure for AI Agents
+**Project:** ZEUSYXA Protocol — Open-Source Payment Infrastructure for AI Agents
 **Network:** Base (with plans for Optimism)
 **Funding Request:** $10,000-50,000 (retroactive)
 **Category:** Public Goods / Infrastructure
 
 ---
 
-## What is QUANTA?
+## What is ZEUSYXA?
 
-QUANTA is open-source payment infrastructure for the AI agent economy. It provides:
+ZEUSYXA is open-source payment infrastructure for the AI agent economy. It provides:
 
 1. **Payment Channels**: Off-chain micropayment streaming (1M payments = 2 on-chain tx)
 2. **Agent Registry**: On-chain identity + spending policies + reputation for AI agents
@@ -18,13 +18,13 @@ QUANTA is open-source payment infrastructure for the AI agent economy. It provid
 
 ## Why Public Goods?
 
-QUANTA is fully open-source (MIT license). Anyone can:
-- Fork and deploy their own QUANTA instance
+ZEUSYXA is fully open-source (MIT license). Anyone can:
+- Fork and deploy their own ZEUSYXA instance
 - Use the SDK to build AI agent payment features
 - Contribute to the codebase
 - Run a validator on the L1 network
 
-QUANTA is infrastructure, not a business. Like TCP/IP for AI agent payments.
+ZEUSYXA is infrastructure, not a business. Like TCP/IP for AI agent payments.
 
 ## Impact Metrics
 
@@ -34,21 +34,21 @@ QUANTA is infrastructure, not a business. Like TCP/IP for AI agent payments.
 - **Documentation**: Whitepaper, SDK docs, API reference, security audit report
 - **Adoption**: SDK ready for integration with LangChain, AutoGPT, CrewAI
 
-## How QUANTA Aligns with Optimism Values
+## How ZEUSYXA Aligns with Optimism Values
 
-1. **Public Goods**: QUANTA is MIT-licensed open-source infrastructure
+1. **Public Goods**: ZEUSYXA is MIT-licensed open-source infrastructure
 2. **Retroactive Impact**: Already built and deployed, not just a promise
 3. **Ecosystem Growth**: AI agent payments are a new category that expands the onchain economy
 4. **Technical Excellence**: Post-quantum cryptography, formal security analysis, 150+ tests
 
 ## Multi-Chain Vision
 
-QUANTA is deployed on Base but designed to be multi-chain:
+ZEUSYXA is deployed on Base but designed to be multi-chain:
 - Layer 2: Base, Optimism, Arbitrum (EVM contracts)
 - Layer 1: Custom Substrate chain (Dilithium3 signatures)
 - Bridge: Hyperlane for cross-chain agent identity
 
-Optimism deployment would bring QUANTA to the Superchain ecosystem.
+Optimism deployment would bring ZEUSYXA to the Superchain ecosystem.
 
 ## Funding Use
 
@@ -64,6 +64,6 @@ Optimism deployment would bring QUANTA to the Superchain ecosystem.
 
 ## Links
 
-- GitHub: https://github.com/quanta-tect/quanta
+- GitHub: https://github.com/zeusyxa-io/zeusyxa
 - Base Sepolia Explorer: https://base-sepolia.blockscout.com
 - Whitepaper: In repo docs/WHITEPAPER.md

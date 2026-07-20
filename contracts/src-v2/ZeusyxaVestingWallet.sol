@@ -5,10 +5,10 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
-/// @title QuantaVestingWallet
+/// @title ZeusyxaVestingWallet
 /// @notice Linear vesting with cliff — OpenZeppelin pattern adapted
 /// @dev beneficiary receives vested amounts over time via release()
-contract QuantaVestingWallet is Ownable {
+contract ZeusyxaVestingWallet is Ownable {
     using SafeERC20 for IERC20;
 
     IERC20 public token;
@@ -44,7 +44,7 @@ contract QuantaVestingWallet is Ownable {
         cliffSeconds = _cliff;
     }
 
-    /// @notice Set QTA token address (one-time, after token deploy)
+    /// @notice Set ZYX token address (one-time, after token deploy)
     function setToken(address _token) external onlyOwner {
         if (tokenSet) revert();
         if (_token == address(0)) revert();
@@ -71,7 +71,7 @@ contract QuantaVestingWallet is Ownable {
     }
 
     /// @notice Fund the vesting wallet — call once after deploy
-    /// @dev Records totalAllocated based on actual QTA balance in this contract.
+    /// @dev Records totalAllocated based on actual ZYX balance in this contract.
     ///      Can only be called once before any release to prevent tampering.
     function fund() external onlyOwner {
         if (released > 0 || totalAllocated > 0) revert(); // can only fund once
@@ -80,10 +80,10 @@ contract QuantaVestingWallet is Ownable {
     }
 
     // ===================================================================
-    // EMERGENCY — owner can recover non-QTA tokens (e.g. stray ERC20)
+    // EMERGENCY — owner can recover non-ZYX tokens (e.g. stray ERC20)
     // ===================================================================
     function recoverTokens(address tokenAddress, uint256 amount) external onlyOwner {
-        if (tokenAddress == address(token)) revert(); // protect QTA
+        if (tokenAddress == address(token)) revert(); // protect ZYX
         IERC20(tokenAddress).safeTransfer(msg.sender, amount);
     }
 }

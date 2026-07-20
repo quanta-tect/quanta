@@ -28,7 +28,7 @@ Improve guides: PRs welcome
 1. Set up dev environment
 ```bash
 # Clone the repo
-git clone https://github.com/quanta-tect/quanta.git
+git clone https://github.com/zeusyxa-io/zeusyxa.git
 cd quanta
 
 # Set up Python prototype

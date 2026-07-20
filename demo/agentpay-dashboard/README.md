@@ -1,8 +1,8 @@
 # AgentPay Dashboard Demo
 
-React and Vite dashboard for Quanta AgentPay.
+React and Vite dashboard for Zeusyxa AgentPay.
 
-Quanta AgentPay gives AI agents wallets with rules:
+Zeusyxa AgentPay gives AI agents wallets with rules:
 - budgets
 - permissions
 - authorized spenders
@@ -39,7 +39,7 @@ VITE_RPC_URL=https://sepolia.base.org
 VITE_AGENT_REGISTRY_ADDRESS=0x37789b163F27a88e6B358c546C34e6d3d6CC6D0c
 VITE_PAYMENT_CHANNEL_ADDRESS=0x22B28618ef6424F253A4D76cEDF5ddD48C0c2EC8
 VITE_MARKETPLACE_ADDRESS=0xBFE04AB65bEA2d0F0A2886C2eC06C5F7622884aA
-VITE_QTA_TOKEN_ADDRESS=0xBfeC1E5574940E4132296819dd4953A3D990dA9a
+VITE_ZYX_TOKEN_ADDRESS=0xBfeC1E5574940E4132296819dd4953A3D990dA9a
 
 VITE_DEMO_MODE=real
 
@@ -49,7 +49,7 @@ npm run dev
 
 ## Base Sepolia contracts
 
-QuantaToken:
+ZeusyxaToken:
 0xBfeC1E5574940E4132296819dd4953A3D990dA9a
 
 AIAgentRegistry:

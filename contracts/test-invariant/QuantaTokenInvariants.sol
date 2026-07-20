@@ -1,27 +1,27 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.24;
 
-import "../src-v1.1/QuantaToken.sol";
+import "../src-v1.1/ZeusyxaToken.sol";
 
 /**
- * @title QuantaTokenInvariants — Echidna property-based fuzz tests
+ * @title ZeusyxaTokenInvariants — Echidna property-based fuzz tests
  *
  * Echidna will generate random call sequences (1000s per second) trying to
  * break these invariants. If ANY invariant returns false, Echidna prints the
  * exact call sequence that broke it.
  *
  * Usage:
- *   echidna contracts/test-invariant/QuantaTokenInvariants.sol \
- *     --contract QuantaTokenInvariants \
+ *   echidna contracts/test-invariant/ZeusyxaTokenInvariants.sol \
+ *     --contract ZeusyxaTokenInvariants \
  *     --config contracts/test-invariant/echidna.yaml
  *
  * Or via Docker (no install needed):
  *   docker run -v $PWD:/src trailofbits/eth-security-toolbox \
- *     echidna /src/contracts/test-invariant/QuantaTokenInvariants.sol \
- *     --contract QuantaTokenInvariants --config /src/contracts/test-invariant/echidna.yaml
+ *     echidna /src/contracts/test-invariant/ZeusyxaTokenInvariants.sol \
+ *     --contract ZeusyxaTokenInvariants --config /src/contracts/test-invariant/echidna.yaml
  */
-contract QuantaTokenInvariants {
-    QuantaToken public token;
+contract ZeusyxaTokenInvariants {
+    ZeusyxaToken public token;
     address public constant TREASURY = address(0xDEAD);
     address public constant OWNER = address(0xC0FFEE);
     address[3] public USERS = [
@@ -34,7 +34,7 @@ contract QuantaTokenInvariants {
     uint256 internal sumMintedBeforeBurn;
 
     constructor() {
-        token = new QuantaToken(OWNER);
+        token = new ZeusyxaToken(OWNER);
         // Seed: transfer some to users for fuzzing
         // We bypass Ownable for this since constructor was OWNER
     }

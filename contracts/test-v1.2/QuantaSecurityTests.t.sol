@@ -2,7 +2,7 @@
 pragma solidity =0.8.24;
 
 import "forge-std/Test.sol";
-import "../src-v1.2/QuantaToken.sol";
+import "../src-v1.2/ZeusyxaToken.sol";
 import "../src-v1.2/AIAgentRegistry.sol";
 import "../src-v1.2/AIPaymentChannel.sol";
 import "../src-v1.2/AIModelMarketplace.sol";
@@ -19,7 +19,7 @@ contract QuantaV12SecurityTests is Test {
     // Contracts
     // ===================================================================
 
-    QuantaToken token;
+    ZeusyxaToken token;
     AIAgentRegistry registry;
     AIPaymentChannel channel;
     AIModelMarketplace market;
@@ -53,7 +53,7 @@ contract QuantaV12SecurityTests is Test {
         aliceSigner = vm.addr(alicePk);
 
         vm.startPrank(owner);
-        token = new QuantaToken(owner);
+        token = new ZeusyxaToken(owner);
         registry = new AIAgentRegistry(owner);
         channel = new AIPaymentChannel(address(token), owner);
         market = new AIModelMarketplace(
@@ -142,7 +142,7 @@ contract QuantaV12SecurityTests is Test {
 
     function test_Token_TaxRateCannotExceedCap() public {
         vm.prank(owner);
-        vm.expectRevert(abi.encodeWithSelector(QuantaToken.InvalidTaxRate.selector, uint16(101)));
+        vm.expectRevert(abi.encodeWithSelector(ZeusyxaToken.InvalidTaxRate.selector, uint16(101)));
         token.setAITaxBps(101); // > MAX_TAX_BPS (100 = 1%)
     }
 
@@ -160,7 +160,7 @@ contract QuantaV12SecurityTests is Test {
 
     function test_Token_SetTaxCollector_ZeroAddress() public {
         vm.prank(owner);
-        vm.expectRevert(abi.encodeWithSelector(QuantaToken.ZeroAddress.selector, address(0)));
+        vm.expectRevert(abi.encodeWithSelector(ZeusyxaToken.ZeroAddress.selector, address(0)));
         token.setAITaxCollector(address(0), true);
     }
 
@@ -183,7 +183,7 @@ contract QuantaV12SecurityTests is Test {
 
     function test_Token_CollectAITax_NotCollector() public {
         vm.prank(attacker);
-        vm.expectRevert(QuantaToken.NotCollector.selector);
+        vm.expectRevert(ZeusyxaToken.NotCollector.selector);
         token.collectAITax(1000 ether);
     }
 
@@ -218,7 +218,7 @@ contract QuantaV12SecurityTests is Test {
 
     function test_Token_BridgeMint_OnlyBridge() public {
         vm.prank(attacker);
-        vm.expectRevert(QuantaToken.NotBridge.selector);
+        vm.expectRevert(ZeusyxaToken.NotBridge.selector);
         token.bridgeMint(attacker, 1000 ether);
     }
 
@@ -232,7 +232,7 @@ contract QuantaV12SecurityTests is Test {
         uint256 remaining = token.MAX_SUPPLY() - token.totalSupply();
         token.bridgeMint(alice, remaining); // OK
 
-        vm.expectRevert(QuantaToken.CapExceeded.selector);
+        vm.expectRevert(ZeusyxaToken.CapExceeded.selector);
         token.bridgeMint(alice, 1);
     }
 
@@ -254,7 +254,7 @@ contract QuantaV12SecurityTests is Test {
 
         // Bridge not active yet
         vm.prank(attacker);
-        vm.expectRevert(QuantaToken.NotBridge.selector);
+        vm.expectRevert(ZeusyxaToken.NotBridge.selector);
         token.bridgeMint(attacker, 100 ether);
     }
 
@@ -264,7 +264,7 @@ contract QuantaV12SecurityTests is Test {
 
         // Try before 48h
         vm.warp(block.timestamp + 47 hours);
-        vm.expectRevert(QuantaToken.TimelockActive.selector);
+        vm.expectRevert(ZeusyxaToken.TimelockActive.selector);
         vm.prank(owner);
         token.applyBridgeChange();
 
@@ -288,7 +288,7 @@ contract QuantaV12SecurityTests is Test {
         // Even after 48h, bridge not active
         vm.warp(block.timestamp + 48 hours + 1);
         vm.prank(attacker);
-        vm.expectRevert(QuantaToken.NotBridge.selector);
+        vm.expectRevert(ZeusyxaToken.NotBridge.selector);
         token.bridgeMint(attacker, 100 ether);
     }
 
@@ -314,7 +314,7 @@ contract QuantaV12SecurityTests is Test {
         token.applyBridgeChange();
 
         vm.prank(address(this));
-        vm.expectRevert(abi.encodeWithSelector(QuantaToken.ZeroAddress.selector, address(0)));
+        vm.expectRevert(abi.encodeWithSelector(ZeusyxaToken.ZeroAddress.selector, address(0)));
         token.bridgeMint(address(0), 100 ether);
     }
 
@@ -326,13 +326,13 @@ contract QuantaV12SecurityTests is Test {
         token.applyBridgeChange();
 
         vm.prank(address(this));
-        vm.expectRevert(abi.encodeWithSelector(QuantaToken.ZeroAddress.selector, address(0)));
+        vm.expectRevert(abi.encodeWithSelector(ZeusyxaToken.ZeroAddress.selector, address(0)));
         token.bridgeBurn(address(0), 100 ether);
     }
 
-    function test_Token_RecoverTokens_RevertsOnQTA() public {
+    function test_Token_RecoverTokens_RevertsOnZYX() public {
         vm.prank(owner);
-        vm.expectRevert(abi.encodeWithSelector(QuantaToken.ZeroAddress.selector, address(token)));
+        vm.expectRevert(abi.encodeWithSelector(ZeusyxaToken.ZeroAddress.selector, address(token)));
         token.recoverTokens(address(token), 100 ether);
     }
 
@@ -1731,5 +1731,65 @@ contract QuantaV12SecurityTests is Test {
         vm.stopPrank();
 
         assertEq(market.validatorPool(), address(0x5678));
+    }
+
+    function test_Marketplace_SetTreasury_EmitsQueuedAndAppliedEvents() public {
+        vm.startPrank(owner);
+        vm.expectEmit();
+        emit AIModelMarketplace.TreasuryChangeQueued(market.treasury(), address(0x1234), uint64(block.timestamp) + market.TREASURY_TIMELOCK());
+        market.setTreasury(address(0x1234));
+        vm.stopPrank();
+
+        vm.warp(block.timestamp + 48 hours + 1);
+
+        vm.startPrank(owner);
+        vm.expectEmit();
+        emit AIModelMarketplace.TreasuryChangeApplied(market.treasury(), address(0x1234));
+        market.applyTreasuryChange();
+        vm.stopPrank();
+    }
+
+    function test_Marketplace_SetValidatorPool_EmitsQueuedAndAppliedEvents() public {
+        vm.startPrank(owner);
+        vm.expectEmit();
+        emit AIModelMarketplace.ValidatorPoolChangeQueued(market.validatorPool(), address(0x5678), uint64(block.timestamp) + market.TREASURY_TIMELOCK());
+        market.setValidatorPool(address(0x5678));
+        vm.stopPrank();
+
+        vm.warp(block.timestamp + 48 hours + 1);
+
+        vm.startPrank(owner);
+        vm.expectEmit();
+        emit AIModelMarketplace.ValidatorPoolChangeApplied(market.validatorPool(), address(0x5678));
+        market.applyValidatorPoolChange();
+        vm.stopPrank();
+    }
+
+    function test_Marketplace_CancelTreasuryChange_ClearsPending() public {
+        vm.startPrank(owner);
+        market.setTreasury(address(0x1234));
+        market.cancelTreasuryChange();
+        vm.stopPrank();
+
+        vm.warp(block.timestamp + 48 hours + 1);
+
+        vm.startPrank(owner);
+        vm.expectRevert(AIModelMarketplace.ZeroAddress.selector);
+        market.applyTreasuryChange();
+        vm.stopPrank();
+    }
+
+    function test_Marketplace_CancelValidatorPoolChange_ClearsPending() public {
+        vm.startPrank(owner);
+        market.setValidatorPool(address(0x5678));
+        market.cancelValidatorPoolChange();
+        vm.stopPrank();
+
+        vm.warp(block.timestamp + 48 hours + 1);
+
+        vm.startPrank(owner);
+        vm.expectRevert(AIModelMarketplace.ZeroAddress.selector);
+        market.applyValidatorPoolChange();
+        vm.stopPrank();
     }
 }

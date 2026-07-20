@@ -2,12 +2,12 @@
 pragma solidity ^0.8.24;
 
 import "forge-std/Test.sol";
-import "../src/QuantaToken.sol";
+import "../src/ZeusyxaToken.sol";
 import "../src/AIAgentRegistry.sol";
 import "../src/AIModelMarketplace.sol";
 
 contract QuantaTokenTest is Test {
-    QuantaToken token;
+    ZeusyxaToken token;
     AIAgentRegistry registry;
     AIModelMarketplace market;
 
@@ -17,9 +17,9 @@ contract QuantaTokenTest is Test {
     address bob = address(0xB0B);
 
     function setUp() public {
-        token = new QuantaToken(treasury);
+        token = new ZeusyxaToken(treasury);
         registry = new AIAgentRegistry();
-        market = new AIModelMarketplace(IERC20(address(token)), IQuantaToken(address(token)), treasury, validatorPool);
+        market = new AIModelMarketplace(IERC20(address(token)), IZeusyxaToken(address(token)), treasury, validatorPool);
 
         // Authorize marketplace as tax collector
         vm.prank(treasury);
@@ -55,7 +55,7 @@ contract QuantaTokenTest is Test {
     }
 
     function testModelMarketplaceWithBurn() public {
-        // Alice registers a model at 1 QTA per call
+        // Alice registers a model at 1 ZYX per call
         vm.prank(alice);
         uint256 modelId = market.registerModel("ipfs://weights", "ipfs://card", 1 ether, 7000);
 
@@ -88,7 +88,7 @@ contract QuantaTokenTest is Test {
         // Try to mint over cap
         uint256 remaining = token.MAX_SUPPLY() - token.totalSupply();
         token.bridgeMint(alice, remaining); // OK
-        vm.expectRevert(QuantaToken.CapExceeded.selector);
+        vm.expectRevert(ZeusyxaToken.CapExceeded.selector);
         token.bridgeMint(alice, 1);
     }
 

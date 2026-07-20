@@ -8,7 +8,7 @@ import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import "@openzeppelin/contracts/access/Ownable2Step.sol";
 import "@openzeppelin/contracts/utils/Pausable.sol";
 
-contract QuantaToken is ERC20, ERC20Permit, ERC20Burnable, Ownable2Step, Pausable {
+contract ZeusyxaToken is ERC20, ERC20Permit, ERC20Burnable, Ownable2Step, Pausable {
     using SafeERC20 for IERC20;
 
     uint256 public constant MAX_SUPPLY      = 1_000_000_000e18;
@@ -42,8 +42,8 @@ contract QuantaToken is ERC20, ERC20Permit, ERC20Burnable, Ownable2Step, Pausabl
     event TokensRecovered(address indexed token, address indexed to, uint256 amount);
 
     constructor(address _initialOwner)
-        ERC20("Quanta", "QTA")
-        ERC20Permit("Quanta")
+        ERC20("Zeusyxa", "ZYX")
+        ERC20Permit("Zeusyxa")
         Ownable(_initialOwner)
     {
         _mint(_initialOwner, 300_000_000e18);
@@ -62,7 +62,7 @@ contract QuantaToken is ERC20, ERC20Permit, ERC20Burnable, Ownable2Step, Pausabl
     }
 
     function applyBridgeChange() external onlyOwner {
-        require(pendingBridge != address(0), "QTA: no pending change");
+        require(pendingBridge != address(0), "ZYX: no pending change");
         if (block.timestamp < bridgeChangeAt) revert TimelockActive();
         address old = bridge;
         bridge = pendingBridge;

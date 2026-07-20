@@ -4,7 +4,7 @@ Read this file at the start of every AI session.
 
 ## Project
 QUANTA Protocol — AI agent payment infrastructure on Base (Coinbase L2).
-- 4 smart contracts: QuantaToken, AIAgentRegistry, AIPaymentChannel, AIModelMarketplace
+- 4 smart contracts: ZeusyxaToken, AIAgentRegistry, AIPaymentChannel, AIModelMarketplace
 - Version: v1.2 (security hardened + KYC + tax reporting)
 - Status: Testnet deployed, verified, SDK demo working
 
@@ -24,10 +24,10 @@ QUANTA Protocol — AI agent payment infrastructure on Base (Coinbase L2).
 - User speaks Vietnamese, works on local machine, prefers sed over new files
 
 ## Contracts (V2 — Base Sepolia)
-- QuantaTokenV2:            0x6d089d25035868358952b4d3644f8dAdcCc3295a
-- QuantaVestingWallet:      0xDc1B7aB0e7aE57bbB66ead2d9998bDA9127A291D
-- QuantaTreasuryController: 0xb8D10Ba1839597c0c76a60455E231Ac2bA837901
-- QuantaRewardsDistributor: 0x3bED931A6A4F0246d152c2532BB9015850657446
+- ZeusyxaTokenV2:            0x6d089d25035868358952b4d3644f8dAdcCc3295a
+- ZeusyxaVestingWallet:      0xDc1B7aB0e7aE57bbB66ead2d9998bDA9127A291D
+- ZeusyxaTreasuryController: 0xb8D10Ba1839597c0c76a60455E231Ac2bA837901
+- ZeusyxaRewardsDistributor: 0x3bED931A6A4F0246d152c2532BB9015850657446
 - AIAgentRegistry (v1.2):   0x10aE5f83F1CF20331186Ea1aD089D8fd3EbA5EEB
 - AIPaymentChannel (v1.2):  0xF146e95b97fce1d1800F5F922AE99155711A4314
 - AIModelMarketplace (v1.2): 0xFf584b30b2D00Bf0aB694683F06dC7E701fdfd49

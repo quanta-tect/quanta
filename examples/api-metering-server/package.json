@@ -1,7 +1,7 @@
 {
-  "name": "@quanta/example-api-metering-server",
+  "name": "@zeusyxa/example-api-metering-server",
   "version": "0.1.0",
-  "description": "Quanta AgentPay API metering server example",
+  "description": "Zeusyxa AgentPay API metering server example",
   "type": "module",
   "scripts": {
     "build": "tsc -p tsconfig.json",

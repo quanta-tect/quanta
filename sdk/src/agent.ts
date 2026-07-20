@@ -1,6 +1,6 @@
 import type { Address, Hex } from "viem";
 import { keccak256, encodeAbiParameters, parseEther } from "viem";
-import type { QuantaClient } from "./client.js";
+import type { ZeusyxaClient } from "./client.js";
 import type { AgentConfig, SpendingPolicy } from "./types.js";
 
 // v1.2 ABI: registerAgent(bytes32 agentId, string metadataURI, uint256 maxPerTx, uint256 maxPerDay)
@@ -79,12 +79,12 @@ const REGISTRY_ABI = [
  */
 export class AIAgent {
   constructor(
-    public readonly client: QuantaClient,
+    public readonly client: ZeusyxaClient,
     public readonly agentId: Hex,
     public readonly config: AgentConfig,
   ) {}
 
-  static async register(client: QuantaClient, config: AgentConfig): Promise<AIAgent> {
+  static async register(client: ZeusyxaClient, config: AgentConfig): Promise<AIAgent> {
     // v1.2: agentId = keccak256(abi.encode(owner, name))
     const agentId = keccak256(
       encodeAbiParameters(

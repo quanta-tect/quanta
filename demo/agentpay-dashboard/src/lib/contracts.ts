@@ -1,4 +1,4 @@
-export { AIAgentRegistryABI, QuantaTokenABI } from './abi';
+export { AIAgentRegistryABI, ZeusyxaTokenABI } from './abi';
 
 const BASE_SEPOLIA_EXPLORER = 'https://sepolia.basescan.org/tx';
 
@@ -27,7 +27,7 @@ export function createBaseReceipt(action: string): BaseReceipt {
   };
 }
 
-export function weiFromQta(qta: string): bigint {
+export function weiFromZyx(zyx: string): bigint {
   const n = parseFloat(qta);
   if (!Number.isFinite(n) || n <= 0) return 0n;
   return BigInt(Math.floor(n * 1e18));
