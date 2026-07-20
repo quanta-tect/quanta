@@ -9,16 +9,16 @@ import {
 } from "viem";
 import { privateKeyToAccount } from "viem/accounts";
 import { base, baseSepolia } from "viem/chains";
-import type { QuantaContracts } from "./types.js";
-import { QUANTA_CONTRACTS } from "./types.js";
+import type { ZeusyxaContracts } from "./types.js";
+import { ZEUXYA_CONTRACTS } from "./types.js";
 
 const CHAINS = { base, "base-sepolia": baseSepolia, "base-sepolia-v2": baseSepolia };
 
 export type ChainName = keyof typeof CHAINS;
 
-export class QuantaClient {
+export class ZeusyxaClient {
   public readonly chainName: ChainName;
-  public readonly contracts: QuantaContracts;
+  public readonly contracts: ZeusyxaContracts;
   public readonly publicClient: PublicClient;
   public readonly walletClient: WalletClient;
   public readonly address: Address;
@@ -27,7 +27,7 @@ export class QuantaClient {
     chain: ChainName;
     privateKey: Hex;
     rpcUrl?: string;
-    contracts?: Partial<QuantaContracts>;
+    contracts?: Partial<ZeusyxaContracts>;
   }) {
     this.chainName = opts.chain;
     const chain = CHAINS[opts.chain];
@@ -46,7 +46,7 @@ export class QuantaClient {
     });
 
     this.contracts = {
-      ...QUANTA_CONTRACTS[opts.chain],
+      ...ZEUXYA_CONTRACTS[opts.chain],
       ...opts.contracts,
     };
 
@@ -57,7 +57,7 @@ export class QuantaClient {
       this.contracts.registry === zeroAddr
     ) {
       console.warn(
-        `[QUANTA] Chain "${opts.chain}" has placeholder addresses. Contracts not deployed to mainnet yet.`
+        `[ZEUSYXA] Chain "${opts.chain}" has placeholder addresses. Contracts not deployed to mainnet yet.`
       );
     }
   }

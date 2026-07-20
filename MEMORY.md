@@ -15,14 +15,14 @@ Append-only. Add new entries at the top.
 ### Fixes Applied
 1. **AIAGENT_REGISTRY cursor bug** — `getRolling24hSpend` tính xấu cửa sổ 24h, đã sửa cả `src/` và `src-v1.2/`.
 2. **SimpleMultisig threshold enforcement** — thêm `signerConfirmed` mapping + logic enforce threshold, remove `block.timestamp` from txHash. Cả `src/` và `src-v1.2/` đều có patch.
-3. **QuantaToken reclaim mechanism** — thêm `recoverTokens()` vào cả `src/` và `src-v1.2/` để owner reclaim ERC20 bị kẹt (trừ QTA), cung cấp `TokensRecovered` event.
+3. **ZeusyxaToken reclaim mechanism** — thêm `recoverTokens()` vào cả `src/` và `src-v1.2/` để owner reclaim ERC20 bị kẹt (trừ ZYX), cung cấp `TokensRecovered` event.
 4. **Environment fixed** — đã move contracts/lib submodules/ symlink của openzeppelin và forge-stad về đúng cấu trúc; git status sạch sẽ.
 5. **forge build + forge test PASS** — test suite `test-v1.2/QuantaSecurityTests.t.sol` pass 87/87 tests.
 
 ## Session 6 — June 21, 2026 — Post-review fixes + infrastructure
 
 ### Fixes Applied
-1. **Duplicate IQuantaToken interface** — Extracted to src-v1.2/interfaces/IQuantaToken.sol (shared). Removed inline definitions from AIPaymentChannel + AIModelMarketplace.
+1. **Duplicate IZeusyxaToken interface** — Extracted to src-v1.2/interfaces/IZeusyxaToken.sol (shared). Removed inline definitions from AIPaymentChannel + AIModelMarketplace.
 2. **Custom errors in contracts** — Added 35 custom errors across 4 contracts (replaces require strings). Gas-efficient, better practice.
 3. **87/87 Solidity tests pass** — Fixed OZ 5.x OwnableUnauthorizedAccount, parameterized error selectors, test logic (permit, rolling window, channel close).
 4. **foundry.toml evm_version** — Changed paris → cancun (OZ 5.6.1 requires mcopy opcode).
@@ -56,7 +56,7 @@ Append-only. Add new entries at the top.
 - Deploy Gnosis Safe on Base Sepolia → run SetupMultisigOwnership
 - Submit grant proposals (Base $25K, Optimism $40K, Arbitrum $15K, Gitcoin $25K, ETHGlobal)
 - Security audit: run Slither + Mythril on v1.2
-- SDK: npm publish @quanta/sdk
+- SDK: npm publish @zeusyxa/sdk
 - Dashboard: React MVP (agent spending, tax reports)
 - Dependabot: ws vulnerability (needs viem major upgrade)
 
@@ -90,7 +90,7 @@ Append-only. Add new entries at the top.
 
 ### P0-A: Contract src/ synced with src-v1.2/
 - Copied src-v1.2/*.sol → src/ (4 contracts now identical)
-- Updated IQuantaToken interface: collectAITax(uint256) 1-param signature
+- Updated IZeusyxaToken interface: collectAITax(uint256) 1-param signature
 - src/ now has: Ownable2Step, Pausable, EIP-712, rolling window, bridge timelock
 
 ### P0-B: SDK ABI fixed for v1.2
@@ -145,7 +145,7 @@ Append-only. Add new entries at the top.
 
 ### Revenue Streams Identified
 1. Grants + Hackathons ($5-50K each) — drafts ready in grants/
-2. Token appreciation — Treasury holds 300M QTA (30% supply)
+2. Token appreciation — Treasury holds 300M ZYX (30% supply)
 3. Protocol fees — 0.3% AI tax burn (deflationary), can add protocol fee
 4. Marketplace commission — 2.5% on model sales
 5. Enterprise SaaS — Dashboard ($99/mo), Manager ($299/mo), API ($999/mo)
@@ -182,7 +182,7 @@ Append-only. Add new entries at the top.
 - Proper fix needed: verify waitForTransactionReceipt in channel.ts
 
 ### Git Remote Keeps Disappearing
-- Fix: git remote add origin https://github.com/quanta-tect/quanta.git
+- Fix: git remote add origin https://github.com/zeusyxa-io/zeusyxa.git
 - Needs GitHub Personal Access Token for HTTPS push
 
 ### Cast Has No allowance Subcommand
@@ -211,7 +211,7 @@ Append-only. Add new entries at the top.
 - OpenZeppelin for standard patterns (ERC20, Ownable2Step, Pausable, EIP712)
 - Off-chain tickets + 1 on-chain settlement (x402-style payment channels)
 - Base (Coinbase L2) for low gas + Ethereum security
-- 1B QTA supply, 30% genesis (300M to treasury)
+- 1B ZYX supply, 30% genesis (300M to treasury)
 
 ## Session 3 (continued) — Wallet Migration
 
@@ -220,7 +220,7 @@ Append-only. Add new entries at the top.
 - Intermediate: 0x076FF02853F4E69989bbb9Ee61b8910B65CEc306 (leaked, rotated)
 - Final owner:  0x288bc8d816f9C2E00af706fEBFeac9a7B149c110 (current)
 - All 4 contracts ownership transferred (Ownable2Step: propose + accept)
-- All 300M QTA tokens transferred
+- All 300M ZYX tokens transferred
 - .envx leaked to git → purged from history with git filter-branch
 
 ### Security Lesson

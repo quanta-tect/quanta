@@ -35,7 +35,7 @@ export interface ModelInfo {
   totalEarned: bigint;
 }
 
-export interface QuantaContracts {
+export interface ZeusyxaContracts {
   token: Address;
   registry: Address;
   channel: Address;
@@ -45,7 +45,7 @@ export interface QuantaContracts {
   rewards?: Address;
 }
 
-export const QUANTA_CONTRACTS: Record<string, QuantaContracts> = {
+export const ZEUXYA_CONTRACTS: Record<string, ZeusyxaContracts> = {
   "base-sepolia": {
     token: "0x312137fb6943F8f89F5eF0f221aA102035a16625",
     registry: "0x10aE5f83F1CF20331186Ea1aD089D8fd3EbA5EEB",

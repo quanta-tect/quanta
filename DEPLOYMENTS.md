@@ -6,10 +6,10 @@
 
 | Contract | Address | Verified |
 |---|---|---|
-| QuantaTokenV2 | `0x6d089d25035868358952b4d3644f8dAdcCc3295a` | Yes |
-| QuantaVestingWallet | `0xDc1B7aB0e7aE57bbB66ead2d9998bDA9127A291D` | Yes |
-| QuantaTreasuryController | `0xb8D10Ba1839597c0c76a60455E231Ac2bA837901` | Yes |
-| QuantaRewardsDistributor | `0x3bED931A6A4F0246d152c2532BB9015850657446` | Yes |
+| ZeusyxaTokenV2 | `0x6d089d25035868358952b4d3644f8dAdcCc3295a` | Yes |
+| ZeusyxaVestingWallet | `0xDc1B7aB0e7aE57bbB66ead2d9998bDA9127A291D` | Yes |
+| ZeusyxaTreasuryController | `0xb8D10Ba1839597c0c76a60455E231Ac2bA837901` | Yes |
+| ZeusyxaRewardsDistributor | `0x3bED931A6A4F0246d152c2532BB9015850657446` | Yes |
 
 - Network: Base Sepolia (84532)
 - Compiler: Solc 0.8.24
@@ -19,7 +19,7 @@
 
 | Contract | Address | Verified |
 |---|---|---|
-| QuantaToken | `0xBfeC1E5574940E4132296819dd4953A3D990dA9a` | Yes |
+| ZeusyxaToken | `0xBfeC1E5574940E4132296819dd4953A3D990dA9a` | Yes |
 | AIAgentRegistry | `0x37789b163F27a88e6B358c546C34e6d3d6CC6D0c` | Yes |
 | AIPaymentChannel | `0x22B28618ef6424F253A4D76cEDF5ddD48C0c2EC8` | Yes |
 | AIModelMarketplace | `0xBFE04AB65bEA3d0F0A2886C2eC06C5F7622884aA` | Yes |

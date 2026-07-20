@@ -1,6 +1,6 @@
 import type { Address, Hex } from "viem";
 import { encodeAbiParameters, keccak256 } from "viem";
-import type { QuantaClient } from "./client.js";
+import type { ZeusyxaClient } from "./client.js";
 import type { ChannelState } from "./types.js";
 
 // v1.2 ABI: openChannel(address payee, uint64 nonce, uint256 deposit, uint64 timeout)
@@ -37,7 +37,7 @@ export class PaymentChannel {
   private lastTicket: ChannelState | null = null;
 
   constructor(
-    public readonly client: QuantaClient,
+    public readonly client: ZeusyxaClient,
     public readonly state: {
       channelId: Hex;
       payer: Address;
@@ -48,7 +48,7 @@ export class PaymentChannel {
   ) {}
 
   static async open(
-    client: QuantaClient,
+    client: ZeusyxaClient,
     payee: Address,
     deposit: bigint,
     opts?: { nonce?: bigint; timeout?: bigint },

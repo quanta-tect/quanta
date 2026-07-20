@@ -1,5 +1,5 @@
 # QUANTA — KEY CEREMONY GUIDE
-## Base Mainnet — QTA v2
+## Base Mainnet — ZYX v2
 ### Chuẩn bị trước deploy — BẮT BUỘC theo playbook
 
 ---
@@ -72,9 +72,9 @@ Ledger #5 — Emergency — người thân / sealed envelope
 
 ---
 
-## BƯỚC 4 — DEPLOY QTA V2 (SCRIPT + LEDGER)
+## BƯỚC 4 — DEPLOY ZYX V2 (SCRIPT + LEDGER)
 
-**Deploy `QuantaVestingWallet` và `QuantaTreasuryController` TRƯỚC `QuantaTokenV2`**
+**Deploy `ZeusyxaVestingWallet` và `ZeusyxaTreasuryController` TRƯỚC `ZeusyxaTokenV2`**
 
 ### 4.1 — Deploy vesting + treasury + rewards
 ```bash
@@ -87,16 +87,16 @@ forge script DeployQTAV2.s.sol \
 
 **IN TREMINAL OUTPUT:**
 ```
-QuantaVestingWallet: 0x...
-QuantaTreasuryController: 0x...
-QuantaRewardsDistributor: 0x...
-QuantaTokenV2: 0x...
+ZeusyxaVestingWallet: 0x...
+ZeusyxaTreasuryController: 0x...
+ZeusyxaRewardsDistributor: 0x...
+ZeusyxaTokenV2: 0x...
 Total Supply: 1000000000000000000000000000000
 ```
 
 ### 4.2 — Verify on Basescan
 ```bash
-forge verify-contract 0x... QuantaTokenV2 \
+forge verify-contract 0x... ZeusyxaTokenV2 \
   --chain base --watch
 # Repeat for vesting, treasury, rewards
 ```
@@ -112,14 +112,14 @@ cast call 0xTreasury "timelock()" → 172800 (48h)
 
 ### 4.4 — Distribution transfers from treasury
 ```bash
-# Approve vesting for 100M QTA
+# Approve vesting for 100M ZYX
 cast send $TREASURY_MULTISIG "approve(address,uint256)" $VESTING 100000000e18
 # Fund vesting
 cast send $VESTING "fund(uint256)" 100000000e18
 
-# Approve rewards for 300M QTA
+# Approve rewards for 300M ZYX
 cast send $TREASURY_MULTISIG "approve(address,uint256)" $REWARDS 300000000e18
-# Direct transfer (rewards uses emit(), give QTA balance directly)
+# Direct transfer (rewards uses emit(), give ZYX balance directly)
 cast send $TREASURY_MULTISIG "transfer(address,uint256)" $REWARDS 300000000e18
 ```
 
@@ -139,7 +139,7 @@ find / -name "*deployer*" -o -name "*private*key*" 2>/dev/null
 # = 0 results
 
 # Sign KEY_DELETION_CERTIFICATE
-echo "I, [name], confirm all deployer keys for QTA mainnet 0x... destroyed — [date] UTC" | gpg --clearsign
+echo "I, [name], confirm all deployer keys for ZYX mainnet 0x... destroyed — [date] UTC" | gpg --clearsign
 ```
 
 **SAVE signature** — encrypted USB + 2 copies
@@ -149,10 +149,10 @@ echo "I, [name], confirm all deployer keys for QTA mainnet 0x... destroyed — [
 ## BƯỚC 6 — GOVERNANCE TRANSFER
 
 ```bash
-# Confirm QuantaTokenV2.owner() == treasuryMultisig
+# Confirm ZeusyxaTokenV2.owner() == treasuryMultisig
 # If not: transferOwnership(treasuryMultisig) from deployer
 
-# Renounce deployer roles in QuantaTokenV2
+# Renounce deployer roles in ZeusyxaTokenV2
 cast send $QTA_TOKEN "renounceRole(bytes32,address)" \
   $PAUSER_ROLE $DEPLOYER_ADDRESS
 cast send $QTA_TOKEN "renounceRole(bytes32,address)" \
@@ -185,7 +185,7 @@ cast send $QTA_TOKEN "renounceRole(bytes32,address)" \
 - [ ] Basescan verified (exact_match) ✅
 - [ ] Vesting `releasable() == 0` ✅
 - [ ] Treasury timelock = 48h ✅
-- [ ] Rewards `remainingDaily() == 1M QTA` ✅
+- [ ] Rewards `remainingDaily() == 1M ZYX` ✅
 
 ### T+2H — Key wipe
 - [ ] Deployer key destroyed ✅
@@ -211,7 +211,7 @@ Function: pause()
 Chain: Base mainnet — 8453
 Threshold: 2/3 (first 90d) → 3/5 (post-TV L>$50K)
 Contacts: [Operator] [Co-sig2] [Co-sig3]
-Runbook: github.com/quanta-tect/quanta/blob/main/docs/incident_runbook.md
+Runbook: github.com/zeusyxa-io/zeusyxa/blob/main/docs/incident_runbook.md
 ```
 
 ---

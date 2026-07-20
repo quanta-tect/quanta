@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="./assets/quanta-mark.svg" alt="Quanta mark" width="96" height="96">
+  <img src="./assets/quanta-mark.svg" alt="Zeusyxa mark" width="96" height="96">
 </p>
 
 <h1 align="center">Quanta</h1>
@@ -25,22 +25,22 @@
 
 ## Overview
 
-Quanta is an open-source payment and trust layer for autonomous AI agents.
+Zeusyxa is an open-source payment and trust layer for autonomous AI agents.
 
-AI agents will need to pay for APIs, tools, models, data, infrastructure, and other agents. Quanta gives them wallets with rules: identity, budgets, permissions, authorized spenders, payment channels, marketplace primitives, and on-chain receipts.
+AI agents will need to pay for APIs, tools, models, data, infrastructure, and other agents. Zeusyxa gives them wallets with rules: identity, budgets, permissions, authorized spenders, payment channels, marketplace primitives, and on-chain receipts.
 
 ## Why Quanta
 
 Giving an AI agent an unrestricted wallet is unsafe.
 
-Quanta is designed around a simple idea:
+Zeusyxa is designed around a simple idea:
 
 ```text
 AI agents should be able to pay.
 But they should not be able to spend without rules.
 ```
 
-Quanta adds the missing control layer between autonomous agents and on-chain payments.
+Zeusyxa adds the missing control layer between autonomous agents and on-chain payments.
 
 ## Current Status
 
@@ -66,11 +66,11 @@ Quanta adds the missing control layer between autonomous agents and on-chain pay
 
 ## Architecture
 
-Quanta consists of six main components:
+Zeusyxa consists of six main components:
 
 | Component | Description |
 |---|---|
-| QuantaToken | ERC-20 token used for payments and policy enforcement |
+| ZeusyxaToken | ERC-20 token used for payments and policy enforcement |
 | AIAgentRegistry | On-chain agent identity, spending limits, and authorized spender controls |
 | AIPaymentChannel | Payment channel primitive for agent transactions |
 | AIModelMarketplace | Marketplace primitive for AI models, tools, and data |
@@ -79,7 +79,7 @@ Quanta consists of six main components:
 
 ## Base Sepolia Deployment
 
-Quanta v1.2 contracts are deployed on Base Sepolia.
+Zeusyxa v1.2 contracts are deployed on Base Sepolia.
 
 ```text
 Network: Base Sepolia
@@ -88,7 +88,7 @@ Chain ID: 84532
 
 | Contract | Address |
 |---|---|
-| QuantaToken | 0xBfeC1E5574940E4132296819dd4953A3D990dA9a |
+| ZeusyxaToken | 0xBfeC1E5574940E4132296819dd4953A3D990dA9a |
 | AIAgentRegistry | 0x37789b163F27a88e6B358c546C34e6d3d6CC6D0c |
 | AIPaymentChannel | 0x22B28618ef6424F253A4D76cEDF5ddD48C0c2EC8 |
 | AIModelMarketplace | 0xBFE04AB65bEA2d0F0A2886C2eC06C5F7622884aA |
@@ -104,7 +104,7 @@ Owner and deployer wallet:
 Clone the repository:
 
 ```bash
-git clone https://github.com/quanta-tect/quanta.git
+git clone https://github.com/zeusyxa-io/zeusyxa.git
 cd quanta
 ```
 

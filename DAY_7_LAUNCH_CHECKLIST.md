@@ -14,7 +14,7 @@
 - [x] Landing page, explorer, wallet UI
 - [x] Marketing content kit
 - [x] Forta monitoring bot
-- [x] Twitter @Quanta_Protocol created
+- [x] Twitter @ZeusyxaProtocol created
 - [x] Discord server created
 - [x] Mirror.xyz blog created
 - [x] README updated with social links
@@ -25,7 +25,7 @@
 
 ### Phase A: Pre-Launch Verification
 - [ ] Test SDK end-to-end on testnet
-- [ ] Register QTA on CoinGecko
+- [ ] Register ZYX on CoinGecko
 
 ### Phase C: Content Distribution
 - [ ] Cross-post on HackerNews
@@ -51,7 +51,7 @@
 
 | Contract | Address | Verified |
 |---|---|---|
-| QuantaToken | 0x4e2B5dE8d3fE3a6C84D34FFf5E673f47010eEc9e | Yes |
+| ZeusyxaToken | 0x4e2B5dE8d3fE3a6C84D34FFf5E673f47010eEc9e | Yes |
 | AIAgentRegistry | 0x9D6d634D4C4D7fF1b920e980793f07c87CD45908 | Yes |
 | AIPaymentChannel | 0xE68dad3095B93476AaeB718E0A4ed3CC5B342272 | Yes |
 | AIModelMarketplace | 0xd545F870Dc1d62E7bF6681CC0984e526a74b6785 | Yes |

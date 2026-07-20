@@ -36,8 +36,8 @@ Contracts: src-v1.2/ (4 contracts)
 - Standard pattern, not exploitable
 
 **I-02: Missing inheritance**
-- `QuantaToken` implements `IQuantaToken.collectAITax()` without inheriting
-- By design — other contracts use `IQuantaToken` interface to call QuantaToken
+- `ZeusyxaToken` implements `IZeusyxaToken.collectAITax()` without inheriting
+- By design — other contracts use `IZeusyxaToken` interface to call ZeusyxaToken
 
 ## Conclusion
 
@@ -56,4 +56,4 @@ Post-audit hardening applied:
 Recommendations:
 1. Consider adding `nonReentrant` to `deactivateModel` for defense-in-depth
 2. Add events for `updatePrice` state changes (already present)
-3. Consider adding `receive()` fallback to QuantaToken for ETH
+3. Consider adding `receive()` fallback to ZeusyxaToken for ETH
