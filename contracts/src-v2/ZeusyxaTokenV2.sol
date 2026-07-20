@@ -9,10 +9,10 @@ import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import "@openzeppelin/contracts/access/AccessControl.sol";
 import "@openzeppelin/contracts/utils/Pausable.sol";
 
-/// @title QuantaTokenV2
-/// @notice QTA v2 mainnet — mint disabled forever — AccessControl — no bridgeMint
+/// @title ZeusyxaTokenV2
+/// @notice ZYX v2 mainnet — mint disabled forever — AccessControl — no bridgeMint
 /// @dev MAX_SUPPLY = 1_000_000_000e18 — mint ONCE in constructor — renounce MINTER_ROLE
-contract QuantaTokenV2 is ERC20Permit, ERC20Burnable, ERC20Pausable, AccessControl {
+contract ZeusyxaTokenV2 is ERC20Permit, ERC20Burnable, ERC20Pausable, AccessControl {
     using SafeERC20 for IERC20;
 
     // ===================================================================
@@ -53,7 +53,7 @@ contract QuantaTokenV2 is ERC20Permit, ERC20Burnable, ERC20Pausable, AccessContr
     event AITaxCollected(address indexed collector, uint256 amount, uint256 taxed);
 
     // ===================================================================
-    // CONSTRUCTOR — MINT EXACTLY 1B QTA — ONCE — NO FURTHER MINT
+    // CONSTRUCTOR — MINT EXACTLY 1B ZYX — ONCE — NO FURTHER MINT
     // ===================================================================
     /// @param treasuryMultisig   Gnosis Safe 3/5 — ops + reserve + emergency
     /// @param vestingWallet       VestingWallet — team 10% — 36mo — 12mo cliff
@@ -72,8 +72,8 @@ contract QuantaTokenV2 is ERC20Permit, ERC20Burnable, ERC20Pausable, AccessContr
         address partnershipsWallet,
         address _initialOwner
     )
-        ERC20("Quanta", "QTA")
-        ERC20Permit("Quanta")
+        ERC20("Zeusyxa", "ZYX")
+        ERC20Permit("Zeusyxa")
     {
         if (treasuryMultisig   == address(0)) revert ZeroAddress(treasuryMultisig);
         if (vestingWallet       == address(0)) revert ZeroAddress(vestingWallet);

@@ -2,7 +2,7 @@
 pragma solidity 0.8.24;
 
 import "forge-std/Test.sol";
-import "../src-v1.1/QuantaToken.sol";
+import "../src-v1.1/ZeusyxaToken.sol";
 import "../src-v1.1/AIPaymentChannel.sol";
 import "../src-v1.1/AIModelMarketplace.sol";
 import "../src-v1.1/AIAgentRegistry.sol";
@@ -27,7 +27,7 @@ import "../src-v1.1/AIAgentRegistry.sol";
  *   halmos --contract HalmosSpecs --loop 5 --solver-timeout-assertion 120000
  */
 contract HalmosSpecs is Test {
-    QuantaToken token;
+    ZeusyxaToken token;
     AIPaymentChannel channel;
     AIModelMarketplace market;
     AIAgentRegistry registry;
@@ -36,13 +36,13 @@ contract HalmosSpecs is Test {
 
     function setUp() public {
         vm.prank(OWNER);
-        token = new QuantaToken(OWNER);
+        token = new ZeusyxaToken(OWNER);
 
         vm.startPrank(OWNER);
         registry = new AIAgentRegistry(OWNER);
-        channel = new AIPaymentChannel(IERC20(address(token)), IQuantaToken(address(token)), OWNER);
+        channel = new AIPaymentChannel(IERC20(address(token)), IZeusyxaToken(address(token)), OWNER);
         market = new AIModelMarketplace(
-            IERC20(address(token)), IQuantaToken(address(token)),
+            IERC20(address(token)), IZeusyxaToken(address(token)),
             OWNER, OWNER, OWNER
         );
         token.setAITaxCollector(address(market), true);
@@ -68,7 +68,7 @@ contract HalmosSpecs is Test {
             assertTrue(false, "Should have reverted (C-06 violation)");
         } catch (bytes memory reason) {
             // Should revert with MustBurnFromSelf selector
-            bytes4 expectedSelector = QuantaToken.MustBurnFromSelf.selector;
+            bytes4 expectedSelector = ZeusyxaToken.MustBurnFromSelf.selector;
             bytes4 actualSelector;
             assembly { actualSelector := mload(add(reason, 32)) }
             assertEq(actualSelector, expectedSelector);

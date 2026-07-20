@@ -3,7 +3,7 @@ pragma solidity 0.8.24;
 
 import "forge-std/Test.sol";
 import "forge-std/StdInvariant.sol";
-import "../src-v1.1/QuantaToken.sol";
+import "../src-v1.1/ZeusyxaToken.sol";
 import "../src-v1.1/AIAgentRegistry.sol";
 import "../src-v1.1/AIPaymentChannel.sol";
 import "../src-v1.1/AIModelMarketplace.sol";
@@ -23,8 +23,8 @@ import "../src-v1.1/AIModelMarketplace.sol";
 // HANDLERS — Bounded actions Foundry calls randomly
 // =====================================================================
 
-contract QuantaTokenHandler is Test {
-    QuantaToken public token;
+contract ZeusyxaTokenHandler is Test {
+    ZeusyxaToken public token;
     address[] public actors;
 
     // Ghost variables — track expected state
@@ -33,7 +33,7 @@ contract QuantaTokenHandler is Test {
     uint256 public ghost_collectAITaxAttempts;
     uint256 public ghost_collectAITaxSucceeded;
 
-    constructor(QuantaToken _token, address[] memory _actors) {
+    constructor(ZeusyxaToken _token, address[] memory _actors) {
         token = _token;
         actors = _actors;
         ghost_totalMinted = token.totalSupply();
@@ -69,16 +69,16 @@ contract QuantaTokenHandler is Test {
     }
 }
 
-contract QuantaTokenInvariantTest is StdInvariant, Test {
-    QuantaToken public token;
-    QuantaTokenHandler public handler;
+contract ZeusyxaTokenInvariantTest is StdInvariant, Test {
+    ZeusyxaToken public token;
+    ZeusyxaTokenHandler public handler;
 
     address constant TREASURY = address(0xA11);
     address[] public actors;
 
     function setUp() public {
         vm.prank(TREASURY);
-        token = new QuantaToken(TREASURY);
+        token = new ZeusyxaToken(TREASURY);
 
         // Setup actors
         actors.push(address(0x1));
@@ -93,7 +93,7 @@ contract QuantaTokenInvariantTest is StdInvariant, Test {
         }
         vm.stopPrank();
 
-        handler = new QuantaTokenHandler(token, actors);
+        handler = new ZeusyxaTokenHandler(token, actors);
         targetContract(address(handler));
     }
 
@@ -140,7 +140,7 @@ contract QuantaTokenInvariantTest is StdInvariant, Test {
 // =====================================================================
 
 contract MarketplaceHandler is Test {
-    QuantaToken public token;
+    ZeusyxaToken public token;
     AIModelMarketplace public market;
     address[] public actors;
 
@@ -148,7 +148,7 @@ contract MarketplaceHandler is Test {
     uint256 public ghost_totalCreatorReceived;
     uint256 public ghost_totalBurnedViaMarket;
 
-    constructor(QuantaToken _token, AIModelMarketplace _market, address[] memory _actors) {
+    constructor(ZeusyxaToken _token, AIModelMarketplace _market, address[] memory _actors) {
         token = _token;
         market = _market;
         actors = _actors;
@@ -190,7 +190,7 @@ contract MarketplaceHandler is Test {
 }
 
 contract MarketplaceInvariantTest is StdInvariant, Test {
-    QuantaToken public token;
+    ZeusyxaToken public token;
     AIModelMarketplace public market;
     MarketplaceHandler public handler;
 
@@ -199,10 +199,10 @@ contract MarketplaceInvariantTest is StdInvariant, Test {
 
     function setUp() public {
         vm.startPrank(OWNER);
-        token = new QuantaToken(OWNER);
+        token = new ZeusyxaToken(OWNER);
         market = new AIModelMarketplace(
             IERC20(address(token)),
-            IQuantaToken(address(token)),
+            IZeusyxaToken(address(token)),
             OWNER, OWNER, OWNER
         );
         token.setAITaxCollector(address(market), true);

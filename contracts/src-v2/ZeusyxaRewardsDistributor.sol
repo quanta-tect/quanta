@@ -5,17 +5,17 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import "@openzeppelin/contracts/access/AccessControl.sol";
 
-/// @title QuantaRewardsDistributor
+/// @title ZeusyxaRewardsDistributor
 /// @notice Rate-limited ecosystem rewards — pull / merkle claim ready
 /// @dev Prevents infinite emission — cap per day/week — governable
-contract QuantaRewardsDistributor is AccessControl {
+contract ZeusyxaRewardsDistributor is AccessControl {
     using SafeERC20 for IERC20;
 
     IERC20 public token;
     bool public tokenSet;
 
-    uint256 public constant MAX_DAILY_EMISSION = 1_000_000e18; // 1M QTA/day max
-    uint256 public constant MAX_WEEKLY_EMISSION = 5_000_000e18; // 5M QTA/week max
+    uint256 public constant MAX_DAILY_EMISSION = 1_000_000e18; // 1M ZYX/day max
+    uint256 public constant MAX_WEEKLY_EMISSION = 5_000_000e18; // 5M ZYX/week max
 
     bytes32 public constant DISTRIBUTOR_ROLE = keccak256("DISTRIBUTOR_ROLE");
 
@@ -33,7 +33,7 @@ contract QuantaRewardsDistributor is AccessControl {
         _grantRole(DISTRIBUTOR_ROLE, _treasuryMultisig);
     }
 
-    /// @notice Set QTA token address (one-time)
+    /// @notice Set ZYX token address (one-time)
     function setToken(address _token) external onlyRole(DEFAULT_ADMIN_ROLE) {
         if (tokenSet) revert();
         if (_token == address(0)) revert();
@@ -85,9 +85,9 @@ contract QuantaRewardsDistributor is AccessControl {
         return MAX_WEEKLY_EMISSION - weeklyEmitted;
     }
 
-    /// @notice Emergency recover non-QTA tokens
+    /// @notice Emergency recover non-ZYX tokens
     function recoverTokens(address tokenAddress, uint256 amount) external onlyRole(DEFAULT_ADMIN_ROLE) {
-        if (tokenAddress == address(token)) revert(); // protect QTA
+        if (tokenAddress == address(token)) revert(); // protect ZYX
         IERC20(tokenAddress).safeTransfer(msg.sender, amount);
     }
 }
