@@ -8,17 +8,17 @@
 ## Module 1: The 12 most common scam patterns (20 min)
 
 ### 1. Fake support DM
-> "Hey I'm support from QUANTA, saw your post about the failed tx, click here to fix"
+> "Hey I'm support from Zeusyxa, saw your post about the failed tx, click here to fix"
 - **Truth**: Real support NEVER DMs first
 - **Defense**: Disable DMs from non-friends. If unsure, ask publicly.
 
 ### 2. Wallet drainer link
-> "Claim your free 1000 QTA: quanta-airdrop.com"
+> "Claim your free 1000 ZYX: zeusyxa-airdrop.com"
 - **Truth**: Sites ask you to "verify wallet" → unlimited approval → drain
 - **Defense**: Only claim from official URLs you typed yourself
 
 ### 3. Phishing site (typo squat)
-> `qunata.foundation` (vs real `quanta.foundation`)
+> `qunata.foundation` (vs real `zeusyxa.foundation`)
 - **Defense**: Bookmark official site. Type URL char-by-char.
 
 ### 4. Fake hardware wallet
@@ -59,7 +59,7 @@
 - **Defense**: Don't publicize crypto wealth, use duress signals (see Course 05)
 
 ### 12. Address poisoning
-> Attacker sends 0 QTA from address looking IDENTICAL to your contact
+> Attacker sends 0 ZYX from address looking IDENTICAL to your contact
 - **Truth**: You later copy "your contact" from history, but it's attacker's address
 - **Defense**: Verify FULL address before sending. Use address book, not history.
 

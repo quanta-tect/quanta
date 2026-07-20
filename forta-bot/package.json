@@ -1,7 +1,7 @@
 {
-  "name": "quanta-forta-bot",
+  "name": "zeusyxa-forta-bot",
   "version": "1.0.0",
-  "description": "QUANTA real-time security monitoring bot for Forta Network",
+  "description": "Zeusyxa real-time security monitoring bot for Forta Network",
   "main": "src/agent.js",
   "scripts": {
     "start": "forta-agent run",

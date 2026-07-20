@@ -29,7 +29,7 @@ Tôi vừa hoàn thành ZEUSYXA Protocol sau nhiều tháng phát triển. Đây
 - ✅ Dilithium3 pure Rust (0 unsafe blocks)
 
 🔗 **Links:**
-- GitHub: https://github.com/zeusyxa-io/zeusyxa
+- GitHub: https://github.com/zeusyxa-tech/Zeusxya
 - Base Sepolia Explorer: https://base-sepolia.blockscout.com
 
 🙏 **Tôi đang tìm kiếm:**
@@ -68,7 +68,7 @@ I've been building ZEUSYXA Protocol for the past several months. Here's the stor
 - ✅ Dilithium3 pure Rust (0 unsafe blocks)
 
 🔗 **Links:**
-- GitHub: https://github.com/zeusyxa-io/zeusyxa
+- GitHub: https://github.com/zeusyxa-tech/Zeusxya
 - Base Sepolia Explorer: https://base-sepolia.blockscout.com
 
 🙏 **Looking for:**

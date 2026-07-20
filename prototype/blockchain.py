@@ -1,5 +1,5 @@
 """
-QUANTA Blockchain Core
+Zeusyxa Blockchain Core
 ======================
 
 Minimal blockchain implementation integrating:

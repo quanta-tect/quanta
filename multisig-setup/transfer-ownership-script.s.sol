@@ -2,14 +2,14 @@
 pragma solidity 0.8.24;
 
 import "forge-std/Script.sol";
-import "../contracts/src-v1.1/QuantaToken.sol";
+import "../contracts/src-v1.1/ZeusyxaToken.sol";
 import "../contracts/src-v1.1/AIAgentRegistry.sol";
 import "../contracts/src-v1.1/AIPaymentChannel.sol";
 import "../contracts/src-v1.1/AIModelMarketplace.sol";
 
 /**
  * @title TransferOwnershipToMultisig
- * @notice Transfers ownership of all 4 QUANTA contracts to Gnosis Safe.
+ * @notice Transfers ownership of all 4 Zeusyxa contracts to Gnosis Safe.
  *         Uses Ownable2Step → Safe must call acceptOwnership() afterwards.
  *
  * Usage:
@@ -23,10 +23,10 @@ import "../contracts/src-v1.1/AIModelMarketplace.sol";
 contract TransferOwnershipToMultisig is Script {
     function run() external {
         address safe = vm.envAddress("SAFE_ADDRESS");
-        address token    = vm.envAddress("QUANTA_TOKEN");
-        address registry = vm.envAddress("QUANTA_REGISTRY");
-        address channel  = vm.envAddress("QUANTA_CHANNEL");
-        address market   = vm.envAddress("QUANTA_MARKET");
+        address token    = vm.envAddress("Zeusyxa_TOKEN");
+        address registry = vm.envAddress("Zeusyxa_REGISTRY");
+        address channel  = vm.envAddress("Zeusyxa_CHANNEL");
+        address market   = vm.envAddress("Zeusyxa_MARKET");
 
         require(safe != address(0), "SAFE_ADDRESS not set");
 
@@ -42,8 +42,8 @@ contract TransferOwnershipToMultisig is Script {
         console.log("Transferring AIAgentRegistry...");
         AIAgentRegistry(registry).transferOwnership(safe);
 
-        console.log("Transferring QuantaToken (last)...");
-        QuantaToken(token).transferOwnership(safe);
+        console.log("Transferring ZeusyxaToken (last)...");
+        ZeusyxaToken(token).transferOwnership(safe);
 
         vm.stopBroadcast();
 

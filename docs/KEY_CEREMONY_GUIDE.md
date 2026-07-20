@@ -1,4 +1,4 @@
-# QUANTA — KEY CEREMONY GUIDE
+# Zeusyxa — KEY CEREMONY GUIDE
 ## Base Mainnet — ZYX v2
 ### Chuẩn bị trước deploy — BẮT BUỘC theo playbook
 
@@ -79,7 +79,7 @@ Ledger #5 — Emergency — người thân / sealed envelope
 ### 4.1 — Deploy vesting + treasury + rewards
 ```bash
 cd contracts/script
-forge script DeployQTAV2.s.sol \
+forge script DeployZYXV2.s.sol \
   --rpc-url $BASE_MAINNET_RPC \
   --private-key $DEPLOYER_KEY \
   --broadcast
@@ -103,9 +103,9 @@ forge verify-contract 0x... ZeusyxaTokenV2 \
 
 ### 4.3 — Post-deploy checks
 ```bash
-cast call 0xQTA "totalSupply()" → 1000000000000000000000000000000 ? (YES)
-cast call 0xQTA "hasRole(bytes32,0xtreasury)" MINTER_ROLE → MUST = false
-cast call 0xQTA "owner()" → ? MUST = treasuryMultisig (NEVER deployer)
+cast call 0xZYX "totalSupply()" → 1000000000000000000000000000000 ? (YES)
+cast call 0xZYX "hasRole(bytes32,0xtreasury)" MINTER_ROLE → MUST = false
+cast call 0xZYX "owner()" → ? MUST = treasuryMultisig (NEVER deployer)
 cast call 0xVesting "releasable()" → 0 at T0+364d
 cast call 0xTreasury "timelock()" → 172800 (48h)
 ```
@@ -153,9 +153,9 @@ echo "I, [name], confirm all deployer keys for ZYX mainnet 0x... destroyed — [
 # If not: transferOwnership(treasuryMultisig) from deployer
 
 # Renounce deployer roles in ZeusyxaTokenV2
-cast send $QTA_TOKEN "renounceRole(bytes32,address)" \
+cast send $ZYX_TOKEN "renounceRole(bytes32,address)" \
   $PAUSER_ROLE $DEPLOYER_ADDRESS
-cast send $QTA_TOKEN "renounceRole(bytes32,address)" \
+cast send $ZYX_TOKEN "renounceRole(bytes32,address)" \
   $TAX_ADMIN_ROLE $DEPLOYER_ADDRESS
 # DEFAULT_ADMIN is already renounced in constructor
 ```
@@ -205,13 +205,13 @@ cast send $QTA_TOKEN "renounceRole(bytes32,address)" \
 **Print 4 copies — laminate — cho 4 multisig signers**
 
 ```
-QUANTA — PAUSE EMERGENCY
+Zeusyxa — PAUSE EMERGENCY
 Safe: app.safe.global/...
 Function: pause()
 Chain: Base mainnet — 8453
 Threshold: 2/3 (first 90d) → 3/5 (post-TV L>$50K)
 Contacts: [Operator] [Co-sig2] [Co-sig3]
-Runbook: github.com/zeusyxa-io/zeusyxa/blob/main/docs/incident_runbook.md
+Runbook: github.com/zeusyxa-tech/Zeusxya/blob/main/docs/incident_runbook.md
 ```
 
 ---

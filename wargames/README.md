@@ -1,4 +1,4 @@
-# 🎮 QUANTA War Games — Security Drill Scenarios
+# 🎮 Zeusyxa War Games — Security Drill Scenarios
 
 > **Purpose**: Practice incident response BEFORE it's real. Each scenario is a 30-60 minute exercise. Run quarterly minimum.
 >

@@ -14,7 +14,7 @@ It's 3 AM. You get a Signal message from Signer 2:
 
 **Your team has hours, maybe minutes, before attacker:**
 1. Cracks PIN (4 digits = brute force in seconds with specialized tools)
-2. Discovers it's a QUANTA multisig signer
+2. Discovers it's a Zeusyxa multisig signer
 3. Coordinates with other compromised signer (if exists)
 4. Proposes malicious tx (transfer ownership to attacker)
 5. If 2 more signers sign by accident OR coordination → game over
@@ -29,7 +29,7 @@ It's 3 AM. You get a Signal message from Signer 2:
 | 00:05 | Etherscan check: signer's address tried `addOwner` tx 2 min ago | Show via Tenderly |
 | 00:15 | "Helpful" community member DMs: "Hey saw you guys posted a tx, you want me to sign it for you?" (red flag: not how multisig works) | Helper |
 | 00:25 | Signer 3 (in Australia, sleeping): unresponsive | Don't reply for whole drill |
-| 00:35 | New tx proposed to Safe: `transferOwnership(0xAttackerAddr)` for QuantaToken | Helper or facilitator submits |
+| 00:35 | New tx proposed to Safe: `transferOwnership(0xAttackerAddr)` for ZeusyxaToken | Helper or facilitator submits |
 
 ---
 

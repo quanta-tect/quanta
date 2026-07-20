@@ -1,4 +1,4 @@
-# 📅 30-Day Content Calendar — @QuantaCoin
+# 📅 30-Day Content Calendar — @ZeusyxaCoin
 
 > Goal: First 30 days after launch — build awareness, dev interest, FOMO.
 > Cadence: 1-2 tweets/day + 1 thread/week + 1 long-form post/week.
@@ -19,7 +19,7 @@
 > "Why ECDSA fails to quantum computers — explained simply 🧵"
 
 **Day 5** — Dev tease:
-> "First line of code in @QuantaCoin SDK:
+> "First line of code in @ZeusyxaCoin SDK:
 > `const agent = await AIAgent.register(...)`
 > AI agents finally have their own bank account."
 

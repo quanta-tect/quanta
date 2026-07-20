@@ -1,6 +1,6 @@
 # Immunefi Bug Bounty Setup — Ready to Configure
 
-> **Goal**: Live bug bounty program for QUANTA, capped initially at $10K to start free/cheap.
+> **Goal**: Live bug bounty program for Zeusyxa, capped initially at $10K to start free/cheap.
 
 ---
 
@@ -29,10 +29,10 @@ Login/signup with team email, then "Add a project".
 
 ### Project info
 
-**Project name**: QUANTA
-**Project URL**: https://quanta.foundation (or GitHub if no domain yet)
+**Project name**: Zeusyxa
+**Project URL**: https://zeusyxa.foundation (or GitHub if no domain yet)
 **Project description**:
-> QUANTA is a quantum-resistant AI-native blockchain protocol. Smart contracts enable AI agent economic agency: on-chain wallets with spending policies, x402-style micropayments, on-chain AI model marketplace, and ERC-20 token with deflationary burn.
+> Zeusyxa is a quantum-resistant AI-native blockchain protocol. Smart contracts enable AI agent economic agency: on-chain wallets with spending policies, x402-style micropayments, on-chain AI model marketplace, and ERC-20 token with deflationary burn.
 
 **Technology stack**: Solidity 0.8.24, Foundry, OpenZeppelin
 **Languages**: Solidity, TypeScript
@@ -41,7 +41,7 @@ Login/signup with team email, then "Add a project".
 
 | Asset | Type | Chain | Address |
 |-------|------|-------|---------|
-| QuantaToken | Smart Contract | Base | `0x___YOUR_DEPLOYED_ADDRESS___` |
+| ZeusyxaToken | Smart Contract | Base | `0x___YOUR_DEPLOYED_ADDRESS___` |
 | AIAgentRegistry | Smart Contract | Base | `0x___YOUR_DEPLOYED_ADDRESS___` |
 | AIPaymentChannel | Smart Contract | Base | `0x___YOUR_DEPLOYED_ADDRESS___` |
 | AIModelMarketplace | Smart Contract | Base | `0x___YOUR_DEPLOYED_ADDRESS___` |
@@ -98,7 +98,7 @@ YES for all submissions. Reports must include:
 
 ### Total bounty pool
 
-Initial: **$10,000 USD** (in QTA, USDC, or ETH at hunter's choice)
+Initial: **$10,000 USD** (in ZYX, USDC, or ETH at hunter's choice)
 Plan to scale:
 - $100K within 3 months of mainnet
 - $500K within 6 months
@@ -119,7 +119,7 @@ Treasury multisig (Gnosis Safe 3/5)
 - Whitehat agrees not to extort
 
 ### Contact info
-- **Email**: security@quanta.foundation
+- **Email**: security@zeusyxa.foundation
 - **Discord**: discord.gg/quanta (#security-disclosure private channel)
 - **Signal**: ____________
 - **PGP**: (publish key on website + here)

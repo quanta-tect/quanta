@@ -1,7 +1,7 @@
-# QUANTA — OpenHuman Project Summary
+# Zeusyxa — OpenHuman Project Summary
 
 ## Giới thiệu
-QUANTA là blockchain quantum-safe (Dilithium) cho AI agent economy.
+Zeusyxa là blockchain quantum-safe (Dilithium) cho AI agent economy.
 
 ## Cấu trúc
 - l1/: Layer 1 Rust (Substrate + Dilithium)
@@ -15,5 +15,5 @@ QUANTA là blockchain quantum-safe (Dilithium) cho AI agent economy.
 - OpenHuman: Memory hub, context
 
 ## Liên kết
-- GitHub: github.com/quanta-tect/quanta
+- GitHub: github.com/zeusyxa-tech/Zeusxya
 - Trạng thái: Layer 2 đã deploy, Layer 1 đang xây dựng

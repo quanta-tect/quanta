@@ -1,4 +1,4 @@
-# 🚨 QUANTA Incident Response Runbook
+# 🚨 Zeusyxa Incident Response Runbook
 
 > **THIS IS THE MOST IMPORTANT DOCUMENT IN THE REPO.**
 >
@@ -43,14 +43,14 @@ If pause multisig is set up:
 
 ```solidity
 // Pre-loaded calldata for emergency pause:
-// QuantaToken: 0x8456cb59
+// ZeusyxaToken: 0x8456cb59
 // AIPaymentChannel: 0x8456cb59
 // AIModelMarketplace: 0x8456cb59
 // AIAgentRegistry: (no pause, doesn't hold funds)
 ```
 
 **While waiting for signatures**: post to Twitter/Discord:
-> 🚨 We're investigating a potential issue with QUANTA contracts. We're pausing as a precaution. Funds are safe / we are working to confirm. Updates every 15 min.
+> 🚨 We're investigating a potential issue with Zeusyxa contracts. We're pausing as a precaution. Funds are safe / we are working to confirm. Updates every 15 min.
 
 ---
 
@@ -95,7 +95,7 @@ WHAT WE'RE DOING:
 WHAT YOU SHOULD DO:
 - DO NOT interact with [CONTRACT] until further notice
 - DO NOT trust any DM offering "recovery services" — those are SCAMS
-- Follow @QuantaCoin for updates every 30 min
+- Follow @ZeusyxaCoin for updates every 30 min
 
 NEXT UPDATE: [TIME UTC + 30 min]
 ```
@@ -178,7 +178,7 @@ If contracts irrecoverable:
 
 ### Bounty negotiation template (on-chain message)
 ```
-Hello, this is the QUANTA Foundation team.
+Hello, this is the Zeusyxa Foundation team.
 
 We acknowledge that you exploited a vulnerability in our contracts and 
 took [X] tokens.
@@ -196,7 +196,7 @@ After 72 hours, we will:
 
 We hope you'll do the right thing.
 
-— QUANTA Foundation
+— Zeusyxa Foundation
 ```
 
 ---

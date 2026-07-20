@@ -66,7 +66,7 @@ ZEUSYXA is ready today.
 - 9/9 node tests PASS
 - Native + WASM builds OK
 
-Code: https://github.com/zeusyxa-io/zeusyxa
+Code: https://github.com/zeusyxa-tech/Zeusxya
 
 ---
 
@@ -97,6 +97,6 @@ If you're building for the future of AI + payments, let's talk.
 **Bonus — Short tweet for retweets:**
 
 "AI agents need a bank. ZEUSYXA is it."
-🔗 https://github.com/zeusyxa-io/zeusyxa
+🔗 https://github.com/zeusyxa-tech/Zeusxya
 
 #ZEUSYXA #AI #Web3

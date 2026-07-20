@@ -1,4 +1,4 @@
-# 🎓 QUANTA Security Training
+# 🎓 Zeusyxa Security Training
 
 > Training materials for team members + community. All free, all open source.
 
@@ -16,7 +16,7 @@
 
 ## 🎯 Certification path (optional)
 
-Team members complete all 7 courses + pass quiz → "QUANTA Security Certified" badge.
+Team members complete all 7 courses + pass quiz → "Zeusyxa Security Certified" badge.
 
 Track progress in your team wiki or via:
 - GitHub Issues template

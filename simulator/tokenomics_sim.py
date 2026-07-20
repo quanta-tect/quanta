@@ -1,5 +1,5 @@
 """
-QUANTA Tokenomics Simulator
+Zeusyxa Tokenomics Simulator
 ===========================
 
 Mô phỏng phát thải, burn, supply qua 50 năm with các kịch bản adoption.
@@ -20,8 +20,8 @@ class Scenario:
     tx_growth_per_year: float        # multiplier
     initial_daily_inferences: int
     inference_growth_per_year: float
-    avg_tx_fee: float = 0.001        # QTA
-    avg_inference_fee: float = 0.0001 # QTA
+    avg_tx_fee: float = 0.001        # ZYX
+    avg_inference_fee: float = 0.0001 # ZYX
 
 
 SCENARIOS = {
@@ -101,7 +101,7 @@ def print_table(rows, sc):
 
 
 def ascii_chart(rows, label: str = "Supply"):
-    print(f"\n📈 {label} (M QTA) over 30 years")
+    print(f"\n📈 {label} (M ZYX) over 30 years")
     vals = [r["supply"] / 1e6 for r in rows]
     max_v = max(vals)
     min_v = min(vals)
@@ -119,7 +119,7 @@ def main():
     parser.add_argument("--all", action="store_true", help="Show all scenarios")
     args = parser.parse_args()
 
-    print("⚛️  QUANTA Tokenomics Simulator\n")
+    print("⚛️  Zeusyxa Tokenomics Simulator\n")
 
     if args.all:
         for sc in SCENARIOS.values():

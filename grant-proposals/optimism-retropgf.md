@@ -64,6 +64,6 @@ Optimism deployment would bring ZEUSYXA to the Superchain ecosystem.
 
 ## Links
 
-- GitHub: https://github.com/zeusyxa-io/zeusyxa
+- GitHub: https://github.com/zeusyxa-tech/Zeusxya
 - Base Sepolia Explorer: https://base-sepolia.blockscout.com
 - Whitepaper: In repo docs/WHITEPAPER.md

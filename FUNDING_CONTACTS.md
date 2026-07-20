@@ -1,4 +1,4 @@
-# QUANTA Funding Contacts
+# Zeusyxa Funding Contacts
 
 Last updated: June 5, 2026
 
@@ -37,9 +37,9 @@ Last updated: June 5, 2026
 - NEAR AI Agent Fund: https://near.ai ($50-100K)
 
 ## Project Summary for Emails
-- QUANTA: Quantum-safe AI-native blockchain
-- Token: QTA, 1B hard cap, 300M genesis
+- Zeusyxa: Quantum-safe AI-native blockchain
+- Token: ZYX, 1B hard cap, 300M genesis
 - Contracts: 4 verified on Base Sepolia
-- SDK: Working demo (agent earns + spends QTA)
-- GitHub: https://github.com/quanta-tect/quanta
-- X: @Quanta_Protocol
+- SDK: Working demo (agent earns + spends ZYX)
+- GitHub: https://github.com/zeusyxa-tech/Zeusxya
+- X: @Zeusyxa_Protocol

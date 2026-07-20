@@ -1,6 +1,6 @@
-# 🤖 QUANTA Forta Detection Bot
+# 🤖 Zeusyxa Forta Detection Bot
 
-Real-time security monitoring for QUANTA contracts via [Forta Network](https://forta.network).
+Real-time security monitoring for Zeusyxa contracts via [Forta Network](https://forta.network).
 
 ## What it detects
 
@@ -8,12 +8,12 @@ Real-time security monitoring for QUANTA contracts via [Forta Network](https://f
 |----------|----------|-------------|
 | `detectPauseEvents` | 🔴 Critical | Any `Paused` event |
 | `detectAdminActions` | 🟠 High/🔴 Critical | Bridge change, tax change, ownership transfer |
-| `detectLargeBridgeMint` | 🟠 High | Mint > 100K QTA or > 5× rolling avg |
-| `detectLargeBurn` | 🟡 Medium | Burn > 10K QTA |
+| `detectLargeBridgeMint` | 🟠 High | Mint > 100K ZYX or > 5× rolling avg |
+| `detectLargeBurn` | 🟡 Medium | Burn > 10K ZYX |
 | `detectChannelAnomalies` | 🟡 Medium | Large opens, force-closes, rapid spam |
 | `detectModelPriceManipulation` | 🟡 Medium | 10× price change in short time |
 | `detectReputationAbuse` | 🟡 Medium | -30% reputation drop |
-| `detectWhaleTransfers` | 🔵 Info | Transfers > 1M QTA |
+| `detectWhaleTransfers` | 🔵 Info | Transfers > 1M ZYX |
 | `detectUnpause` | 🟠 High | Unpause event (verify legitimate) |
 
 **Smart elevation**: After a `Paused` event, all severities are bumped one level for 1 hour (heightened alertness).
@@ -64,7 +64,7 @@ npm run tx 0xYOUR_TEST_TX_HASH
 # 2. Push to Forta scan node
 npm run publish
 
-# Output: alertId for your bot, e.g., QUANTA-BOT-v1.0.0
+# Output: alertId for your bot, e.g., Zeusyxa-BOT-v1.0.0
 
 # 3. Verify deployment
 forta-agent info
@@ -120,11 +120,11 @@ Edit `src/config.js` → `THRESHOLDS` object. Start with conservative values; tu
 # After deploying contracts, create test transactions:
 # 1. Big transfer (whale alert)
 cast send $TOKEN "transfer(address,uint256)" $RECIPIENT 1000000ether
-npm run tx <txhash>  # should fire QUANTA-WHALE
+npm run tx <txhash>  # should fire Zeusyxa-WHALE
 
 # 2. Pause (critical alert)
 cast send $TOKEN "pause()"  # if you have owner key
-npm run tx <txhash>  # should fire QUANTA-PAUSE (Critical)
+npm run tx <txhash>  # should fire Zeusyxa-PAUSE (Critical)
 ```
 
 ## Architecture

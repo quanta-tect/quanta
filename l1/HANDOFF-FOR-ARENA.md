@@ -9,7 +9,7 @@
 
 Chỉ cần paste đoạn này làm tin nhắn đầu tiên:
 
-Arena ơi, mình làm việc tiếp với nhau ở phiên trước về dự án QUANTA.
+Arena ơi, mình làm việc tiếp với nhau ở phiên trước về dự án Zeusyxa.
 Hãy đọc file HANDOFF-FOR-ARENA.md trong workspace của bạn.
 Hướng dẫn mình bằng cách: bạn show code → mình COPY-PASTE vào terminal Linux.
 Dùng python3 để ghi file dài (không dùng cat << EOF vì dễ lỗi terminal).
@@ -18,8 +18,8 @@ Dùng python3 để ghi file dài (không dùng cat << EOF vì dễ lỗi termin
 
 ## 📋 I. THÔNG TIN DỰ ÁN
 
-**Tên:** QUANTA — Quantum-safe AI-native Blockchain
-**GitHub:** https://github.com/quanta-tect/quanta
+**Tên:** Zeusyxa — Quantum-safe AI-native Blockchain
+**GitHub:** https://github.com/zeusyxa-tech/Zeusxya
 **Máy user:** Linux (acer-Aspire-A715-76)
 **Cấu trúc:** Layer 2 (Solidity/Base) + Layer 1 (Rust/Substrate) + Agent System
 
@@ -28,18 +28,18 @@ Dùng python3 để ghi file dài (không dùng cat << EOF vì dễ lỗi termin
 ## ✅ II. NHỮNG GÌ ĐÃ XONG (tính đến 2026-06-19)
 
 ### Layer 2 — Đã deploy + verified trên Base Sepolia
-- QuantaToken (QTA), AIAgentRegistry, AIPaymentChannel, AIModelMarketplace
+- ZeusyxaToken (ZYX), AIAgentRegistry, AIPaymentChannel, AIModelMarketplace
 - TypeScript SDK demo thành công
 - Security audit + Forta bot + War games
 
 ### Layer 1 — 35 tests all pass
 | Package | Tests | Status |
 |---------|-------|--------|
-| quanta-l1-crypto (Dilithium3) | 9 | ✅ PASS |
+| zeusyxa-l1-crypto (Dilithium3) | 9 | ✅ PASS |
 | pallet-pq-dilithium | 7 | ✅ PASS |
 | pallet-pq-balances | 6 | ✅ PASS |
 | pallet-pq-staking (PoUW) | 11 | ✅ PASS |
-| quanta-l1-runtime | 2 | ✅ PASS |
+| zeusyxa-l1-runtime | 2 | ✅ PASS |
 | **TOTAL** | **35** | **✅ ALL PASS** |
 
 ### 🎉 BREAKTHROUGH: Dilithium3 pure Rust!
@@ -48,7 +48,7 @@ Dùng python3 để ghi file dài (không dùng cat << EOF vì dễ lỗi termin
 - ✅ 0 unsafe blocks, 9 tests pass
 
 ### Node binary (native-only)
-- ✅ quanta-l1-node binary build OK (1.7MB ELF)
+- ✅ zeusyxa-l1-node binary build OK (1.7MB ELF)
 - Commit cũ: 13d1233
 
 ### Agent System
@@ -93,7 +93,7 @@ Dùng python3 để ghi file dài (không dùng cat << EOF vì dễ lỗi termin
 | Signature | 3,309 bytes |
 | Secret key | 4,032 bytes |
 | Block time | 6s |
-| Token | QTA (1B supply, 18 decimals) |
+| Token | ZYX (1B supply, 18 decimals) |
 | Crate cũ (đã xoá) | pqcrypto-dilithium v0.5 |
 | Crate mới | **dilithium-rs v0.2.0** (Pure Rust ✅) |
 
@@ -101,5 +101,5 @@ Dùng python3 để ghi file dài (không dùng cat << EOF vì dễ lỗi termin
 
 ## 🔗 VIII. LINK QUAN TRỌNG
 
-- Repo: https://github.com/quanta-tect/quanta
+- Repo: https://github.com/zeusyxa-tech/Zeusxya
 - dilithium-rs: https://crates.io/crates/dilithium-rs

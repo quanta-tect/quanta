@@ -4,7 +4,7 @@
 
 Highlights:
 - Quanta EVM contracts v1.2
-- QTA token
+- ZYX token
 - AI agent registry
 - Spending policy and authorized spender flow
 - Payment channel primitive

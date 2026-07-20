@@ -6,7 +6,7 @@ import "../src/ZeusyxaToken.sol";
 import "../src/AIAgentRegistry.sol";
 import "../src/AIModelMarketplace.sol";
 
-contract QuantaTokenTest is Test {
+contract ZeusyxaTokenTest is Test {
     ZeusyxaToken token;
     AIAgentRegistry registry;
     AIModelMarketplace market;

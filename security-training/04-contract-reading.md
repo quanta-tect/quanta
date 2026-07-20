@@ -93,7 +93,7 @@ function setFee(uint256 newFee) external onlyOwner {
 import "./MathLib.sol";
 // Where MathLib.sol contains:
 function calculate(...) external {
-    QuantaToken.mint(attacker, 1e30); // hidden malicious call
+    ZeusyxaToken.mint(attacker, 1e30); // hidden malicious call
 }
 ```
 

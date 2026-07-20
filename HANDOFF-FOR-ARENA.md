@@ -1,6 +1,6 @@
 # HANDOFF CONTEXT - Phien 2026-06-21 (Buoi 4 - Hoan Thanh P0/P1/P2)
 
-> Arena.ai + Hermes + OpenHuman tiep tuc cong viec QUANTA L1.
+> Arena.ai + Hermes + OpenHuman tiep tuc cong viec Zeusyxa L1.
 > Copy file nay paste vao tin nhan dau tien cho Arena phien moi.
 
 ---
@@ -34,7 +34,7 @@ Tat ca P0/P1/P2 tasks da hoan thanh!
 
 ## CACH NOI VOI ARENA PHIEN MOI
 
-Arena oi, minh lam viec tiep voi nhau ve du an QUANTA.
+Arena oi, minh lam viec tiep voi nhau ve du an Zeusyxa.
 Hay doc file HANDOFF-FOR-ARENA.md trong workspace cua ban.
 Huong dan minh bang cach: ban show code → minh COPY-PASTE vao terminal Linux.
 Dung python3 de ghi file dai (khong dung cat EOF vi de loi terminal).
@@ -44,8 +44,8 @@ QUAN TRONG: dung chr() trong Python de tranh chat auto-linkify paths.
 
 ## I. THONG TIN DU AN
 
-**Ten:** QUANTA - Quantum-safe AI-native Blockchain
-**GitHub:** https://github.com/quanta-tect/quanta
+**Ten:** Zeusyxa - Quantum-safe AI-native Blockchain
+**GitHub:** https://github.com/zeusyxa-tech/Zeusxya
 **May user:** Linux (acer-Aspire-A715-76)
 **Cau truc:** Layer 2 (Solidity/Base) + Layer 1 (Rust/Substrate) + Agent System
 
@@ -54,7 +54,7 @@ QUAN TRONG: dung chr() trong Python de tranh chat auto-linkify paths.
 ## II. NHUNG GI DA XONG (tinh den 2026-06-21 - Phien 3)
 
 ### Layer 2 - Da deploy + verified tren Base Sepolia
-- QuantaToken (QTA), AIAgentRegistry, AIPaymentChannel, AIModelMarketplace
+- ZeusyxaToken (ZYX), AIAgentRegistry, AIPaymentChannel, AIModelMarketplace
 - TypeScript SDK demo thanh cong
 - Security audit + Forta bot + War games
 - Security hardening v1.0 → v1.2 (Ownable2Step, Pausable, timelock, rolling window)
@@ -62,11 +62,11 @@ QUAN TRONG: dung chr() trong Python de tranh chat auto-linkify paths.
 ### Layer 1 - 35 tests all pass (native)
 [Package] | [Tests] | [Status]
 ---------|-------|--------
-quanta-l1-crypto (Dilithium3) | 9 | PASS
+zeusyxa-l1-crypto (Dilithium3) | 9 | PASS
 pallet-pq-dilithium | 7 | PASS
 pallet-pq-balances | 6 | PASS
 pallet-pq-staking (PoUW) | 11 | PASS
-quanta-l1-runtime | 2 | PASS
+zeusyxa-l1-runtime | 2 | PASS
 **TOTAL** | **35** | **ALL PASS**
 
 ### BREAKTHROUGH: Dilithium3 pure Rust!
@@ -75,7 +75,7 @@ quanta-l1-runtime | 2 | PASS
 - 0 unsafe blocks, 9 tests pass
 
 ### Node binary (native)
-- quanta-l1-node binary build OK (1.7MB ELF)
+- zeusyxa-l1-node binary build OK (1.7MB ELF)
 - Van o dang minimal main.rs (7 dong)
 - **CHUA co day du service** (chain_spec, cli, command, rpc, manual-seal)
 
@@ -169,8 +169,8 @@ quanta-l1-runtime | 2 | PASS
    - command.rs (subcommands)
    - service.rs (manual-seal consensus)
    - rpc.rs (RPC endpoints)
-6. **Build native:** `cargo build --release -p quanta-l1-node`
-7. **Chay testnet:** `./target/release/quanta-node --dev --tmp`
+6. **Build native:** `cargo build --release -p zeusyxa-l1-node`
+7. **Chay testnet:** `./target/release/zeusyxa-node --dev --tmp`
 8. **Test submit extrinsic** (transfer, register_key, stake) qua RPC
 
 ### P2 - Nice to have:
@@ -240,7 +240,7 @@ Public key | 1,952 bytes
 Signature | 3,309 bytes
 Secret key | 4,032 bytes
 Block time | 6s (planned)
-Token | QTA (1B supply, 18 decimals)
+Token | ZYX (1B supply, 18 decimals)
 AccountId | DilithiumPublicKey (1952 bytes)
 Consensus | Manual Seal (cho dev), Aura (TODO)
 Crate moi | dilithium-rs v0.2.0 (Pure Rust WASM-ready)
@@ -275,7 +275,7 @@ Stub moi | substrate-prometheus-endpoint stub (path-based patch)
 
 ## XI. LINK QUAN TRONG
 
-- Repo: https://github.com/quanta-tect/quanta
+- Repo: https://github.com/zeusyxa-tech/Zeusxya
 - Workspace zip: https://files.catbox.moe/cwjm1k.zip
 - Handoff file: https://files.catbox.moe/o1y2od.md
 - dilithium-rs: https://crates.io/crates/dilithium-rs
@@ -289,19 +289,19 @@ Stub moi | substrate-prometheus-endpoint stub (path-based patch)
 ```bash
 # Build native runtime (PASS)
 cd /home/acer/quanta/l1
-cargo check -p quanta-l1-runtime
+cargo check -p zeusyxa-l1-runtime
 
 # Build WASM (BLOCKED by getrandom 0.3.4)
-cargo build -p quanta-l1-runtime --release --target wasm32-unknown-unknown
+cargo build -p zeusyxa-l1-runtime --release --target wasm32-unknown-unknown
 
 # Build native node (minimal)
-cargo build --release -p quanta-l1-node
+cargo build --release -p zeusyxa-l1-node
 
 # Run dev testnet (sau khi code xong node service)
-./target/release/quanta-node --dev --tmp
+./target/release/zeusyxa-node --dev --tmp
 
 # Find chain pull
-cargo tree --target wasm32-unknown-unknown -p quanta-l1-runtime -i X
+cargo tree --target wasm32-unknown-unknown -p zeusyxa-l1-runtime -i X
 
 # Forge test (BLOCKED by foundry.toml merge conflict)
 cd /home/acer/quanta/contracts

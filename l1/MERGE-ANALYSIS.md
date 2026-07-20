@@ -1,6 +1,6 @@
 # Merge Analysis
 
-## Quanta (đã có)
+## Zeusyxa (đã có)
 - Layer 2: Smart contracts on Base ✅
 - SDK TypeScript ✅
 - Security suite (Forta, Wargames, Training) ✅
@@ -12,4 +12,4 @@
 - Agent system: Arena + Hermes + OpenHuman 🆕
 
 ## Kết quả
-Quanta = Layer 2 (EVM) + Layer 1 (Substrate/PQC) + Agents
+Zeusyxa = Layer 2 (EVM) + Layer 1 (Substrate/PQC) + Agents

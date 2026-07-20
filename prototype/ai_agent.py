@@ -1,5 +1,5 @@
 """
-QUANTA — AI Agent Wallet & x402-style Micropayment
+Zeusyxa — AI Agent Wallet & x402-style Micropayment
 ==================================================
 
 Unique features enabling AI agents to transact autonomously:
@@ -188,10 +188,10 @@ def http_402_response(price_qta: float, receiver: str, nonce: str) -> dict:
     return {
         "status": 402,
         "headers": {
-            "X-QUANTA-Price": f"{price_qta:.6f} QTA",
-            "X-QUANTA-Receiver": receiver,
-            "X-QUANTA-Nonce": nonce,
-            "X-QUANTA-Channel-Hint": "Open channel for batch discount 90%",
+            "X-Zeusyxa-Price": f"{price_qta:.6f} ZYX",
+            "X-Zeusyxa-Receiver": receiver,
+            "X-Zeusyxa-Nonce": nonce,
+            "X-Zeusyxa-Channel-Hint": "Open channel for batch discount 90%",
         },
         "body": {"error": "Payment required for this AI inference"},
     }
@@ -214,7 +214,7 @@ if __name__ == "__main__":
         initial_funding=5.0,
     )
     print(f"Created agent: {agent.name} @ {agent.address}")
-    print(f"Initial balance: {agent.balance} QTA")
+    print(f"Initial balance: {agent.balance} ZYX")
 
     # Agent pays for another AI service
     api_provider = "qta1openrouter"
@@ -222,18 +222,18 @@ if __name__ == "__main__":
     print(json.dumps(http_402_response(0.001, api_provider, "n1"), indent=2))
 
     # Open payment channel to reduce fees
-    print("\n💸 Opening payment channel (deposit 1 QTA)...")
+    print("\n💸 Opening payment channel (deposit 1 ZYX)...")
     channel = PaymentChannel(agent, api_provider, deposit=1.0)
     for i in range(5):
         state = channel.micro_pay(0.001)
         print(f"  Micro-payment #{state['state']['nonce']}: "
-              f"spent={state['state']['spent']:.4f} QTA")
+              f"spent={state['state']['spent']:.4f} ZYX")
 
     settle = channel.close()
     print(f"\n🔚 Channel closed:")
-    print(f"  → Payee receives {settle['settle_to_payee']:.4f} QTA")
-    print(f"  → Refund to agent: {settle['refund_to_payer']:.4f} QTA")
-    print(f"  Agent balance now: {agent.balance:.4f} QTA")
+    print(f"  → Payee receives {settle['settle_to_payee']:.4f} ZYX")
+    print(f"  → Refund to agent: {settle['refund_to_payer']:.4f} ZYX")
+    print(f"  Agent balance now: {agent.balance:.4f} ZYX")
 
     # Test policy enforcement
     print("\n🚫 Testing policy enforcement:")

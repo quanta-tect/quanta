@@ -1,5 +1,5 @@
 #!/bin/bash
-# QUANTA — One-shot setup script
+# Zeusyxa — One-shot setup script
 # Run from quanta/ root: bash setup.sh
 
 set -euo pipefail
@@ -9,7 +9,7 @@ PURPLE='\033[0;35m'
 CYAN='\033[0;36m'
 NC='\033[0m'
 
-echo -e "${PURPLE}⚛  QUANTA Setup${NC}"
+echo -e "${PURPLE}⚛  Zeusyxa Setup${NC}"
 echo "================================="
 
 # --- 1. Python prototype ---

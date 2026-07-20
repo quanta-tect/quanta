@@ -1,8 +1,8 @@
 /**
- * Forta Detection Bot for QUANTA
+ * Forta Detection Bot for Zeusyxa
  * ==============================
  *
- * Monitors QUANTA contracts in real-time and alerts on anomalies.
+ * Monitors Zeusyxa contracts in real-time and alerts on anomalies.
  * Forta = free decentralized monitoring infrastructure.
  *
  * Setup: https://docs.forta.network/en/latest/quickstart/
@@ -21,13 +21,13 @@ const { Finding, FindingSeverity, FindingType, getEthersProvider } = require("fo
 const ethers = require("ethers");
 
 // === Configuration ===
-const QUANTA_TOKEN = "0x___YOUR_DEPLOYED_TOKEN___";
-const QUANTA_CHANNEL = "0x___YOUR_DEPLOYED_CHANNEL___";
-const QUANTA_MARKET = "0x___YOUR_DEPLOYED_MARKET___";
-const QUANTA_REGISTRY = "0x___YOUR_DEPLOYED_REGISTRY___";
+const Zeusyxa_TOKEN = "0x___YOUR_DEPLOYED_TOKEN___";
+const Zeusyxa_CHANNEL = "0x___YOUR_DEPLOYED_CHANNEL___";
+const Zeusyxa_MARKET = "0x___YOUR_DEPLOYED_MARKET___";
+const Zeusyxa_REGISTRY = "0x___YOUR_DEPLOYED_REGISTRY___";
 
 // Anomaly thresholds (tune based on historical data)
-const LARGE_MINT_THRESHOLD = ethers.parseEther("100000"); // 100K QTA
+const LARGE_MINT_THRESHOLD = ethers.parseEther("100000"); // 100K ZYX
 const BURN_SPIKE_THRESHOLD = ethers.parseEther("10000");
 const SUSPICIOUS_CHANNEL_AMOUNT = ethers.parseEther("1000000");
 
@@ -71,9 +71,9 @@ async function handleTransaction(txEvent) {
   for (const event of pauseEvents) {
     findings.push(
       Finding.fromObject({
-        name: "🚨 QUANTA Contract Paused",
+        name: "🚨 Zeusyxa Contract Paused",
         description: `${event.address} was paused by ${event.args.account}. This is a major event — verify it's intentional.`,
-        alertId: "QUANTA-PAUSE-1",
+        alertId: "Zeusyxa-PAUSE-1",
         severity: FindingSeverity.Critical,
         type: FindingType.Suspicious,
         metadata: {
@@ -90,7 +90,7 @@ async function handleTransaction(txEvent) {
   // ---------------------------------------------------------------
   const mintEvents = txEvent.filterLog([
     "event BridgeMinted(address indexed to, uint256 amount)",
-  ], QUANTA_TOKEN);
+  ], Zeusyxa_TOKEN);
 
   for (const event of mintEvents) {
     const amount = BigInt(event.args.amount);
@@ -108,10 +108,10 @@ async function handleTransaction(txEvent) {
       findings.push(
         Finding.fromObject({
           name: "⚠️ Unusually Large Bridge Mint",
-          description: `${ethers.formatEther(amount)} QTA minted via bridge to ${event.args.to}. ` +
-                       `Daily avg: ${ethers.formatEther(avg)} QTA. ` +
+          description: `${ethers.formatEther(amount)} ZYX minted via bridge to ${event.args.to}. ` +
+                       `Daily avg: ${ethers.formatEther(avg)} ZYX. ` +
                        `Verify legitimacy.`,
-          alertId: "QUANTA-BRIDGE-LARGE-MINT",
+          alertId: "Zeusyxa-BRIDGE-LARGE-MINT",
           severity: FindingSeverity.High,
           type: FindingType.Suspicious,
           metadata: {
@@ -141,7 +141,7 @@ async function handleTransaction(txEvent) {
       Finding.fromObject({
         name: `🔐 Sensitive Admin Action: ${event.name}`,
         description: `Admin action detected on ${event.address}. Args: ${JSON.stringify(event.args)}`,
-        alertId: `QUANTA-ADMIN-${event.name.toUpperCase()}`,
+        alertId: `Zeusyxa-ADMIN-${event.name.toUpperCase()}`,
         severity: FindingSeverity.High,
         type: FindingType.Info,
         metadata: {
@@ -159,7 +159,7 @@ async function handleTransaction(txEvent) {
   // ---------------------------------------------------------------
   const burnEvents = txEvent.filterLog([
     "event Transfer(address indexed from, address indexed to, uint256 value)",
-  ], QUANTA_TOKEN).filter(e => e.args.to === ethers.ZeroAddress);
+  ], Zeusyxa_TOKEN).filter(e => e.args.to === ethers.ZeroAddress);
 
   for (const event of burnEvents) {
     const amount = BigInt(event.args.value);
@@ -167,9 +167,9 @@ async function handleTransaction(txEvent) {
       findings.push(
         Finding.fromObject({
           name: "🔥 Large Burn Detected",
-          description: `${ethers.formatEther(amount)} QTA burned by ${event.args.from}. ` +
+          description: `${ethers.formatEther(amount)} ZYX burned by ${event.args.from}. ` +
                        `Investigate if legitimate (large tx fee burn) or exploit.`,
-          alertId: "QUANTA-LARGE-BURN",
+          alertId: "Zeusyxa-LARGE-BURN",
           severity: FindingSeverity.Medium,
           type: FindingType.Info,
           metadata: {
@@ -187,15 +187,15 @@ async function handleTransaction(txEvent) {
   // ---------------------------------------------------------------
   const forceCloseEvents = txEvent.filterLog([
     "event ChannelForceClosed(bytes32 indexed channelId, uint256 refund)",
-  ], QUANTA_CHANNEL);
+  ], Zeusyxa_CHANNEL);
 
   for (const event of forceCloseEvents) {
     findings.push(
       Finding.fromObject({
         name: "⚡ Payment Channel Force-Closed",
-        description: `Channel ${event.args.channelId} force-closed with refund ${ethers.formatEther(event.args.refund)} QTA. ` +
+        description: `Channel ${event.args.channelId} force-closed with refund ${ethers.formatEther(event.args.refund)} ZYX. ` +
                      `Payee should claim if they have unsubmitted tickets.`,
-        alertId: "QUANTA-CHANNEL-FORCE-CLOSE",
+        alertId: "Zeusyxa-CHANNEL-FORCE-CLOSE",
         severity: FindingSeverity.Medium,
         type: FindingType.Info,
         metadata: {
@@ -212,16 +212,16 @@ async function handleTransaction(txEvent) {
   // ---------------------------------------------------------------
   const channelOpenEvents = txEvent.filterLog([
     "event ChannelOpened(bytes32 indexed channelId, address indexed payer, address indexed payee, uint256 deposit)",
-  ], QUANTA_CHANNEL);
+  ], Zeusyxa_CHANNEL);
 
   for (const event of channelOpenEvents) {
     if (BigInt(event.args.deposit) > SUSPICIOUS_CHANNEL_AMOUNT) {
       findings.push(
         Finding.fromObject({
           name: "💰 Large Payment Channel Opened",
-          description: `${ethers.formatEther(event.args.deposit)} QTA channel opened ` +
+          description: `${ethers.formatEther(event.args.deposit)} ZYX channel opened ` +
                        `from ${event.args.payer} to ${event.args.payee}.`,
-          alertId: "QUANTA-CHANNEL-LARGE",
+          alertId: "Zeusyxa-CHANNEL-LARGE",
           severity: FindingSeverity.Low,
           type: FindingType.Info,
           metadata: {

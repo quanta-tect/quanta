@@ -22,7 +22,7 @@ ZEUSYXA provides:
 - ✅ 4 smart contracts deployed + verified on Base Sepolia (Sourcify + Blockscout)
 - ✅ TypeScript SDK working (viem, 0 tsc errors)
 - ✅ 150+ tests (Rust L1 node + Solidity contracts)
-- ✅ Open-source: https://github.com/zeusyxa-io/zeusyxa
+- ✅ Open-source: https://github.com/zeusyxa-tech/Zeusxya
 
 ## Technical Architecture
 
@@ -79,6 +79,6 @@ Solo founder, full-stack blockchain engineer. Built ZEUSYXA from scratch: Solidi
 
 ## Links
 
-- GitHub: https://github.com/zeusyxa-io/zeusyxa
+- GitHub: https://github.com/zeusyxa-tech/Zeusxya
 - Base Sepolia: https://base-sepolia.blockscout.com/address/0x312137fb6943F8f89F5eF0f221aA102035a16625
-- Whitepaper: https://github.com/zeusyxa-io/zeusyxa/blob/main/docs/WHITEPAPER.md
+- Whitepaper: https://github.com/zeusyxa-tech/Zeusxya/blob/main/docs/WHITEPAPER.md

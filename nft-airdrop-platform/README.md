@@ -2,8 +2,8 @@
 
 Production-ready airdrop contracts built for Senior Web3 NFT Airdrop Platform job spec (29-page).
 
-GitHub: https://github.com/quanta-tect/quanta  
-LinkedIn: https://www.linkedin.com/in/quanta-protocol-5761a4411
+GitHub: https://github.com/zeusyxa-tech/Zeusxya  
+LinkedIn: https://www.linkedin.com/in/zeusyxa-protocol-5761a4411
 
 ## Stack match
 
@@ -31,7 +31,7 @@ LinkedIn: https://www.linkedin.com/in/quanta-protocol-5761a4411
 
 ## Verify – Quanta Protocol suite
 
-- QuantaToken – ERC-20 burn + treasury + multisig
+- ZeusyxaToken – ERC-20 burn + treasury + multisig
 - AIAgentRegistry – on-chain agent registration, RBAC
 - AIPaymentChannel – approve/transferFrom settlement
 - AIModelMarketplace – listing + fee distribution
@@ -58,4 +58,4 @@ forge script script/Deploy.s.sol --rpc-url $ETH_RPC --broadcast --verify
 
 $95/hr • $90/hr long-term  
 Start: TODAY – UTC+7 full-time – US EST / EU overlap  
-Contact: https://www.linkedin.com/in/quanta-protocol-5761a4411
+Contact: https://www.linkedin.com/in/zeusyxa-protocol-5761a4411

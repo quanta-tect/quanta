@@ -1,4 +1,4 @@
-﻿# QUANTA .gitignore
+﻿# Zeusyxa .gitignore
 
 # SECRETS (NEVER COMMIT!)
 .env
@@ -11,7 +11,7 @@
 !*seed*.md
 *private*key*
 *mnemonic*
-.quanta-deploy-seed.txt
+.zeusyxa-deploy-seed.txt
 keystore/
 wallet.json
 keystore.json

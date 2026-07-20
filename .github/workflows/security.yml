@@ -100,10 +100,10 @@ jobs:
       - name: Install mythril
         run: pip install mythril
 
-      - name: Analyze QuantaToken (v1.2)
+      - name: Analyze ZeusyxaToken (v1.2)
         run: |
           cd contracts
-          myth analyze src-v1.2/QuantaToken.sol \
+          myth analyze src-v1.2/ZeusyxaToken.sol \
             --solv 0.8.24 \
             --execution-timeout 120 \
             --max-depth 12 | tee mythril-quanta-token.log

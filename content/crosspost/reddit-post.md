@@ -42,7 +42,7 @@ ZEUSYXA is "Stripe for AI Agents":
 
 ### Links
 
-- GitHub: https://github.com/zeusyxa-io/zeusyxa
+- GitHub: https://github.com/zeusyxa-tech/Zeusxya
 - Base Sepolia Explorer: https://base-sepolia.blockscout.com/address/0x312137fb6943F8f89F5eF0f221aA102035a16625
 - Whitepaper: In repo docs/WHITEPAPER.md
 
@@ -86,6 +86,6 @@ I've been working on **ZEUSYXA Protocol** — a blockchain designed specifically
 
 **Token:** ZYX (1B supply, 30% genesis to treasury, 0.3% AI tax burn = deflationary)
 
-GitHub: https://github.com/zeusyxa-io/zeusyxa
+GitHub: https://github.com/zeusyxa-tech/Zeusxya
 
 Looking for grant funding and enterprise pilot clients. AMA!

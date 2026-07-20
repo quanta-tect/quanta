@@ -8,7 +8,7 @@ import {Pausable} from "@openzeppelin/contracts/utils/Pausable.sol";
 import {Ownable2Step, Ownable} from "@openzeppelin/contracts/access/Ownable2Step.sol";
 
 /**
- * @title QuantaBridgeHyperlane
+ * @title ZeusyxaBridgeHyperlane
  * @notice Uses Hyperlane interchain messaging — audited, battle-tested infra.
  *         We do NOT build custom signature verification (#1 way to lose money).
  *
@@ -20,7 +20,7 @@ import {Ownable2Step, Ownable} from "@openzeppelin/contracts/access/Ownable2Step
  *
  * Security stack (defense in depth):
  *   1. Hyperlane default ISM (multisig of 7 validators)
- *   2. Custom ISM: rate limit (max 100K QTA/hour)
+ *   2. Custom ISM: rate limit (max 100K ZYX/hour)
  *   3. Custom ISM: solvency check (mint <= locked)
  *   4. Auto-pause on anomaly (5× avg deviation)
  *   5. 48h delay on admin changes
@@ -49,12 +49,12 @@ interface IMessageRecipient {
     ) external payable;
 }
 
-interface IQuantaTokenBridge {
+interface IZeusyxaTokenBridge {
     function bridgeMint(address to, uint256 amount) external;
     function bridgeBurn(address from, uint256 amount) external;
 }
 
-contract QuantaBridgeHyperlane is IMessageRecipient, ReentrancyGuard, Pausable, Ownable2Step {
+contract ZeusyxaBridgeHyperlane is IMessageRecipient, ReentrancyGuard, Pausable, Ownable2Step {
     using SafeERC20 for IERC20;
 
     // ─────────────────────────────────────────────────────────────
@@ -63,14 +63,14 @@ contract QuantaBridgeHyperlane is IMessageRecipient, ReentrancyGuard, Pausable, 
 
     IMailbox public immutable mailbox;
     IERC20 public immutable token;
-    IQuantaTokenBridge public immutable quantaToken;
+    IZeusyxaTokenBridge public immutable quantaToken;
 
     // Map chainId → Hyperlane domain (e.g., Ethereum=1, Base=8453, Optimism=10)
     mapping(uint32 => bytes32) public trustedBridges;  // domain → bridge address
 
     // Rate limiting (anti-drain)
-    uint256 public constant MAX_HOURLY_MINT = 100_000 ether;    // 100K QTA per hour global
-    uint256 public constant MAX_DAILY_MINT  = 1_000_000 ether;  // 1M QTA per day global
+    uint256 public constant MAX_HOURLY_MINT = 100_000 ether;    // 100K ZYX per hour global
+    uint256 public constant MAX_DAILY_MINT  = 1_000_000 ether;  // 1M ZYX per day global
     uint256 public constant ANOMALY_MULTIPLIER = 5;             // 5× rolling avg → auto-pause
 
     uint256 public minted_thisHour;
@@ -85,7 +85,7 @@ contract QuantaBridgeHyperlane is IMessageRecipient, ReentrancyGuard, Pausable, 
     uint256 public globalMinted;
 
     // Phased TVL caps (start small, grow with confidence)
-    uint256 public globalCap = 100_000 ether;     // start at 100K QTA cap
+    uint256 public globalCap = 100_000 ether;     // start at 100K ZYX cap
     uint256 public constant MAX_GLOBAL_CAP = 100_000_000 ether; // hard ceiling 100M
 
     // Anti-replay
@@ -137,7 +137,7 @@ contract QuantaBridgeHyperlane is IMessageRecipient, ReentrancyGuard, Pausable, 
     constructor(
         IMailbox _mailbox,
         IERC20 _token,
-        IQuantaTokenBridge _quantaToken,
+        IZeusyxaTokenBridge _quantaToken,
         address initialOwner
     ) Ownable(initialOwner) {
         mailbox = _mailbox;
@@ -166,7 +166,7 @@ contract QuantaBridgeHyperlane is IMessageRecipient, ReentrancyGuard, Pausable, 
     function unpause() external onlyOwner { _unpause(); }
 
     // ─────────────────────────────────────────────────────────────
-    // OUT: User locks QTA on this chain → triggers mint on dest chain
+    // OUT: User locks ZYX on this chain → triggers mint on dest chain
     // ─────────────────────────────────────────────────────────────
 
     function bridgeOut(
@@ -178,8 +178,8 @@ contract QuantaBridgeHyperlane is IMessageRecipient, ReentrancyGuard, Pausable, 
         if (trustedBridges[destinationDomain] == bytes32(0)) revert UntrustedSourceDomain();
 
         // Burn from sender (or lock — depending on chain role)
-        // On "source" chain (where QTA is native): lock
-        // On "destination" chain (where QTA is wrapped): burn
+        // On "source" chain (where ZYX is native): lock
+        // On "destination" chain (where ZYX is wrapped): burn
         // For simplicity: this contract always BURNS, native handles lock separately
         quantaToken.bridgeBurn(msg.sender, amount);
 
@@ -211,7 +211,7 @@ contract QuantaBridgeHyperlane is IMessageRecipient, ReentrancyGuard, Pausable, 
     }
 
     // ─────────────────────────────────────────────────────────────
-    // IN: Receive message from another chain → mint QTA here
+    // IN: Receive message from another chain → mint ZYX here
     // ─────────────────────────────────────────────────────────────
 
     function handle(

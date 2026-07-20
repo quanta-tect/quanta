@@ -1,6 +1,6 @@
 # 🛡️ Course 01: Security Basics for Everyone
 
-**Audience**: ALL QUANTA users (not just devs)
+**Audience**: ALL Zeusyxa users (not just devs)
 **Duration**: 30 minutes
 **Prerequisites**: None
 
@@ -91,7 +91,7 @@ Within 5 minutes, "support staff" DMs you offering help. They send a link to "fi
 
 ### Attack 3: Approval exploits
 
-You think you're approving 100 QTA for a swap. But the website tricks your wallet into approving `2^256 - 1` (effectively infinite).
+You think you're approving 100 ZYX for a swap. But the website tricks your wallet into approving `2^256 - 1` (effectively infinite).
 
 Six months later, that swap site is hacked. Attacker sweeps all your approved tokens.
 
@@ -99,7 +99,7 @@ Six months later, that swap site is hacked. Attacker sweeps all your approved to
 - Use wallet that decodes approvals clearly
 - Set EXACT amounts in approval (not max)
 - Revoke approvals you no longer need: revoke.cash
-- Use QUANTA Wallet (simulates before sign)
+- Use Zeusyxa Wallet (simulates before sign)
 
 ### Attack 4: SIM swap
 
@@ -156,7 +156,7 @@ Reasons:
 
 ```
 ❌ approve(swap_router, MAX_UINT256)
-✅ approve(swap_router, 100 QTA)   // exact amount for this trade
+✅ approve(swap_router, 100 ZYX)   // exact amount for this trade
 ```
 
 After trade: `approve(swap_router, 0)` to revoke.
@@ -250,7 +250,7 @@ If you missed any, re-read that section.
 
 ## Action items
 
-- [ ] Bookmark official QUANTA URL
+- [ ] Bookmark official Zeusyxa URL
 - [ ] Buy hardware wallet if you have > $500 in crypto
 - [ ] Set up authenticator app for 2FA (replace SMS)
 - [ ] Install Blowfish + Pocket Universe browser extensions

@@ -19,10 +19,10 @@
 ### Application text (copy-paste-ready)
 
 ```
-Project name: QUANTA
+Project name: Zeusyxa
 
 What are you building?
-QUANTA is a smart contract suite on Base that enables AI agents to have 
+Zeusyxa is a smart contract suite on Base that enables AI agents to have 
 self-sovereign wallets, transact via micropayments (x402-style payment 
 channels), and participate in an on-chain AI model marketplace. Designed 
 for the emerging AI agent economy.
@@ -65,7 +65,7 @@ Team
 Links
 - Repo: github.com/[org]/quanta
 - Demo: [Base Sepolia interaction URL]
-- Twitter: @QuantaCoin
+- Twitter: @ZeusyxaCoin
 - Discord: discord.gg/quanta
 - Whitepaper: [link]
 ```
@@ -94,7 +94,7 @@ Highlight contributions to Base ecosystem.
 ### Application key sections
 
 **Description**: 
-"QUANTA brings AI agent economic primitives to the OP Stack: quantum-resistant token, spending policies for AI agents, x402 payment channels, and AI model marketplace. All open-source MIT. Includes security tooling (Forta bot, audit framework, war games) reusable by other OP Stack projects."
+"Zeusyxa brings AI agent economic primitives to the OP Stack: quantum-resistant token, spending policies for AI agents, x402 payment channels, and AI model marketplace. All open-source MIT. Includes security tooling (Forta bot, audit framework, war games) reusable by other OP Stack projects."
 
 **Impact**: List specific things you've done that help others:
 - Open-source Forta bot template
@@ -116,7 +116,7 @@ Highlight contributions to Base ecosystem.
 Apply for **security research grant**, not product grant.
 
 **Application opening**:
-> We're researching quantum-resistant signature schemes (CRYSTALS-Dilithium, FALCON, SPHINCS+) in the context of EVM-compatible chains. As part of this research, we built QUANTA: a working implementation of AI agent infrastructure that will require quantum-safe migration when EVM precompiles for PQ-crypto become available. We seek funding for:
+> We're researching quantum-resistant signature schemes (CRYSTALS-Dilithium, FALCON, SPHINCS+) in the context of EVM-compatible chains. As part of this research, we built Zeusyxa: a working implementation of AI agent infrastructure that will require quantum-safe migration when EVM precompiles for PQ-crypto become available. We seek funding for:
 >
 > 1. Comparative analysis of PQ signatures on EVM (gas costs, security models)
 > 2. EIP proposal for Dilithium precompile
@@ -135,7 +135,7 @@ EF loves research over products. Frame as research.
 
 ### Pitch
 Apply for **cross-L2 security infrastructure**:
-- "QUANTA contracts can be deployed across all L2s (Base, Arbitrum, Optimism)"
+- "Zeusyxa contracts can be deployed across all L2s (Base, Arbitrum, Optimism)"
 - "Our Forta bot template + war game framework benefits all OP Stack and Arbitrum projects"
 
 Mentioning "ecosystem-wide benefit" doubles approval rate.
@@ -170,7 +170,7 @@ Match fund mechanism: every $1 community donation gets matched 10-100x by Gitcoi
 
 ### Pitch
 Apply for **multi-chain deployment grant**:
-- "Deploy QUANTA contracts on Polygon zkEVM in addition to Base"
+- "Deploy Zeusyxa contracts on Polygon zkEVM in addition to Base"
 - "Subsidize audit cost (will benefit Polygon TVL)"
 
 ---

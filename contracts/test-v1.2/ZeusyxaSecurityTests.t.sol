@@ -9,7 +9,7 @@ import "../src-v1.2/AIModelMarketplace.sol";
 
 /**
  * @title QuantaV12SecurityTests
- * @notice Comprehensive security + regression tests for QUANTA v1.2
+ * @notice Comprehensive security + regression tests for Zeusyxa v1.2
  * @dev Tests all 4 contracts with their hardened security features
  *
  * Run: forge test -vvv
@@ -79,7 +79,7 @@ contract QuantaV12SecurityTests is Test {
     }
 
     // ===================================================================
-    // QUANTA TOKEN TESTS
+    // Zeusyxa TOKEN TESTS
     // ===================================================================
 
     function test_Token_GenesisSupply() public view {

@@ -198,7 +198,7 @@ mod tests {
     #[test]
     fn test_roundtrip() {
         let kp = generate_keypair_deterministic(&[0x42u8; 32]);
-        let msg = b"QUANTA test";
+        let msg = b"Zeusyxa test";
         let sig = sign_message(msg, &kp);
         assert!(sig.verify(&msg[..], &kp.public));
     }

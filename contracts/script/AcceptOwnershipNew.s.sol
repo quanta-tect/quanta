@@ -6,7 +6,7 @@ import "../src/SimpleMultisig.sol";
 
 /**
  * @title AcceptOwnershipNew
- * @notice Accept ownership of all QUANTA contracts via new multisig
+ * @notice Accept ownership of all Zeusyxa contracts via new multisig
  */
 contract AcceptOwnershipNew is Script {
     address constant NEW_MULTISIG = 0x9261020D451a631AcB26e5BcA26b7BD3c95b726D;

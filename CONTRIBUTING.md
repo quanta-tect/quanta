@@ -1,5 +1,5 @@
-Contributing to QUANTA
-Thank you for considering contributing to QUANTA! 🎉
+Contributing to Zeusyxa
+Thank you for considering contributing to Zeusyxa! 🎉
 This document outlines how to contribute, what we're looking for, and how to get your contribution merged.
 ---
 🎯 Ways to Contribute
@@ -28,8 +28,8 @@ Improve guides: PRs welcome
 1. Set up dev environment
 ```bash
 # Clone the repo
-git clone https://github.com/zeusyxa-io/zeusyxa.git
-cd quanta
+git clone https://github.com/zeusyxa-tech/Zeusxya.git
+cd zeusyxa
 
 # Set up Python prototype
 cd prototype && python3 demo.py

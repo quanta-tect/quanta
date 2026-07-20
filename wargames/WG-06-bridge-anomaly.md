@@ -11,12 +11,12 @@
 Forta alert fires at 9 AM:
 
 ```
-🟠 HIGH: QUANTA-BRIDGE-LARGE-MINT
+🟠 HIGH: Zeusyxa-BRIDGE-LARGE-MINT
 Detector: bridge_anomaly
 Time: 09:14 UTC
 
-Anomaly: 500,000 QTA minted via bridge in single tx.
-Rolling 24h avg: 12,000 QTA.
+Anomaly: 500,000 ZYX minted via bridge in single tx.
+Rolling 24h avg: 12,000 ZYX.
 Recipient: 0xNEW_ADDRESS_NEVER_SEEN_BEFORE
 Source chain attestation: present
 Validator sigs: 5 of 7 (above threshold)
@@ -37,11 +37,11 @@ The bridge mint is **technically valid** (passes all checks). But:
 | T+ | Event |
 |----|-------|
 | 00:00 | Forta alert (above) |
-| 00:05 | Second mint: 750K QTA to different new address |
-| 00:10 | Third mint: 1M QTA |
+| 00:05 | Second mint: 750K ZYX to different new address |
+| 00:10 | Third mint: 1M ZYX |
 | 00:15 | If not paused: Discord user "Did you guys raise lock cap? Seeing massive mints" |
 | 00:20 | Source chain check: NO matching lock txs (this is the smoking gun) |
-| 00:30 | If still not paused: "RIP QUANTA, bridge being drained" Twitter trending |
+| 00:30 | If still not paused: "RIP Zeusyxa, bridge being drained" Twitter trending |
 
 ---
 
@@ -111,7 +111,7 @@ T+12 3/5 sigs, pause executed
 T+15 Tweet: "We've detected anomalous bridge mints and paused mint functionality as a precaution. Burns/exits remain enabled. Investigating. No user action needed yet."
 T+20 Discord: detailed explanation for crypto-literate users
 T+25 Forensics: identified bug in verifier (off-by-one in signature index)
-T+30 Quantified: 2.25M QTA over-minted (2.5% of supply)
+T+30 Quantified: 2.25M ZYX over-minted (2.5% of supply)
 T+40 Recovery plan:
      - Tokens minted to 3 attacker addresses
      - Cannot recover without consent
@@ -119,7 +119,7 @@ T+40 Recovery plan:
      - Bug fix being written
 T+60 Public statement with details
 T+24h Fix deployed, bridge re-enabled
-T+48h Treasury burns 2.25M QTA, supply restored
+T+48h Treasury burns 2.25M ZYX, supply restored
 T+7d Post-mortem published, validators audited
 ```
 
@@ -131,7 +131,7 @@ T+7d Post-mortem published, validators audited
    ```solidity
    require(totalMinted <= totalLockedOnSourceChain, "insolvency");
    ```
-2. **Rate limit per hour**: max 50K QTA / hour global
+2. **Rate limit per hour**: max 50K ZYX / hour global
 3. **Auto-pause on anomaly**: if mint > 5× avg, pause automatically
 4. **Multiple data sources for source chain verification**:
    - Don't trust single relayer
@@ -149,7 +149,7 @@ This drill exists because:
 - Even "audited" bridges (Wormhole, Ronin) got exploited
 - Custom bridges are the #1 risk vector for new L1s
 
-**Lesson**: For QUANTA v1, use **existing audited bridges** (LayerZero, Hyperlane). Don't build custom unless absolutely necessary.
+**Lesson**: For Zeusyxa v1, use **existing audited bridges** (LayerZero, Hyperlane). Don't build custom unless absolutely necessary.
 
 When you do build custom (post-L1 launch), invest **disproportionately** in:
 - Multiple independent audits

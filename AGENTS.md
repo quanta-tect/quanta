@@ -1,9 +1,9 @@
-# AGENTS.md — QUANTA Project Conventions
+# AGENTS.md — Zeusyxa Project Conventions
 
 Read this file at the start of every AI session.
 
 ## Project
-QUANTA Protocol — AI agent payment infrastructure on Base (Coinbase L2).
+Zeusyxa Protocol — AI agent payment infrastructure on Base (Coinbase L2).
 - 4 smart contracts: ZeusyxaToken, AIAgentRegistry, AIPaymentChannel, AIModelMarketplace
 - Version: v1.2 (security hardened + KYC + tax reporting)
 - Status: Testnet deployed, verified, SDK demo working

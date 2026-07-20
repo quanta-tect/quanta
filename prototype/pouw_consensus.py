@@ -1,5 +1,5 @@
 """
-QUANTA — Proof of Useful Work (PoUW) Consensus Module
+Zeusyxa — Proof of Useful Work (PoUW) Consensus Module
 =====================================================
 
 Instead of meaningless SHA-256 hashes, validators must complete
@@ -91,7 +91,7 @@ class PoUWConsensus:
 
     def register(self, validator: Validator) -> None:
         if validator.stake < self.MIN_STAKE:
-            raise ValueError(f"Min stake {self.MIN_STAKE} QTA required")
+            raise ValueError(f"Min stake {self.MIN_STAKE} ZYX required")
         self.validators[validator.address] = validator
 
     def total_stake(self) -> float:
@@ -173,7 +173,7 @@ if __name__ == "__main__":
         )
         pouw.register(v)
     print(f"Registered {len(pouw.validators)} validators, "
-          f"total stake = {pouw.total_stake():,.0f} QTA")
+          f"total stake = {pouw.total_stake():,.0f} ZYX")
 
     for i in range(3):
         task = UsefulTask(
@@ -192,7 +192,7 @@ if __name__ == "__main__":
         ok = pouw.verify_proof(task, proof, demo_executor)
         reward = pouw.reward_and_slash(proposer, ok, work_score=0.9)
         print(f"Block {slot}: proposer={proposer.address[:18]}... "
-              f"task={task.task_id} verified={ok} reward={reward:+.2f} QTA")
+              f"task={task.task_id} verified={ok} reward={reward:+.2f} ZYX")
 
     print("\nFinal validator stakes:")
     for v in pouw.validators.values():

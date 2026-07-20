@@ -93,8 +93,8 @@ cd contracts && bash run-security-tools.sh
 
 # Echidna via Docker (no install)
 docker run -v $PWD:/src trailofbits/echidna \
-  echidna /src/contracts/test-invariant/QuantaTokenInvariants.sol \
-  --contract QuantaTokenInvariants
+  echidna /src/contracts/test-invariant/ZeusyxaTokenInvariants.sol \
+  --contract ZeusyxaTokenInvariants
 
 # Halmos
 halmos --contract HalmosSpecs
@@ -130,7 +130,7 @@ Before engaging ANY auditor, do these (saves $$$ and improves findings):
 
 ---
 
-## 🎯 Our recommended path (for QUANTA)
+## 🎯 Our recommended path (for Zeusyxa)
 
 **Month 1-2 (now)**: 
 - ✅ All free tools (done)

@@ -1,4 +1,4 @@
-# 🔐 QUANTA Multisig Setup — Complete Guide
+# 🔐 Zeusyxa Multisig Setup — Complete Guide
 
 > **Goal**: Set up 3/5 Gnosis Safe multisig on Base, with hardware wallets, geographic distribution, and proper key ceremony.
 >
@@ -9,7 +9,7 @@
 
 ## 📐 Architecture Decision
 
-### Recommended for QUANTA at different stages
+### Recommended for Zeusyxa at different stages
 
 | Stage | Setup | Why |
 |-------|-------|-----|
@@ -84,14 +84,14 @@ Generate the multisig together, in a recorded session, so the community can veri
 2. Connect coordinator's hardware wallet
 3. Switch to **Base mainnet** (chainId 8453)
 4. Click "Create new Safe"
-5. Name: `QUANTA Foundation Multisig v1`
+5. Name: `Zeusyxa Foundation Multisig v1`
 6. Network: Base
 7. **Owners**: paste all 5 addresses (verify with each signer over video)
 8. **Threshold**: 3 of 5
 9. Review fees (~$5-15)
 10. Click "Create" → sign with hardware wallet
 11. Wait for confirmation
-12. **Copy Safe address** (e.g., `0xSAFE...`) — this becomes QUANTA's owner
+12. **Copy Safe address** (e.g., `0xSAFE...`) — this becomes Zeusyxa's owner
 
 #### Step 2: Verify Safe configuration (10 min)
 
@@ -121,7 +121,7 @@ Practice transaction (DON'T deploy real contracts yet):
 Create `multisig-attestation.txt`:
 
 ```
-QUANTA Multisig Key Ceremony Attestation
+Zeusyxa Multisig Key Ceremony Attestation
 =========================================
 Date: YYYY-MM-DD HH:MM UTC
 Safe address: 0xSAFE_ADDRESS_HERE
@@ -154,7 +154,7 @@ Sign attestation with all 5 hardware wallets + publish to GitHub + Mirror.xyz.
 For each contract, propose tx via Safe:
 
 ```javascript
-// On each QUANTA contract (Token, Registry, Channel, Marketplace):
+// On each Zeusyxa contract (Token, Registry, Channel, Marketplace):
 contract.transferOwnership(SAFE_ADDRESS);
 // Then SAFE accepts (Ownable2Step):
 contract.acceptOwnership();
@@ -164,7 +164,7 @@ Order:
 1. AIPaymentChannel.transferOwnership(SAFE) → Safe accepts
 2. AIModelMarketplace.transferOwnership(SAFE) → Safe accepts
 3. AIAgentRegistry.transferOwnership(SAFE) → Safe accepts
-4. QuantaToken.transferOwnership(SAFE) → Safe accepts
+4. ZeusyxaToken.transferOwnership(SAFE) → Safe accepts
 
 ⚠️ **Token is last** because some other contracts depend on its admin functions.
 
@@ -179,7 +179,7 @@ Verify after each: `owner()` returns Safe address.
 Any signer can propose:
 
 ```
-1. Go to https://app.safe.global → select QUANTA Safe
+1. Go to https://app.safe.global → select Zeusyxa Safe
 2. Click "New transaction" → "Contract interaction"
 3. Paste contract address + ABI (or use saved app)
 4. Select function (e.g., `setAITaxRate(uint16)`)
@@ -259,7 +259,7 @@ Allows daily limits without full multisig sigs:
 
 ```
 Setup: Safe → Apps → "Spending Limit"
-Add: 1000 QTA/day per signer
+Add: 1000 ZYX/day per signer
 Use case: routine payments don't need 3/5
 Emergencies: still go through full multisig
 ```
@@ -280,7 +280,7 @@ ALL admin actions delayed 48h (configurable):
 
 ```
 Setup: Safe → Apps → "OpenZeppelin Defender" → "Defender Admin"
-Configure: 48h delay on all transactions to QUANTA contracts
+Configure: 48h delay on all transactions to Zeusyxa contracts
 Override: only with 5/5 signatures (emergency)
 ```
 

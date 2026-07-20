@@ -14,7 +14,7 @@ It's a normal Tuesday. Then complaints start:
 >
 > User B: "Same here! Approved it because I trusted you guys. Now my wallet is empty."
 >
-> User C: "Just lost 50,000 QTA. WTF is going on with quanta.foundation??"
+> User C: "Just lost 50,000 ZYX. WTF is going on with zeusyxa.foundation??"
 
 **Your smart contracts are fine.** Your FRONTEND has been compromised.
 
@@ -41,9 +41,9 @@ Facilitator picks one:
 | 00:00 | User A Discord message about weird approval | Inject via helper |
 | 00:02 | User B message confirming pattern | Inject |
 | 00:05 | Twitter mentions starting to spike | Show graph |
-| 00:10 | Reports: 20 users affected, ~500K QTA drained | Compile list |
-| 00:15 | If team hasn't taken down site: 50 users affected, 2M QTA | Escalate |
-| 00:25 | Crypto Twitter influencer (10K followers): "QUANTA frontend hacked, DO NOT USE" | Tweet |
+| 00:10 | Reports: 20 users affected, ~500K ZYX drained | Compile list |
+| 00:15 | If team hasn't taken down site: 50 users affected, 2M ZYX | Escalate |
+| 00:25 | Crypto Twitter influencer (10K followers): "Zeusyxa frontend hacked, DO NOT USE" | Tweet |
 | 00:35 | Forensics clue (drop subtly): Recent commit by "trusted dev" had base64-encoded payload | Pin to channel |
 | 00:50 | Reset for debrief |
 
@@ -61,7 +61,7 @@ Facilitator picks one:
    - OR: Cloudflare → page rule → 503
    - OR: Vercel → pause deployment
 3. **Block additional damage**:
-   - Tweet IMMEDIATELY: "🚨 DO NOT INTERACT WITH quanta.foundation. Suspected compromise. Investigating. Use only contracts directly via Etherscan."
+   - Tweet IMMEDIATELY: "🚨 DO NOT INTERACT WITH zeusyxa.foundation. Suspected compromise. Investigating. Use only contracts directly via Etherscan."
    - Pin tweet, post in Discord, send email blast
 4. **Revoke any active deploy keys**:
    - Vercel/Netlify tokens
@@ -107,7 +107,7 @@ Public template:
 🚨 INCIDENT UPDATE [TIME UTC]
 
 WHAT HAPPENED:
-At [TIME], our website (quanta.foundation) was serving malicious JavaScript
+At [TIME], our website (zeusyxa.foundation) was serving malicious JavaScript
 that prompted users to approve excessive token allowances. Users who signed
 these transactions had tokens drained.
 
@@ -115,7 +115,7 @@ OUR SMART CONTRACTS ARE NOT AFFECTED. Only the website was compromised.
 
 IMPACT:
 - ~X users affected
-- ~Y QTA / $Z drained
+- ~Y ZYX / $Z drained
 - Attacker address: 0x...
 
 WHAT WE'VE DONE:

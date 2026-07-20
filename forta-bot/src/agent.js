@@ -1,5 +1,5 @@
 /**
- * QUANTA Forta Bot — Main Agent
+ * Zeusyxa Forta Bot — Main Agent
  *
  * Forta runs this against every transaction on configured chains.
  * Returns Findings → Forta network broadcasts to subscribers.
@@ -45,7 +45,7 @@ async function handleTransaction(txEvent) {
   // Skip if we don't monitor this chain
   if (!deployment) return [];
 
-  // Skip if no QUANTA contracts touched (perf optimization)
+  // Skip if no Zeusyxa contracts touched (perf optimization)
   const monitoredAddresses = Object.values(deployment).map(a => a.toLowerCase());
   const touched = Object.keys(txEvent.addresses || {});
   const matches = touched.some(a => monitoredAddresses.includes(a.toLowerCase()));
@@ -77,7 +77,7 @@ async function handleBlock(blockEvent) {
       total_alerts: Array.from(state.alertsByCategory.entries())
         .map(([k, v]) => `${k}:${v}`).join(", "),
     };
-    console.log(`[QUANTA Bot] Block ${blockEvent.blockNumber}`, stats);
+    console.log(`[Zeusyxa Bot] Block ${blockEvent.blockNumber}`, stats);
   }
 
   return findings;

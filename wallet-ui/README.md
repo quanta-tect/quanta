@@ -1,6 +1,6 @@
-# 🛡️ QUANTA Wallet UI
+# 🛡️ Zeusyxa Wallet UI
 
-> Safe wallet for QUANTA with **transaction simulation** — the #1 defense against frontend hacks and signing-based scams.
+> Safe wallet for Zeusyxa with **transaction simulation** — the #1 defense against frontend hacks and signing-based scams.
 
 ## Why simulate transactions?
 
@@ -58,8 +58,8 @@ In production, this would integrate:
 
 ```bash
 # Create Next.js project
-npx create-next-app@latest quanta-wallet --typescript --tailwind --app
-cd quanta-wallet
+npx create-next-app@latest zeusyxa-wallet --typescript --tailwind --app
+cd zeusyxa-wallet
 
 # Install dependencies
 npm install viem wagmi @tanstack/react-query connectkit
@@ -212,7 +212,7 @@ npx ipfs-deploy out/
 
 This wallet code should be MIT licensed and open. Why:
 1. Users can audit (vs blind trust)
-2. Other QUANTA projects can fork
+2. Other Zeusyxa projects can fork
 3. Detection rules improve via community PRs
 4. Reproducible builds prove no hidden code
 

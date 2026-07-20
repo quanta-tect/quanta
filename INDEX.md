@@ -1,4 +1,4 @@
-# 📚 QUANTA — Master Index
+# 📚 Zeusyxa — Master Index
 
 > Complete project map. Everything in one place.
 
@@ -6,7 +6,7 @@
 
 | File | Purpose |
 |------|---------|
-| [README.md](./README.md) | Project overview, what is QUANTA |
+| [README.md](./README.md) | Project overview, what is Zeusyxa |
 | [LAUNCH_GUIDE_7_DAYS.md](./LAUNCH_GUIDE_7_DAYS.md) | Day-by-day launch plan ($0 budget) |
 | [CHECKLIST_7_DAYS.md](./CHECKLIST_7_DAYS.md) | Print + tick checklist for launch |
 
@@ -35,11 +35,11 @@
 ### Production (v1.1, all security fixes applied)
 | File | Lines | Purpose |
 |------|-------|---------|
-| [contracts/src-v1.1/QuantaToken.sol](./contracts/src-v1.1/QuantaToken.sol) | 176 | ERC-20 + burn + AI tax + bridge |
+| [contracts/src-v1.1/ZeusyxaToken.sol](./contracts/src-v1.1/ZeusyxaToken.sol) | 176 | ERC-20 + burn + AI tax + bridge |
 | [contracts/src-v1.1/AIAgentRegistry.sol](./contracts/src-v1.1/AIAgentRegistry.sol) | 224 | Agent identity + spending policy |
 | [contracts/src-v1.1/AIPaymentChannel.sol](./contracts/src-v1.1/AIPaymentChannel.sol) | 226 | x402 micropayments (EIP-712) |
 | [contracts/src-v1.1/AIModelMarketplace.sol](./contracts/src-v1.1/AIModelMarketplace.sol) | 231 | AI inference marketplace |
-| [bridge/QuantaBridgeHyperlane.sol](./bridge/QuantaBridgeHyperlane.sol) | 240 | Cross-chain bridge (Hyperlane) |
+| [bridge/ZeusyxaBridgeHyperlane.sol](./bridge/ZeusyxaBridgeHyperlane.sol) | 240 | Cross-chain bridge (Hyperlane) |
 
 ### Testing
 | Path | Purpose |
@@ -99,7 +99,7 @@
 | File | Purpose |
 |------|---------|
 | [bridge/README.md](./bridge/README.md) | Why Hyperlane + setup |
-| [bridge/QuantaBridgeHyperlane.sol](./bridge/QuantaBridgeHyperlane.sol) | Bridge contract |
+| [bridge/ZeusyxaBridgeHyperlane.sol](./bridge/ZeusyxaBridgeHyperlane.sol) | Bridge contract |
 
 ## 📱 Wallet UI (Demo)
 
@@ -135,7 +135,7 @@
 | File | Purpose |
 |------|---------|
 | [sdk/README.md](./sdk/README.md) | SDK usage |
-| [sdk/src/client.ts](./sdk/src/client.ts) | Main QuantaClient |
+| [sdk/src/client.ts](./sdk/src/client.ts) | Main ZeusyxaClient |
 | [sdk/src/agent.ts](./sdk/src/agent.ts) | AI agent registration |
 | [sdk/src/channel.ts](./sdk/src/channel.ts) | Payment channels |
 | [sdk/src/marketplace.ts](./sdk/src/marketplace.ts) | Model marketplace |
@@ -194,7 +194,7 @@
 9. audit-applications/GRANTS_APPLICATIONS.md (30 min)
 
 ### Day 4: Code
-10. contracts/src-v1.1/QuantaToken.sol (60 min)
+10. contracts/src-v1.1/ZeusyxaToken.sol (60 min)
 11. sdk/examples/autonomous-agent.ts (30 min)
 12. forta-bot/src/agent.js (30 min)
 

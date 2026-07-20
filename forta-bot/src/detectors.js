@@ -37,15 +37,15 @@ function detectPauseEvents(txEvent, deployment) {
     recordAlert("PAUSE");
 
     findings.push(Finding.fromObject({
-      name: "🚨 QUANTA Contract Paused",
+      name: "🚨 Zeusyxa Contract Paused",
       description:
         `Contract ${e.address} was paused by ${e.args.account}. ` +
         `This is typically done in response to a critical issue. ` +
         `On-call should verify intent IMMEDIATELY.`,
-      alertId: "QUANTA-PAUSE",
+      alertId: "Zeusyxa-PAUSE",
       severity: FindingSeverity.Critical,
       type: FindingType.Suspicious,
-      protocol: "QUANTA",
+      protocol: "Zeusyxa",
       metadata: {
         contract: e.address,
         pauser: e.args.account,
@@ -65,12 +65,12 @@ function detectUnpause(txEvent, deployment) {
     if (!contracts.includes(e.address.toLowerCase())) continue;
 
     findings.push(Finding.fromObject({
-      name: "✅ QUANTA Contract Unpaused",
+      name: "✅ Zeusyxa Contract Unpaused",
       description: `Contract ${e.address} unpaused by ${e.args.account}.`,
-      alertId: "QUANTA-UNPAUSE",
+      alertId: "Zeusyxa-UNPAUSE",
       severity: FindingSeverity.High,
       type: FindingType.Info,
-      protocol: "QUANTA",
+      protocol: "Zeusyxa",
       metadata: { contract: e.address, unpauser: e.args.account, txHash: txEvent.hash },
     }));
   }
@@ -101,15 +101,15 @@ function detectLargeBridgeMint(txEvent, deployment) {
       findings.push(Finding.fromObject({
         name: "⚠️  Unusually Large Bridge Mint",
         description:
-          `${ethers.utils.formatEther(amount)} QTA minted via bridge to ${e.args.to}. ` +
-          `24h rolling avg: ${ethers.utils.formatEther(avg.toString())} QTA. ` +
+          `${ethers.utils.formatEther(amount)} ZYX minted via bridge to ${e.args.to}. ` +
+          `24h rolling avg: ${ethers.utils.formatEther(avg.toString())} ZYX. ` +
           `${isSpike ? `⚠️ ${THRESHOLDS.MINT_SPIKE_MULTIPLIER}× spike detected. ` : ""}` +
           `${isHuge ? "⚠️ Above absolute threshold. " : ""}` +
           `Verify legitimacy with bridge operations team.`,
-        alertId: "QUANTA-BRIDGE-LARGE-MINT",
+        alertId: "Zeusyxa-BRIDGE-LARGE-MINT",
         severity: maybeElevate(FindingSeverity.High),
         type: FindingType.Suspicious,
-        protocol: "QUANTA",
+        protocol: "Zeusyxa",
         metadata: {
           amount: amount.toString(),
           recipient: e.args.to,
@@ -155,10 +155,10 @@ function detectAdminActions(txEvent, deployment) {
       findings.push(Finding.fromObject({
         name: `🔐 Admin Action: ${def.name}`,
         description: `${def.formatter(e)}. Contract: ${e.address}.`,
-        alertId: `QUANTA-ADMIN-${def.name.replace(/\s+/g, "-").toUpperCase()}`,
+        alertId: `Zeusyxa-ADMIN-${def.name.replace(/\s+/g, "-").toUpperCase()}`,
         severity: maybeElevate(def.severity),
         type: FindingType.Info,
-        protocol: "QUANTA",
+        protocol: "Zeusyxa",
         metadata: {
           contract: e.address,
           eventName: def.name,
@@ -193,15 +193,15 @@ function detectLargeBurn(txEvent, deployment) {
     if (amount.gt(threshold)) {
       recordAlert("LARGE_BURN");
       findings.push(Finding.fromObject({
-        name: "🔥 Large QTA Burn",
+        name: "🔥 Large ZYX Burn",
         description:
-          `${ethers.utils.formatEther(amount)} QTA burned by ${e.args.from}. ` +
-          `Last hour total burns: ${ethers.utils.formatEther(state.burns1h.sum().toString())} QTA. ` +
+          `${ethers.utils.formatEther(amount)} ZYX burned by ${e.args.from}. ` +
+          `Last hour total burns: ${ethers.utils.formatEther(state.burns1h.sum().toString())} ZYX. ` +
           `Verify if legitimate (large tx fee) or exploit.`,
-        alertId: "QUANTA-LARGE-BURN",
+        alertId: "Zeusyxa-LARGE-BURN",
         severity: maybeElevate(FindingSeverity.Medium),
         type: FindingType.Info,
-        protocol: "QUANTA",
+        protocol: "Zeusyxa",
         metadata: {
           burner: e.args.from,
           amount: amount.toString(),
@@ -229,11 +229,11 @@ function detectChannelAnomalies(txEvent, deployment) {
       findings.push(Finding.fromObject({
         name: "💰 Large Payment Channel Opened",
         description:
-          `${ethers.utils.formatEther(deposit)} QTA channel from ${e.args.payer} to ${e.args.payee}.`,
-        alertId: "QUANTA-CHANNEL-LARGE",
+          `${ethers.utils.formatEther(deposit)} ZYX channel from ${e.args.payer} to ${e.args.payee}.`,
+        alertId: "Zeusyxa-CHANNEL-LARGE",
         severity: maybeElevate(FindingSeverity.Low),
         type: FindingType.Info,
-        protocol: "QUANTA",
+        protocol: "Zeusyxa",
         metadata: {
           channelId: e.args.channelId,
           payer: e.args.payer,
@@ -252,10 +252,10 @@ function detectChannelAnomalies(txEvent, deployment) {
         description:
           `Address ${e.args.payer} opened ${recentCount} channels in last minute. ` +
           `Possible griefing or abuse.`,
-        alertId: "QUANTA-CHANNEL-SPAM",
+        alertId: "Zeusyxa-CHANNEL-SPAM",
         severity: maybeElevate(FindingSeverity.Medium),
         type: FindingType.Suspicious,
-        protocol: "QUANTA",
+        protocol: "Zeusyxa",
         metadata: { payer: e.args.payer, count: recentCount.toString(), txHash: txEvent.hash },
       }));
     }
@@ -270,12 +270,12 @@ function detectChannelAnomalies(txEvent, deployment) {
       findings.push(Finding.fromObject({
         name: "⚡ Large Channel Force-Close",
         description:
-          `Channel ${e.args.channelId} force-closed with refund ${ethers.utils.formatEther(refund)} QTA. ` +
+          `Channel ${e.args.channelId} force-closed with refund ${ethers.utils.formatEther(refund)} ZYX. ` +
           `Payee with unsubmitted tickets should claim before next force-close attempt.`,
-        alertId: "QUANTA-CHANNEL-FORCE-LARGE",
+        alertId: "Zeusyxa-CHANNEL-FORCE-LARGE",
         severity: maybeElevate(FindingSeverity.Medium),
         type: FindingType.Info,
-        protocol: "QUANTA",
+        protocol: "Zeusyxa",
         metadata: { channelId: e.args.channelId, refund: refund.toString(), txHash: txEvent.hash },
       }));
     }
@@ -304,12 +304,12 @@ function detectModelPriceManipulation(txEvent, deployment) {
           name: "📊 Model Price Manipulation",
           description:
             `Model ${modelId} price changed from ${ethers.utils.formatEther(old)} ` +
-            `to ${ethers.utils.formatEther(newPrice)} QTA (>10× jump). ` +
+            `to ${ethers.utils.formatEther(newPrice)} ZYX (>10× jump). ` +
             `Possible MEV / frontrunning attempt.`,
-          alertId: "QUANTA-PRICE-JUMP",
+          alertId: "Zeusyxa-PRICE-JUMP",
           severity: maybeElevate(FindingSeverity.Medium),
           type: FindingType.Suspicious,
-          protocol: "QUANTA",
+          protocol: "Zeusyxa",
           metadata: {
             modelId, oldPrice: old.toString(), newPrice: newPrice.toString(), txHash: txEvent.hash,
           },
@@ -334,10 +334,10 @@ function detectReputationAbuse(txEvent, deployment) {
           `Agent ${e.args.agentId} reputation dropped by ${-delta} ` +
           `(now ${e.args.newScore}) by oracle ${e.args.oracle}. ` +
           `Verify oracle's claim is legitimate.`,
-        alertId: "QUANTA-REPUTATION-DROP",
+        alertId: "Zeusyxa-REPUTATION-DROP",
         severity: maybeElevate(FindingSeverity.Medium),
         type: FindingType.Suspicious,
-        protocol: "QUANTA",
+        protocol: "Zeusyxa",
         metadata: {
           agentId: e.args.agentId,
           delta: delta.toString(),
@@ -369,13 +369,13 @@ function detectWhaleTransfers(txEvent, deployment) {
 
     if (amount.gt(threshold)) {
       findings.push(Finding.fromObject({
-        name: "🐋 Whale QTA Transfer",
+        name: "🐋 Whale ZYX Transfer",
         description:
-          `${ethers.utils.formatEther(amount)} QTA: ${e.args.from} → ${e.args.to}`,
-        alertId: "QUANTA-WHALE",
+          `${ethers.utils.formatEther(amount)} ZYX: ${e.args.from} → ${e.args.to}`,
+        alertId: "Zeusyxa-WHALE",
         severity: FindingSeverity.Info,
         type: FindingType.Info,
-        protocol: "QUANTA",
+        protocol: "Zeusyxa",
         metadata: {
           from: e.args.from, to: e.args.to, amount: amount.toString(), txHash: txEvent.hash,
         },

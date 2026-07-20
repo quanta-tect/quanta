@@ -153,7 +153,7 @@ We need:
 • Community builders
 • Memers (yes, srsly)
 
-GitHub: github.com/zeusyxa-io/zeusyxa
+GitHub: github.com/zeusyxa-tech/Zeusxya
 Discord: discord.gg/quanta (coming soon)
 
 ---
@@ -163,8 +163,8 @@ Discord: discord.gg/quanta (coming soon)
 The best time to migrate to post-quantum was yesterday.
 The second best time is ZEUSYXA.
 
-📄 Whitepaper: github.com/zeusyxa-io/zeusyxa/blob/main/docs/WHITEPAPER.md
-💻 Code: github.com/zeusyxa-io/zeusyxa
+📄 Whitepaper: github.com/zeusyxa-tech/Zeusxya/blob/main/docs/WHITEPAPER.md
+💻 Code: github.com/zeusyxa-tech/Zeusxya
 🐦 Follow @ZeusyxaProtocol
 
 Like + RT if you think AI needs its own bank 🤖💸

@@ -1,6 +1,6 @@
-# 💰 Support QUANTA
+# 💰 Support Zeusyxa
 
-QUANTA is an open-source project (MIT licensed). Your support helps us:
+Zeusyxa is an open-source project (MIT licensed). Your support helps us:
 
 * 🔐 Pay for smart contract audits (\~$30K each)
 * 🛠️ Fund developer grants
@@ -87,10 +87,10 @@ Multi-sig wallet (3/5 signers) controls all donations once we reach $10K thresho
 
 The official donation addresses are:
 
-* Only listed in this file in the [quanta-tect/quanta repo](https://github.com/quanta-tect/quanta)
-* Or via official Twitter/X @Quanta_Protocol (only when stating "official donation address")
+* Only listed in this file in the [zeusyxa-tech/Zeusxya repo](https://github.com/zeusyxa-tech/Zeusxya)
+* Or via official Twitter/X @Zeusyxa_Protocol (only when stating "official donation address")
 
-If anyone DMs you a different address claiming to be QUANTA — it's a SCAM.
+If anyone DMs you a different address claiming to be Zeusyxa — it's a SCAM.
 
 \---
 
@@ -98,7 +98,7 @@ If anyone DMs you a different address claiming to be QUANTA — it's a SCAM.
 
 Every contribution, no matter the size, makes a real difference. We're building this for the public good of the crypto + AI ecosystem.
 
-**The best non-monetary support is using QUANTA in your projects and giving feedback.**
+**The best non-monetary support is using Zeusyxa in your projects and giving feedback.**
 
-— QUANTA Foundation Team
+— Zeusyxa Foundation Team
 

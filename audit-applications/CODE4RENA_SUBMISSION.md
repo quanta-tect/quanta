@@ -7,7 +7,7 @@
 ## Submission email
 
 **To**: sponsors@code4rena.com
-**Subject**: QUANTA — Audit Contest Inquiry — Quantum-safe AI-native protocol
+**Subject**: Zeusyxa — Audit Contest Inquiry — Quantum-safe AI-native protocol
 
 ---
 
@@ -15,12 +15,12 @@
 
 Hi Code4rena team,
 
-I'm reaching out about hosting an audit contest for QUANTA, an EVM contract suite designed for AI agent economic agency on Base.
+I'm reaching out about hosting an audit contest for Zeusyxa, an EVM contract suite designed for AI agent economic agency on Base.
 
 **Quick facts:**
 - 4 contracts, ~860 SLoC total (manageable scope)
 - Pure Solidity 0.8.24, no proxies, no upgradeability
-- Open source MIT from day 1: https://github.com/quanta-tect/quanta
+- Open source MIT from day 1: https://github.com/zeusyxa-tech/Zeusxya
 - Pre-audit complete: 30 internal findings already fixed (see SECURITY_AUDIT.md)
 - Foundry-based: tests, fuzz, invariants, Halmos all included
 - Documentation: whitepaper, NatSpec, threat model, incident runbook
@@ -36,16 +36,16 @@ We chose C4 over single-firm audits because:
 
 **Available materials for diligence:**
 - GitHub repo (link above)
-- Whitepaper: https://github.com/quanta-tect/quanta
+- Whitepaper: https://github.com/zeusyxa-tech/Zeusxya
 - Internal audit: SECURITY_AUDIT.md
-- Demo on Base Sepolia: https://github.com/quanta-tect/quanta
+- Demo on Base Sepolia: https://github.com/zeusyxa-tech/Zeusxya
 
 Can we schedule a 30-min intro call?
 
 Best,
-QUANTA Foundation
-Founder, QUANTA Foundation
-team@quanta.network | @Quanta_Protocol | @quanta_protocol
+Zeusyxa Foundation
+Founder, Zeusyxa Foundation
+team@zeusyxa.network | @Zeusyxa_Protocol | @quanta_protocol
 
 ---
 
@@ -87,7 +87,7 @@ If you don't have $50K cash:
 3. **Arbitrum DAO grants**: even though you're on Base, sometimes cross-fund security
 4. **Ethereum Foundation Ecosystem Support**: small grants for audits of public goods
 5. **Public crowdfunding**: Gitcoin Grants quarterly rounds
-6. **Token-paid**: C4 accepts payment in protocol tokens (QTA) at agreed valuation
+6. **Token-paid**: C4 accepts payment in protocol tokens (ZYX) at agreed valuation
 
 **Practical reality**: Many post-revenue projects pay $50-150K from treasury for audits. It's a normal cost of operating.
 

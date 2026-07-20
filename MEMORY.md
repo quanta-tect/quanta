@@ -1,6 +1,22 @@
-# MEMORY.md — QUANTA Decision Log
+# MEMORY.md — Zeusyxa Decision Log
 
 Append-only. Add new entries at the top.
+## Session 8 — July 18, 2026 — Security verification + marketplace tests
+### Verification findings
+- Issue #1 AIModelMarketplace treasury/validatorPool timelock: gov protection already implemented in
+  `contracts/src/AIModelMarketplace.sol` and `contracts/src-v1.2/AIModelMarketplace.sol` on `origin/main`.
+  Added missing timelock event tests: queue/apply/cancel for treasury and validatorPool.
+- Issue #2 AIPaymentChannel EIP-712 domain separator: already cached by OpenZeppelin `EIP712`
+  (`_cachedDomainSeparator` / `_cachedChainId` / `_cachedThis`), so no contract change required.
+  Verified cache path via source; no volatile domain fields present.
+
+### Tests
+- `forge test -vvv`: 180/180 PASS
+  - `test-v1.2/QtaV2Tests.t.sol`: 59/59 PASS
+  - `test-v1.2/ZeusyxaSecurityTests.t.sol`: 121/121 PASS
+
+### Commit
+- `62d4a90` security: fix marketplace governance + verify EIP-712 caching
 
 ## Session 7 — June 27, 2026 — Post-review security fixes + reclaim mechanism
 
@@ -17,7 +33,7 @@ Append-only. Add new entries at the top.
 2. **SimpleMultisig threshold enforcement** — thêm `signerConfirmed` mapping + logic enforce threshold, remove `block.timestamp` from txHash. Cả `src/` và `src-v1.2/` đều có patch.
 3. **ZeusyxaToken reclaim mechanism** — thêm `recoverTokens()` vào cả `src/` và `src-v1.2/` để owner reclaim ERC20 bị kẹt (trừ ZYX), cung cấp `TokensRecovered` event.
 4. **Environment fixed** — đã move contracts/lib submodules/ symlink của openzeppelin và forge-stad về đúng cấu trúc; git status sạch sẽ.
-5. **forge build + forge test PASS** — test suite `test-v1.2/QuantaSecurityTests.t.sol` pass 87/87 tests.
+5. **forge build + forge test PASS** — test suite `test-v1.2/ZeusyxaSecurityTests.t.sol` pass 87/87 tests.
 
 ## Session 6 — June 21, 2026 — Post-review fixes + infrastructure
 
@@ -127,7 +143,7 @@ Append-only. Add new entries at the top.
 
 ### Test Count Summary
 - L1 Rust: 35/35 tests PASS
-- Solidity v1.2: 50+ tests written (QuantaSecurityTests.t.sol)
+- Solidity v1.2: 50+ tests written (ZeusyxaSecurityTests.t.sol)
 - Solidity v1.1: 14 tests (SecurityFixes.t.sol)
 - Node: 9/9 tests PASS
 - Total: 100+ tests across all layers
@@ -149,18 +165,18 @@ Append-only. Add new entries at the top.
 3. Protocol fees — 0.3% AI tax burn (deflationary), can add protocol fee
 4. Marketplace commission — 2.5% on model sales
 5. Enterprise SaaS — Dashboard ($99/mo), Manager ($299/mo), API ($999/mo)
-6. FDE services — Deploy AI agents + QUANTA for VN enterprises ($2-10K/deployment)
+6. FDE services — Deploy AI agents + Zeusyxa for VN enterprises ($2-10K/deployment)
 7. White-label licensing for other chains
 
 ### Key Market Insight: Forward Deployed Engineer (FDE)
-- Enterprise AI agents need payment rails → QUANTA is that rail
-- Position QUANTA as "Stripe for AI Agents"
+- Enterprise AI agents need payment rails → Zeusyxa is that rail
+- Position Zeusyxa as "Stripe for AI Agents"
 - VN market: first-mover advantage, start with tech startups/fintech as pilot
 - Build: Web dashboard → Agent management UI → Analytics → Invoice export
 
 ### Products to Build Next
-- QUANTA Dashboard (React) — agent spending realtime, tax report export
-- QUANTA Agent Manager — deploy agents 1-click, spending policies UI
+- Zeusyxa Dashboard (React) — agent spending realtime, tax report export
+- Zeusyxa Agent Manager — deploy agents 1-click, spending policies UI
 - Enterprise API — webhook, priority support, custom integrations
 - Slack/Discord bot notifications
 - Zapier/Make.com integration
@@ -229,19 +245,3 @@ Append-only. Add new entries at the top.
 - ALWAYS check `git ls-files | grep -i env` before pushing
 - On mainnet: if key leaks, rotate IMMEDIATELY — don't wait
 
-## Session 8 — July 18, 2026 — Security verification + marketplace tests
-### Verification findings
-- Issue #1 AIModelMarketplace treasury/validatorPool timelock: gov protection already implemented in
-  `contracts/src/AIModelMarketplace.sol` and `contracts/src-v1.2/AIModelMarketplace.sol` on `origin/main`.
-  Added missing timelock event tests: queue/apply/cancel for treasury and validatorPool.
-- Issue #2 AIPaymentChannel EIP-712 domain separator: already cached by OpenZeppelin `EIP712`
-  (`_cachedDomainSeparator` / `_cachedChainId` / `_cachedThis`), so no contract change required.
-  Verified cache path via source; no volatile domain fields present.
-
-### Tests
-- `forge test -vvv`: 180/180 PASS
-  - `test-v1.2/QtaV2Tests.t.sol`: 59/59 PASS
-  - `test-v1.2/QuantaSecurityTests.t.sol`: 121/121 PASS
-
-### Commit
-- `62d4a90` security: fix marketplace governance + verify EIP-712 caching

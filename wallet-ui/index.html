@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>QUANTA Wallet — Safe AI Agent Wallet with Transaction Simulation</title>
+<title>Zeusyxa Wallet — Safe AI Agent Wallet with Transaction Simulation</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
@@ -195,7 +195,7 @@
 
 <div class="container">
   <header>
-    <div class="logo">⚛ QUANTA Wallet</div>
+    <div class="logo">⚛ Zeusyxa Wallet</div>
     <div class="tagline">Safe wallet with on-chain transaction simulation</div>
   </header>
 
@@ -208,7 +208,7 @@
   <!-- Account card -->
   <div class="card">
     <div class="card-title">Account <span class="status"><span class="dot"></span>Base Sepolia</span></div>
-    <div class="balance">1,234.56 <span style="font-size: 16px; color: #888;">QTA</span></div>
+    <div class="balance">1,234.56 <span style="font-size: 16px; color: #888;">ZYX</span></div>
     <div class="balance-label">≈ $1,234.56 USD</div>
     <div class="addr" id="userAddr">qta1c6a6bff372ce72e4902a1dc3008940a02f71c4</div>
   </div>
@@ -216,7 +216,7 @@
   <!-- SEND TAB -->
   <div id="tab-send">
     <div class="card">
-      <div class="card-title">Send QTA</div>
+      <div class="card-title">Send ZYX</div>
 
       <div class="input-group">
         <label>Recipient address</label>
@@ -224,7 +224,7 @@
       </div>
 
       <div class="input-group">
-        <label>Amount (QTA)</label>
+        <label>Amount (ZYX)</label>
         <input id="amount" type="number" placeholder="0.00" step="0.001" />
       </div>
 
@@ -255,7 +255,7 @@
         <div style="display: flex; justify-content: space-between; align-items: center;">
           <div>
             <div style="font-weight: 700;">ResearchBot-001</div>
-            <div style="color: #888; font-size: 13px; margin-top: 4px;">Spent today: 0.5 / 5.0 QTA</div>
+            <div style="color: #888; font-size: 13px; margin-top: 4px;">Spent today: 0.5 / 5.0 ZYX</div>
           </div>
           <span class="status"><span class="dot"></span>Alive</span>
         </div>
@@ -308,7 +308,7 @@
 
 <script>
 // ================================================================
-// QUANTA Wallet — Safe wallet with transaction simulation
+// Zeusyxa Wallet — Safe wallet with transaction simulation
 // ================================================================
 // In production: connects to Tenderly Simulate API or fork RPC
 // Here: simulates client-side for demo
@@ -388,7 +388,7 @@ async function simulateSend() {
     </div>
     <div class="sim-changes">
       <div class="change-row">
-        <span class="label">Your QTA balance:</span>
+        <span class="label">Your ZYX balance:</span>
         <span class="value">
           ${currentBalance.toFixed(2)} → 
           <span class="neg">${(currentBalance - amount - gasFee).toFixed(2)}</span>
@@ -397,11 +397,11 @@ async function simulateSend() {
       </div>
       <div class="change-row">
         <span class="label">Recipient (${recipient.slice(0, 12)}...) balance:</span>
-        <span class="value pos">+${amount.toFixed(2)} QTA</span>
+        <span class="value pos">+${amount.toFixed(2)} ZYX</span>
       </div>
       <div class="change-row">
         <span class="label">Gas fee (burned):</span>
-        <span class="value neg">${gasFee} QTA</span>
+        <span class="value neg">${gasFee} ZYX</span>
       </div>
     </div>
   `;
@@ -447,9 +447,9 @@ function confirmTx() {
     </p>
     <div style="background: rgba(0,0,0,0.3); padding: 16px; border-radius: 12px; font-family: monospace; font-size: 13px;">
       <div><strong>To:</strong> ${recipient}</div>
-      <div style="margin-top: 8px;"><strong>Amount:</strong> ${amount} QTA</div>
+      <div style="margin-top: 8px;"><strong>Amount:</strong> ${amount} ZYX</div>
       <div style="margin-top: 8px;"><strong>Network:</strong> Base Sepolia (chainId 84532)</div>
-      <div style="margin-top: 8px;"><strong>Gas:</strong> ~0.001 QTA</div>
+      <div style="margin-top: 8px;"><strong>Gas:</strong> ~0.001 ZYX</div>
     </div>
     <div style="background: rgba(251,191,36,0.1); border: 1px solid rgba(251,191,36,0.3); padding: 12px; border-radius: 8px; margin-top: 16px; font-size: 13px;">
       🔍 <strong>Read your hardware wallet screen carefully.</strong>

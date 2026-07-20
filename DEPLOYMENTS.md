@@ -1,4 +1,4 @@
-# QUANTA Deployments
+# Zeusyxa Deployments
 
 ## Base Sepolia Testnet
 

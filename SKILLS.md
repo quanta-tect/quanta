@@ -35,14 +35,14 @@ Update ALL: sdk/src/types.ts, DEPLOYMENTS.md, PROJECT_CONTEXT.md, MEMORY.md
 
 ## Build Enterprise Dashboard
 1. Setup: cd ~/quanta && npx create-react-app dashboard (or Next.js)
-2. Connect to QUANTA SDK (sdk/src/)
+2. Connect to Zeusyxa SDK (sdk/src/)
 3. Features: agent list, spending realtime, tax report, channel status
 4. Deploy to Vercel for demo
 
 ## Pitch Enterprise Client (VN)
 1. Find: tech startups, fintech, outsourcing firms using AI tools
 2. Problem: no audit trail for AI spending, no control, no tax report
-3. Solution: QUANTA payment layer + dashboard
+3. Solution: Zeusyxa payment layer + dashboard
 4. Offer: free pilot deployment → case study → paid subscription
 5. Pricing: $2-10K setup + $99-999/mo subscription
 

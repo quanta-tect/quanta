@@ -1,5 +1,5 @@
 """
-QUANTA Quantum-Resistant Wallet
+Zeusyxa Quantum-Resistant Wallet
 ================================
 
 Implements a wallet with post-quantum signatures.
@@ -121,7 +121,7 @@ class MerkleSignatureScheme:
         idx = self.used
         sig = _lamport_sign(self.lamport_sks[idx], msg)
         result = {
-            "scheme": "QUANTA-MSS-v0",
+            "scheme": "Zeusyxa-MSS-v0",
             "idx": idx,
             "ots_pk": self.lamport_pks[idx].hex(),
             "ots_sig": sig.hex(),
@@ -138,7 +138,7 @@ class MerkleSignatureScheme:
 
 def verify_signature(root: bytes, msg: bytes, sig_obj: dict) -> bool:
     """Verifier only needs the Merkle root."""
-    if sig_obj.get("scheme") != "QUANTA-MSS-v0":
+    if sig_obj.get("scheme") != "Zeusyxa-MSS-v0":
         return False
     idx = sig_obj["idx"]
     ots_pk = bytes.fromhex(sig_obj["ots_pk"])
@@ -164,7 +164,7 @@ def verify_signature(root: bytes, msg: bytes, sig_obj: dict) -> bool:
 
 @dataclass
 class Wallet:
-    """High-level QUANTA wallet."""
+    """High-level Zeusyxa wallet."""
     mss: MerkleSignatureScheme
     address: str
 
@@ -193,7 +193,7 @@ def verify(address_root_hex: str, message: dict, signature: dict) -> bool:
 
 
 if __name__ == "__main__":
-    print("🔐 QUANTA Quantum-Resistant Wallet Demo\n")
+    print("🔐 Zeusyxa Quantum-Resistant Wallet Demo\n")
     alice = Wallet.create(height=3)  # 8 signatures
     print(f"Alice address  : {alice.address}")
     print(f"Public root    : {alice.public_root}")

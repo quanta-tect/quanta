@@ -1,6 +1,6 @@
-# 🌉 QUANTA Bridge — Security Architecture Review
+# 🌉 Zeusyxa Bridge — Security Architecture Review
 
-> **TL;DR**: Building a custom bridge is the #1 way to lose $100M+ in crypto. We outline why, what attacks to expect, and recommend using audited infrastructure (LayerZero/Hyperlane/Axelar) for v1, with QUANTA-specific extensions for quantum-safety in v2.
+> **TL;DR**: Building a custom bridge is the #1 way to lose $100M+ in crypto. We outline why, what attacks to expect, and recommend using audited infrastructure (LayerZero/Hyperlane/Axelar) for v1, with Zeusyxa-specific extensions for quantum-safety in v2.
 
 ---
 
@@ -21,7 +21,7 @@
 
 ---
 
-## 🏗️ QUANTA Bridge Design (Phased)
+## 🏗️ Zeusyxa Bridge Design (Phased)
 
 ### v1 — Use existing bridges (recommended for first 12 months)
 
@@ -30,17 +30,17 @@
 | ETH ↔ Base | Native Base bridge (OP Stack) | Audited, $5B+ TVL track record |
 | Base ↔ Arbitrum | Hyperlane or LayerZero | Permissionless, battle-tested |
 | Base ↔ Solana | Wormhole (post-fix) | Largest non-EVM bridge |
-| To future QUANTA L1 | Custom (audited) | Required since L1 is novel |
+| To future Zeusyxa L1 | Custom (audited) | Required since L1 is novel |
 
-**For v1**, QUANTA token is just ERC-20 wrapped — bridges work out of the box.
+**For v1**, Zeusyxa token is just ERC-20 wrapped — bridges work out of the box.
 
-### v2 — QUANTA L1 ↔ EVM bridge (custom, post-audit)
+### v2 — Zeusyxa L1 ↔ EVM bridge (custom, post-audit)
 
 ```
 ┌────────────────────────────────────────────────────────────────┐
-│                  QUANTA L1 (Dilithium signatures)              │
+│                  Zeusyxa L1 (Dilithium signatures)              │
 │  ┌─────────────────┐                                            │
-│  │ BridgeVault.qta │  Lock QTA when bridging to EVM            │
+│  │ BridgeVault.zyx │  Lock ZYX when bridging to EVM            │
 │  └────────┬────────┘                                            │
 └───────────│────────────────────────────────────────────────────┘
             │ Zero-knowledge state proofs
@@ -50,7 +50,7 @@
 ┌────────────────────────────────────────────────────────────────┐
 │                          EVM Chain (Base)                       │
 │  ┌─────────────────┐    ┌──────────────────────┐               │
-│  │  QuantaBridge   │───▶│  QuantaToken (ERC20) │               │
+│  │  ZeusyxaBridge   │───▶│  ZeusyxaToken (ERC20) │               │
 │  │  (Verifier)     │    │  bridgeMint()        │               │
 │  └─────────────────┘    └──────────────────────┘               │
 └────────────────────────────────────────────────────────────────┘
@@ -184,7 +184,7 @@
 **Attack**: Tiny bridge transactions clog relayer queue
 
 **Mitigations**:
-- [ ] `MIN_BRIDGE_AMOUNT` (e.g., 10 QTA)
+- [ ] `MIN_BRIDGE_AMOUNT` (e.g., 10 ZYX)
 - [ ] Bridging fee covers gas
 
 ### 14. 🔵 LOW: Token whitelisting
@@ -193,7 +193,7 @@
 
 **Mitigations**:
 - [ ] Whitelist (governance-controlled) of bridgeable tokens
-- [ ] Default: only QTA + canonical wrapped versions
+- [ ] Default: only ZYX + canonical wrapped versions
 
 ### 15. 🟣 OPERATIONAL: Frontend supply chain (Bybit-style)
 
@@ -225,10 +225,10 @@ Layer 6: Insurance            → Nexus Mutual, Sherlock
 
 ### Quantum-safe attestations
 
-For QUANTA L1 → EVM bridge, attestations should use **Dilithium signatures** for forward-secrecy:
+For Zeusyxa L1 → EVM bridge, attestations should use **Dilithium signatures** for forward-secrecy:
 
 ```solidity
-contract QuantaBridgeVerifier {
+contract ZeusyxaBridgeVerifier {
     // Precompile address for Dilithium verification
     // (Custom precompile to be added to Base/Ethereum, or use SNARK proof of verification)
     address constant DILITHIUM_PRECOMPILE = address(0x0a);
@@ -254,9 +254,9 @@ contract QuantaBridgeVerifier {
 ### Recommended: ZK-bridge with hybrid sigs
 
 ```
-QUANTA L1                            EVM Chain
+Zeusyxa L1                            EVM Chain
 ─────────                            ─────────
-1. User locks QTA
+1. User locks ZYX
 2. Validators sign attestation
    (both Ed25519 + Dilithium)
 3. SNARK prover compresses:
@@ -264,7 +264,7 @@ QUANTA L1                            EVM Chain
    - Multi-sig validity
    - State inclusion
                           ───────▶  4. Verify SNARK (~500K gas)
-                                    5. Mint wrapped QTA
+                                    5. Mint wrapped ZYX
 ```
 
 ---
@@ -275,10 +275,10 @@ QUANTA L1                            EVM Chain
 
 | Offense | Slash % | Min stake |
 |---------|---------|-----------|
-| Double-signing | 100% | 10,000 QTA |
-| Signing invalid proof | 100% | 10,000 QTA |
-| Censorship (proven) | 20% | 10,000 QTA |
-| Liveness fault (24h offline) | 5% | 10,000 QTA |
+| Double-signing | 100% | 10,000 ZYX |
+| Signing invalid proof | 100% | 10,000 ZYX |
+| Censorship (proven) | 20% | 10,000 ZYX |
+| Liveness fault (24h offline) | 5% | 10,000 ZYX |
 
 ### Insurance fund
 
@@ -387,13 +387,13 @@ T+72:00  Insurance claims process opened
 
 ## ⚖️ Final recommendation
 
-**For QUANTA v1 (next 12 months):**
+**For Zeusyxa v1 (next 12 months):**
 1. ✅ Use **Hyperlane** for permissionless EVM↔EVM (free, audited)
 2. ✅ Use **native Base bridge** for ETH↔Base
 3. ❌ DO NOT build custom bridge yet
 4. ✅ Focus on building product value; bridges come later
 
-**For QUANTA v2 (after L1 launch):**
+**For Zeusyxa v2 (after L1 launch):**
 1. ✅ Build custom bridge L1↔EVM (required since L1 is novel)
 2. ✅ ZK proof of Dilithium signatures (avoid waiting for EVM precompile)
 3. ✅ Hybrid with audited partner (LayerZero co-design)

@@ -1,4 +1,4 @@
-# QUANTA PROJECT - Full Context Summary
+# Zeusyxa PROJECT - Full Context Summary
 
 Last updated: June 21, 2026 (Session 4)
 
@@ -43,7 +43,7 @@ Last updated: June 21, 2026 (Session 4)
 
 ### Test Count: 141+ tests across all layers
 - L1 Rust: 54/54 PASS (crypto 9, balances 6, dilithium 7, staking 11, runtime 2, getrandom 3, node 16)
-- Solidity v1.2: 87/87 tests PASS (QuantaSecurityTests.t.sol, 35 custom errors)
+- Solidity v1.2: 87/87 tests PASS (ZeusyxaSecurityTests.t.sol, 35 custom errors)
 - SDK: 0 tsc errors (viem-based)
 
 ### Stubs (path-based patches)
@@ -97,14 +97,14 @@ Last updated: June 21, 2026 (Session 4)
 ## Business Strategy
 ### Revenue Model (priority order)
 1. Grants + Hackathons — $5-50K each (short term)
-2. FDE services — deploy QUANTA for enterprises, $2-10K/deployment
+2. FDE services — deploy Zeusyxa for enterprises, $2-10K/deployment
 3. Enterprise SaaS — Dashboard $99/mo, Manager $299/mo, API $999/mo
 4. Token appreciation — Treasury holds 300M ZYX (30% supply)
 5. Protocol fees — 0.3% AI tax burn
 6. Marketplace commission — % on model sales
 
 ### Market Positioning
-- QUANTA = "Stripe for AI Agents"
+- Zeusyxa = "Stripe for AI Agents"
 - Target: enterprises deploying AI agents who need payment rails
 - VN market first-mover: tech startups, fintech, outsourcing firms
 
@@ -120,7 +120,7 @@ export BASESCAN_API_KEY="..."     # Unset before verify with sourcify!
 - Makefile — Quick commands
 - contracts/src/ — Production contracts (v1.2, security hardened)
 - contracts/src-v1.2/ — Same as src/ (synced)
-- contracts/test-v1.2/QuantaSecurityTests.t.sol — 50+ security tests
+- contracts/test-v1.2/ZeusyxaSecurityTests.t.sol — 50+ security tests
 - contracts/script/SetupMultisigOwnership.s.sol — Multisig transfer
 - l1/ — Rust Substrate node (native + WASM)
 - sdk/ — TypeScript SDK (viem)
@@ -130,9 +130,9 @@ export BASESCAN_API_KEY="..."     # Unset before verify with sourcify!
 - Twitter: @ZeusyxaProtocol
 - Discord: created
 - Mirror.xyz: created
-- GitHub: https://github.com/zeusyxa-io/zeusyxa
+- GitHub: https://github.com/zeusyxa-tech/Zeusxya
 
 ## Git State
 - Branch: main
-- Remote: https://github.com/zeusyxa-io/zeusyxa.git
+- Remote: https://github.com/zeusyxa-tech/Zeusxya.git
 - Pushed to GitHub

@@ -1,4 +1,4 @@
-# 🌉 QUANTA Bridge — Hyperlane Implementation
+# 🌉 Zeusyxa Bridge — Hyperlane Implementation
 
 > **Decision**: We use **Hyperlane** (audited, battle-tested) instead of building custom signature verification. This eliminates the #1 source of bridge hacks ($3B+ lost 2021-2025).
 
@@ -23,12 +23,12 @@
 │      Base mainnet        │        │   Arbitrum mainnet      │
 │                          │        │                         │
 │  ┌────────────────────┐  │        │  ┌────────────────────┐ │
-│  │ QuantaToken (orig) │  │        │  │ QuantaToken (wrap) │ │
+│  │ ZeusyxaToken (orig) │  │        │  │ ZeusyxaToken (wrap) │ │
 │  └────────┬───────────┘  │        │  └─────────┬──────────┘ │
 │           │ bridgeBurn   │        │            │ bridgeMint │
 │           ▼              │        │            ▲            │
 │  ┌────────────────────┐  │        │  ┌─────────┴──────────┐ │
-│  │ QuantaBridgeH...   │  │        │  │ QuantaBridgeH...   │ │
+│  │ ZeusyxaBridgeH...   │  │        │  │ ZeusyxaBridgeH...   │ │
 │  └────────┬───────────┘  │        │  └─────────▲──────────┘ │
 │           │              │        │            │            │
 │           ▼              │        │            │            │
@@ -46,7 +46,7 @@
 
 1. **Hyperlane default ISM**: 7 validators must agree
 2. **Custom ISM** (optional v2): require Dilithium signature in addition
-3. **Rate limit on contract**: max 100K QTA/hour, 1M/day
+3. **Rate limit on contract**: max 100K ZYX/hour, 1M/day
 4. **Anomaly detection**: auto-pause if mint > 5× rolling avg
 5. **Phased TVL caps**: start at 100K, scale up
 6. **Solvency tracking**: mint never exceeds locked
@@ -73,11 +73,11 @@ npm install -g @hyperlane-xyz/cli
 
 # 3. Deploy on each chain
 export MAILBOX=0xeA87ae93Fa0019a82A727bfd3eBd1cFCa8f64f1D  # Base
-export QUANTA_TOKEN=0xYOUR_DEPLOYED_TOKEN
+export Zeusyxa_TOKEN=0xYOUR_DEPLOYED_TOKEN
 export OWNER=0xYOUR_SAFE_MULTISIG
 
-forge create QuantaBridgeHyperlane \
-  --constructor-args $MAILBOX $QUANTA_TOKEN $QUANTA_TOKEN $OWNER \
+forge create ZeusyxaBridgeHyperlane \
+  --constructor-args $MAILBOX $Zeusyxa_TOKEN $Zeusyxa_TOKEN $OWNER \
   --rpc-url $BASE_RPC \
   --private-key $DEPLOYER_KEY \
   --verify
@@ -91,7 +91,7 @@ cast send $BRIDGE_BASE "setTrustedBridge(uint32,bytes32)" \
 cast send $BRIDGE_ARB "setTrustedBridge(uint32,bytes32)" \
   8453 $(cast --to-bytes32 $BRIDGE_BASE)
 
-# 5. Authorize bridge contracts as bridge() on QuantaToken
+# 5. Authorize bridge contracts as bridge() on ZeusyxaToken
 # Via Safe multisig: token.proposeBridge(bridge_address)
 # Wait 48h, then executeBridgeChange()
 ```
@@ -110,9 +110,9 @@ cast send $BRIDGE_ARB "setTrustedBridge(uint32,bytes32)" \
 ## User flow
 
 ```typescript
-// User wants to bridge 100 QTA from Base → Arbitrum
+// User wants to bridge 100 ZYX from Base → Arbitrum
 
-// 1. Approve QTA to bridge
+// 1. Approve ZYX to bridge
 await token.approve(bridgeBase, parseEther("100"));
 
 // 2. Quote fee (small ETH amount for Hyperlane validator gas)
@@ -133,7 +133,7 @@ await bridgeBase.bridgeOut(
 // 4. Wait ~3-5 minutes for Hyperlane validators to confirm
 // (track via Hyperlane Explorer: https://explorer.hyperlane.xyz)
 
-// 5. Recipient receives 100 QTA on Arbitrum
+// 5. Recipient receives 100 ZYX on Arbitrum
 ```
 
 ## Testing
@@ -145,23 +145,23 @@ forge test --match-contract BridgeTest -vv
 
 # Testnet test (Base Sepolia → Arbitrum Sepolia)
 # Deploy bridges on both
-# Then bridge 1 QTA, verify mint within 5 min on dest
+# Then bridge 1 ZYX, verify mint within 5 min on dest
 ```
 
 ## Phased rollout plan
 
 | Week | Cap | Action |
 |------|-----|--------|
-| 1 | 100K QTA | Beta with whitelisted users only |
-| 2-4 | 500K QTA | Public, monitor closely |
-| 5-12 | 5M QTA | Scale if no incidents |
-| 12+ | 100M QTA | Mature operation |
+| 1 | 100K ZYX | Beta with whitelisted users only |
+| 2-4 | 500K ZYX | Public, monitor closely |
+| 5-12 | 5M ZYX | Scale if no incidents |
+| 12+ | 100M ZYX | Mature operation |
 
 Reset cap to lower if ANY incident occurs.
 
-## Migration to QUANTA L1 (post-v2)
+## Migration to Zeusyxa L1 (post-v2)
 
-When QUANTA L1 launches:
+When Zeusyxa L1 launches:
 1. Deploy this bridge on L1 (Hyperlane supports custom chains)
 2. Migrate users from EVM-only bridge to L1↔EVM bridge
 3. Old EVM bridges remain operational
@@ -183,7 +183,7 @@ When QUANTA L1 launches:
 - ❌ Build custom signature verification (use Hyperlane's audited)
 - ❌ Run our own validators (use Hyperlane's permissionless set)
 - ❌ Custom proof formats (use Hyperlane's standard)
-- ❌ Allow bridging arbitrary ERC-20s (only QTA, prevents exploit surface)
+- ❌ Allow bridging arbitrary ERC-20s (only ZYX, prevents exploit surface)
 - ❌ Upgrade bridge contract (immutable, deploy new version if needed)
 
 **Boring is good in bridges.** Innovation here = catastrophe.

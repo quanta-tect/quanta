@@ -1,4 +1,4 @@
-# SECURITY AUDIT — QUANTA v1.2
+# SECURITY AUDIT — Zeusyxa v1.2
 
 Date: June 21, 2026
 Auditor: Slither (crytic-slither v0.11.5)

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity =0.8.24;
 
-/** @title SimpleMultisig — Minimal multisig wallet for QUANTA testnet
+/** @title SimpleMultisig — Minimal multisig wallet for Zeusyxa testnet
  * @notice Operation-centric threshold wallet: any signer can broadcast an
  *         operation, but it only executes once enough distinct signers have
  *         confirmed the same op. Use separate EOAs per signer.

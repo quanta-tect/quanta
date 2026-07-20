@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://img.shields.io/badge/Quanta-AgentPay-0052FF?style=for-the-badge" alt="Quanta AgentPay">
+  <img src="https://img.shields.io/badge/Quanta-AgentPay-0052FF?style=for-the-badge" alt="Zeusyxa AgentPay">
   <img src="https://img.shields.io/badge/Release-v0.1.0-black?style=for-the-badge" alt="Release v0.1.0">
   <img src="https://img.shields.io/badge/Network-Base%20Sepolia-0052FF?style=for-the-badge" alt="Base Sepolia">
 </p>
@@ -11,7 +11,7 @@
   <img src="https://img.shields.io/badge/Status-Testnet%20Experimental-F59E0B?style=flat-square" alt="Testnet Experimental">
 </p>
 
-<h1 align="center">Quanta v0.1.0</h1>
+<h1 align="center">Zeusyxa v0.1.0</h1>
 
 <p align="center">
   <strong>AgentPay Testnet Release</strong>
@@ -29,7 +29,7 @@
 
 ## Overview
 
-Quanta v0.1.0 is the first public testnet release of the AgentPay stack.
+Zeusyxa v0.1.0 is the first public testnet release of the AgentPay stack.
 
 This release includes:
 
@@ -51,7 +51,7 @@ They need budgets, permissions, spend limits, authorized spenders, and on-chain 
 
 ### Smart contracts
 
-- QuantaToken ERC-20
+- ZeusyxaToken ERC-20
 - AIAgentRegistry for agent identity, spending policies, and authorized spenders
 - AIPaymentChannel payment channel primitive
 - AIModelMarketplace model and data marketplace primitives

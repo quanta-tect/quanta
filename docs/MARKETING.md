@@ -1,4 +1,4 @@
-# QUANTA Go-to-Market & Viral Strategy
+# Zeusyxa Go-to-Market & Viral Strategy
 
 ## 🎯 Positioning
 
@@ -15,20 +15,20 @@
 ## 🔥 Viral Hooks (Top 10)
 
 1. **"Q-Day Countdown"** — Counter estimating days until quantum machines break Bitcoin. Updates with each IBM/Google news → naturally viral on every milestone.
-2. **"Live AI Trade Tape"** — Stream real-time AI agent transactions happening on QUANTA, showing "GPT-instance-#4419 just paid Claude-instance-#221 0.003 QTA for 1 prompt".
-3. **"Mining Saves Earth"** — Compare Bitcoin mining vs QUANTA: "Each QUANTA block = 1000 free medical answers for the poor".
+2. **"Live AI Trade Tape"** — Stream real-time AI agent transactions happening on Zeusyxa, showing "GPT-instance-#4419 just paid Claude-instance-#221 0.003 ZYX for 1 prompt".
+3. **"Mining Saves Earth"** — Compare Bitcoin mining vs Zeusyxa: "Each Zeusyxa block = 1000 free medical answers for the poor".
 4. **"Agent Self-Sovereignty"** — Tutorial: "Create an AI agent that earns its own living in 5 minutes".
-5. **"Burn Counter"** — Live dashboard: "Burned 1,234,567 QTA today because AI usage was high".
-6. **"Quantum Bounty"** — $1M offered to anyone who can break Dilithium wallet on QUANTA using a real quantum computer. PR gold.
+5. **"Burn Counter"** — Live dashboard: "Burned 1,234,567 ZYX today because AI usage was high".
+6. **"Quantum Bounty"** — $1M offered to anyone who can break Dilithium wallet on Zeusyxa using a real quantum computer. PR gold.
 7. **"Adopt-an-Agent"** — Users "adopt" 1 AI agent, split 50/50 profits the agent earns.
 8. **"NFT model royalties"** — A developer earns $X from their model being called 1M times by other AIs. Share as case study.
 9. **"AI Hackathon for Real Money"** — $500K prize, participants' AI agents must earn real money in 30 days on mainnet.
-10. **"Wrapped Bitcoin Quantum-Safe (qBTC)"** — Bridge BTC into QUANTA with Dilithium signatures → "Protect your BTC from Q-Day".
+10. **"Wrapped Bitcoin Quantum-Safe (qBTC)"** — Bridge BTC into Zeusyxa with Dilithium signatures → "Protect your BTC from Q-Day".
 
 ## 📣 Distribution Channels
 
 ### Tier 1 — Owned
-- **Twitter/X** (@QuantaCoin) — daily threads, memes, dev updates
+- **Twitter/X** (@ZeusyxaCoin) — daily threads, memes, dev updates
 - **Discord** — community, support, alpha
 - **Mirror.xyz blog** — long-form research articles
 - **GitHub** — code is the strongest marketing for crypto
@@ -46,7 +46,7 @@
 ## 🎪 Launch Sequence
 
 **T-90 days**: Stealth → Whitepaper drop on HackerNews + r/crypto
-**T-60 days**: "Why we built QUANTA" — viral founder essay
+**T-60 days**: "Why we built Zeusyxa" — viral founder essay
 **T-45 days**: Devnet live, dev incentives open
 **T-30 days**: AMA series with Vitalik, Adam Back, Yann LeCun (aim high)
 **T-15 days**: Testnet faucet, $1M trading competition (paper money)
@@ -57,7 +57,7 @@
 ## 🧠 Memetic Warfare (Winning Memes)
 
 - **"Schrödinger's Wallet"** — wallet both has and doesn't have money until quantum opens it
-- **"AGI needs ATM"** — AI agent standing at a 2050-era ATM withdrawing QTA
+- **"AGI needs ATM"** — AI agent standing at a 2050-era ATM withdrawing ZYX
 - **"Q-Day Survivor"** — NFT badge for early adopters, free claim
 - **"Bitcoin Maxi vs Quantum"** — meme comparing 2009 vs 2030
 - **"My AI made more money than me last week"** — viral testimonial

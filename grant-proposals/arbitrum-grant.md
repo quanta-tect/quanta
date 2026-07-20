@@ -72,6 +72,6 @@ Solo founder. Full-stack blockchain engineer with expertise in Solidity, Rust/Su
 
 ## Links
 
-- GitHub: https://github.com/zeusyxa-io/zeusyxa
+- GitHub: https://github.com/zeusyxa-tech/Zeusxya
 - Base Sepolia: https://base-sepolia.blockscout.com
 - Demo: SDK examples in repo

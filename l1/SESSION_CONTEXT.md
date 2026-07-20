@@ -1,15 +1,15 @@
-# 🧠 QUANTA — Session Context Handoff
+# 🧠 Zeusyxa — Session Context Handoff
 
 > **Ngày:** 2026-06-21
 > **Agent:** 🏟️ Arena.ai + 🧠 Hermes + 👤 OpenHuman
-> **Dự án:** QUANTA — Quantum-safe AI-native Blockchain
+> **Dự án:** Zeusyxa — Quantum-safe AI-native Blockchain
 
 ---
 
 ## ✅ ĐÃ HOÀN THÀNH
 
 ### Layer 2 (Solidity — Base Sepolia)
-- ✅ 4 contracts v1.2: QuantaToken, AIAgentRegistry, AIPaymentChannel, AIModelMarketplace
+- ✅ 4 contracts v1.2: ZeusyxaToken, AIAgentRegistry, AIPaymentChannel, AIModelMarketplace
 - ✅ Verified trên Sourcify + Blockscout
 - ✅ SDK TypeScript demo 7/7 steps
 - ✅ Security audit + Forta bot + War games
@@ -68,13 +68,13 @@
 | Signature | 3,309 bytes |
 | Secret key | 4,032 bytes |
 | Block time | 6s |
-| Token | QTA (1B supply, 18 decimals) |
+| Token | ZYX (1B supply, 18 decimals) |
 | Crate mới | **dilithium-rs v0.2.0** (Pure Rust ✅) |
 
 ---
 
 ## 🔗 LINKS
 
-- GitHub: https://github.com/quanta-tect/quanta
+- GitHub: https://github.com/zeusyxa-tech/Zeusxya
 - dilithium-rs: https://crates.io/crates/dilithium-rs
 - FIPS 204: https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.204.pdf

@@ -13,19 +13,19 @@ URL: https://sherlock.xyz/audits/contests/new
 ## Form fields (copy-paste-ready)
 
 ### Protocol name
-QUANTA
+Zeusyxa
 
 ### Protocol description (max 500 chars)
-QUANTA is an EVM contract suite for AI agent economic agency: quantum-safe wrapped token (ERC-20 with burn), on-chain AI agent registry with spending policies, x402-style payment channels for micropayments, and AI model marketplace with auto-royalty distribution. Designed for the AI agent economy on Base.
+Zeusyxa is an EVM contract suite for AI agent economic agency: quantum-safe wrapped token (ERC-20 with burn), on-chain AI agent registry with spending policies, x402-style payment channels for micropayments, and AI model marketplace with auto-royalty distribution. Designed for the AI agent economy on Base.
 
 ### GitHub repository
-https://github.com/quanta-tect/quanta
+https://github.com/zeusyxa-tech/Zeusxya
 
 ### Branch/commit for audit
 `main` (latest commit hash to be frozen 1 week before contest)
 
 ### Contracts in scope
-- `contracts/src-v1.1/QuantaToken.sol` (~176 SLoC)
+- `contracts/src-v1.1/ZeusyxaToken.sol` (~176 SLoC)
 - `contracts/src-v1.1/AIAgentRegistry.sol` (~224 SLoC)
 - `contracts/src-v1.1/AIPaymentChannel.sol` (~226 SLoC)
 - `contracts/src-v1.1/AIModelMarketplace.sol` (~231 SLoC)
@@ -71,7 +71,7 @@ https://github.com/quanta-tect/quanta
 Standard Sherlock severity matrix.
 
 ### Prize pool requested
-$30,000 (or USD-equivalent in QTA at TGE valuation)
+$30,000 (or USD-equivalent in ZYX at TGE valuation)
 
 ### Audit duration
 7 days

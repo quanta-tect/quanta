@@ -8,8 +8,8 @@
 
 | Severity | Method | Response time |
 |----------|--------|---------------|
-| Critical (funds at risk) | Email `security@quanta.foundation` (PGP key below) | 24 hours |
-| High | Email `security@quanta.foundation` | 72 hours |
+| Critical (funds at risk) | Email `security@zeusyxa.foundation` (PGP key below) | 24 hours |
+| High | Email `security@zeusyxa.foundation` | 72 hours |
 | Medium / Low | GitHub Security Advisory | 1 week |
 
 ### Bug bounty program
@@ -48,7 +48,7 @@ Currently (pre-mainnet): goodwill rewards based on Foundation discretion.
 - Verify contract addresses against `DEPLOYMENTS.md` (signed by foundation keys)
 - For AI agents: use FRESH wallet per agent, set conservative spending policies
 
-### For developers integrating QUANTA SDK
+### For developers integrating Zeusyxa SDK
 ```ts
 // ❌ NEVER
 const wallet = new Wallet(process.env.PRIVATE_KEY || "0xfallback...");
@@ -66,7 +66,7 @@ const wallet = await SessionKey.fromMainKey(mainKey, {
 });
 ```
 
-## 📚 PGP key (security@quanta.foundation)
+## 📚 PGP key (security@zeusyxa.foundation)
 
 ```
 -----BEGIN PGP PUBLIC KEY BLOCK-----
@@ -82,7 +82,7 @@ We follow [responsible disclosure](https://en.wikipedia.org/wiki/Responsible_dis
 1. Report privately, allow time to fix
 2. We commit to: acknowledge in 24h, patch ASAP, credit researcher publicly
 3. CVE assigned for confirmed vulnerabilities
-4. Hall of Fame at [quanta.foundation/security/hall-of-fame](#)
+4. Hall of Fame at [zeusyxa.foundation/security/hall-of-fame](#)
 
 ---
 

@@ -1,4 +1,4 @@
-# QUANTA Roadmap
+# Zeusyxa Roadmap
 
 ## 🌱 Phase 0 — Genesis (Q1 2026) — DONE in this repo
 - [x] Whitepaper v1.0
@@ -13,7 +13,7 @@
 ## 🔬 Phase 1 — Devnet (Q2-Q3 2026)
 - [ ] Rust implementation (substrate-fork or scratch)
 - [ ] Single-node devnet with Dilithium signatures
-- [ ] QVM (Quanta VM) — fork EVM + add 8 AI opcodes:
+- [ ] QVM (Zeusyxa VM) — fork EVM + add 8 AI opcodes:
   - `LLM_INFER`, `IMAGE_GEN`, `ZK_VERIFY`, `INTENT_RESOLVE`, `AGENT_AUTH`, `STREAM_PAY`, `ORACLE_AI`, `MODEL_REGISTRY`
 - [ ] CLI wallet `quanta-cli`
 - [ ] Block explorer
@@ -36,7 +36,7 @@
 - [ ] Security audit #2 (Halborn) + #3 (OpenZeppelin)
 
 ## 🌐 Phase 4 — Ecosystem (Q2-Q4 2027)
-- [ ] zk-rollup launches (Quanta Layer-2)
+- [ ] zk-rollup launches (Zeusyxa Layer-2)
 - [ ] Cross-chain bridges (Ethereum, Solana, Cosmos) with PQ-security
 - [ ] Mobile wallet (iOS, Android)
 - [ ] Hardware wallet support (Ledger, Trezor)

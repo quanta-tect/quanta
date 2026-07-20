@@ -1,4 +1,4 @@
-# 🛡️ Code4rena Audit Application — QUANTA
+# 🛡️ Code4rena Audit Application — Zeusyxa
 
 > **Why Code4rena?** Decentralized audit competitions with 100+ wardens. Cost: ~$50-150K but you get **breadth** that no single firm can match. Often catches bugs even Trail of Bits misses.
 >
@@ -10,21 +10,21 @@
 
 ## 📝 Application Template
 
-**Project**: QUANTA — Quantum-resistant AI-native blockchain
+**Project**: Zeusyxa — Quantum-resistant AI-native blockchain
 **Applicant**: [Your Name] — Founder
 **Date**: [Submit date]
 **Repository**: github.com/[your-org]/quanta
 **Audit scope**: `contracts/src-v1.1/` (4 contracts, ~860 SLoC)
 **Requested timeline**: 7-day contest, public
-**Budget**: $50,000 (or in-kind QTA grants for grant-funded version)
+**Budget**: $50,000 (or in-kind ZYX grants for grant-funded version)
 
 ---
 
 ## 1. Executive Summary
 
-QUANTA is an EVM-compatible token + smart contract suite that introduces **AI-native primitives** to blockchain:
+Zeusyxa is an EVM-compatible token + smart contract suite that introduces **AI-native primitives** to blockchain:
 
-- **QuantaToken** (ERC-20 + burn + AI usage tax + bridge interface)
+- **ZeusyxaToken** (ERC-20 + burn + AI usage tax + bridge interface)
 - **AIAgentRegistry** (on-chain identity + spending policies for AI agents)
 - **AIPaymentChannel** (x402-style off-chain micropayments with EIP-712 sigs)
 - **AIModelMarketplace** (creator-monetized AI inference with auto royalty distribution)
@@ -50,7 +50,7 @@ We commit to:
 
 ### In scope (audit these)
 ```
-contracts/src-v1.1/QuantaToken.sol           (176 SLoC)
+contracts/src-v1.1/ZeusyxaToken.sol           (176 SLoC)
 contracts/src-v1.1/AIAgentRegistry.sol       (224 SLoC)
 contracts/src-v1.1/AIPaymentChannel.sol      (226 SLoC)
 contracts/src-v1.1/AIModelMarketplace.sol    (231 SLoC)
@@ -192,9 +192,9 @@ Look for:
 
 ## 📞 Contact
 
-- **Email**: founder@quanta.foundation
+- **Email**: founder@zeusyxa.foundation
 - **Discord**: @founder#0000
-- **Twitter**: @QuantaCoin
+- **Twitter**: @ZeusyxaCoin
 - **GitHub**: github.com/quanta-foundation
 
 ---

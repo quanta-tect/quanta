@@ -1,5 +1,5 @@
 """
-QUANTA — End-to-End Demo
+Zeusyxa — End-to-End Demo
 ========================
 
 Run: `python demo.py` in the prototype/ directory.
@@ -29,7 +29,7 @@ def section(title: str) -> None:
 
 
 def main():
-    print("⚛️  QUANTA Blockchain — End-to-End Demo")
+    print("⚛️  Zeusyxa Blockchain — End-to-End Demo")
     print("    Quantum-safe • AI-native • Proof of Useful Work")
 
     chain = Blockchain()
@@ -49,8 +49,8 @@ def main():
     chain.credit(bob.address, 100.0)
     chain.credit("qta1treasury", 0)
     chain.credit("qta1validator_pool", 0)
-    print(f"Alice balance: {chain.accounts[alice.address].balance} QTA")
-    print(f"Bob balance  : {chain.accounts[bob.address].balance} QTA")
+    print(f"Alice balance: {chain.accounts[alice.address].balance} ZYX")
+    print(f"Bob balance  : {chain.accounts[bob.address].balance} ZYX")
 
     # -----------------------------------------------------------------------
     section("2. Register validators + enqueue PoUW tasks")
@@ -75,7 +75,7 @@ def main():
     print(f"Queued {len(chain.pouw.task_queue)} useful AI tasks")
 
     # -----------------------------------------------------------------------
-    section("3. Alice transfers 50 QTA to Bob (quantum-signed)")
+    section("3. Alice transfers 50 ZYX to Bob (quantum-signed)")
     # -----------------------------------------------------------------------
     payload = {
         "from": alice.address, "to": bob.address, "amount": 50.0,
@@ -98,10 +98,10 @@ def main():
         print(f"Block #{block.height} | proposer={block.proposer[:20]}... | "
               f"txs={len(block.transactions)} | "
               f"PoUW={'✓' if block.pouw_proof else '-'} | "
-              f"burned={block.burned:.4f} QTA")
+              f"burned={block.burned:.4f} ZYX")
 
-    print(f"\nAlice balance after: {chain.accounts[alice.address].balance:.4f} QTA")
-    print(f"Bob balance after  : {chain.accounts[bob.address].balance:.4f} QTA")
+    print(f"\nAlice balance after: {chain.accounts[alice.address].balance:.4f} ZYX")
+    print(f"Bob balance after  : {chain.accounts[bob.address].balance:.4f} ZYX")
 
     # -----------------------------------------------------------------------
     section("5. AI Agent Wallet + Payment Channel (x402-style)")
@@ -119,7 +119,7 @@ def main():
     chain.register_account(api_provider_addr, "")
     print(f"Created AI agent: {research_bot.name}")
     print(f"  Address: {research_bot.address}")
-    print(f"  Balance: {research_bot.balance} QTA")
+    print(f"  Balance: {research_bot.balance} ZYX")
     print(f"  Death-switch: {agent_policy.death_switch_seconds}s")
 
     print("\n📡 Agent calls LLM API via payment channel...")
@@ -128,9 +128,9 @@ def main():
         s = channel.micro_pay(0.0001)
     settle = channel.close()
     print(f"  10 micro-payments executed off-chain")
-    print(f"  Fee per inference: 0.0001 QTA = $0.0001 (assuming $1/QTA)")
-    print(f"  Settle on-chain: {settle['settle_to_payee']:.4f} QTA → API provider")
-    print(f"  Refund:           {settle['refund_to_payer']:.4f} QTA → agent")
+    print(f"  Fee per inference: 0.0001 ZYX = $0.0001 (assuming $1/ZYX)")
+    print(f"  Settle on-chain: {settle['settle_to_payee']:.4f} ZYX → API provider")
+    print(f"  Refund:           {settle['refund_to_payer']:.4f} ZYX → agent")
 
     # -----------------------------------------------------------------------
     section("6. AI Model Marketplace — register + monetize")
@@ -142,13 +142,13 @@ def main():
         price_per_call=0.05,
     )
     print(f"Alice registers model: {model.model_id}")
-    print(f"  Price per call: {model.price_per_call} QTA")
+    print(f"  Price per call: {model.price_per_call} ZYX")
     print(f"  Royalty to owner: {model.royalty_pct * 100:.0f}%")
 
     # Bob calls inference 5 times
     for _ in range(5):
         receipt = chain.call_model(bob.address, model.model_id)
-    print(f"\nBob called {model.total_calls} inferences. Alice earned {model.total_earned:.4f} QTA")
+    print(f"\nBob called {model.total_calls} inferences. Alice earned {model.total_earned:.4f} ZYX")
 
     # -----------------------------------------------------------------------
     section("7. Network Stats")
@@ -157,7 +157,7 @@ def main():
     for k, v in stats.items():
         print(f"  {k:20s} : {v}")
 
-    print("\n💎 Burn so far:", chain.total_burned, "QTA")
+    print("\n💎 Burn so far:", chain.total_burned, "ZYX")
     print("   → every tx and inference reduces total supply (deflationary)")
 
     print("\n✨ Demo complete. Every transaction signed with quantum-resistant signature.")

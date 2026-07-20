@@ -1,4 +1,4 @@
-# DAY 7 LAUNCH CHECKLIST - QUANTA
+# DAY 7 LAUNCH CHECKLIST - Zeusyxa
 
 **Last updated**: June 2, 2026
 

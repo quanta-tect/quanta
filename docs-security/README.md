@@ -1,4 +1,4 @@
-# 🛡️ QUANTA Security — Complete Documentation
+# 🛡️ Zeusyxa Security — Complete Documentation
 
 > The most important folder in this repo. Read EVERY file before launching to mainnet.
 
@@ -122,4 +122,4 @@ The projects that survive 5+ years all share one trait: **paranoia disguised as 
 
 Be paranoid. Be professional. Ship secure code. Your users are trusting you with their money.
 
-— QUANTA Foundation
+— Zeusyxa Foundation

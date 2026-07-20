@@ -1,6 +1,6 @@
-🚀 **BREAKTHROUGH: QUANTA L1 chuyển Dilithium3 sang pure Rust!** 🦀
+🚀 **BREAKTHROUGH: Zeusyxa L1 chuyển Dilithium3 sang pure Rust!** 🦀
 
-Hôm nay mình vừa hoàn thành bước quan trọng cho **QUANTA** — blockchain quantum-safe, AI-native đầu tiên:
+Hôm nay mình vừa hoàn thành bước quan trọng cho **Zeusyxa** — blockchain quantum-safe, AI-native đầu tiên:
 
 🔥 **Vấn đề:** pqcrypto-dilithium dùng C code → không build được WASM → không thể có runtime hoàn chỉnh trên Substrate.
 
@@ -20,13 +20,13 @@ Hôm nay mình vừa hoàn thành bước quan trọng cho **QUANTA** — blockc
 • pallet-pq-staking (PoUW): 11/11 ✅
 • quanta-l1-runtime: 2/2 ✅
 
-⚛️ **QUANTA** là Layer-1 blockchain với:
+⚛️ **Zeusyxa** là Layer-1 blockchain với:
 • 🔐 Dilithium3 chống lượng tử (NIST Level 3)
 • 🧠 Proof of Useful Work — mining = AI inference
 • 🤖 AI Agent-native: x402 micropayments
 • 💎 Deflationary tokenomics
 
-🌐 GitHub: https://github.com/quanta-tect/quanta
+🌐 GitHub: https://github.com/zeusyxa-tech/Zeusxya
 🔗 dilithium-rs: https://crates.io/crates/dilithium-rs
 
-#QuantumSafe #PostQuantum #Crypto #Rust #Blockchain #AI #Dilithium #FIPS204 #Substrate #Polkadot #Web3 #QUANTA
+#QuantumSafe #PostQuantum #Crypto #Rust #Blockchain #AI #Dilithium #FIPS204 #Substrate #Polkadot #Web3 #Zeusyxa

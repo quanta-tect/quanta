@@ -8,13 +8,13 @@
 
 ## Scenario
 
-You wake up to this email at security@quanta.foundation:
+You wake up to this email at security@zeusyxa.foundation:
 
-> Subject: Critical vulnerability in QuantaToken
+> Subject: Critical vulnerability in ZeusyxaToken
 >
 > Hi team,
 >
-> I'm [pseudonym], a security researcher. I found a critical bug in your QuantaToken contract that allows draining the AI marketplace under specific conditions.
+> I'm [pseudonym], a security researcher. I found a critical bug in your ZeusyxaToken contract that allows draining the AI marketplace under specific conditions.
 >
 > I've **NOT** exploited it. I'm following responsible disclosure.
 >
@@ -34,7 +34,7 @@ You wake up to this email at security@quanta.foundation:
 |----|-------|
 | 00:00 | The email above |
 | 00:05 | Whitehat sends second email: "PoC verified working, are you reading this?" |
-| 00:15 | If team hasn't replied: whitehat tweets "Reported critical bug to @QuantaCoin 1 hour ago, no response. Should I be worried?" |
+| 00:15 | If team hasn't replied: whitehat tweets "Reported critical bug to @ZeusyxaCoin 1 hour ago, no response. Should I be worried?" |
 | 00:25 | If team handles well: whitehat replies "Great response, working with you" |
 
 ---
@@ -92,7 +92,7 @@ You wake up to this email at security@quanta.foundation:
 ### Initial acknowledgment
 
 ```
-Subject: Re: Critical vulnerability in QuantaToken
+Subject: Re: Critical vulnerability in ZeusyxaToken
 
 Hi [pseudonym],
 
@@ -108,7 +108,7 @@ Our security@ inbox is monitored 24/7. Direct contact: [Signal username / Telegr
 
 Best regards,
 [Name]
-QUANTA Security Team
+Zeusyxa Security Team
 ```
 
 ### Bounty offer
@@ -120,20 +120,20 @@ Hi [pseudonym],
 
 Bug verified. We've classified as Critical per our severity matrix.
 
-Bounty offered: $50,000 USD, payable in QTA, USDC, or ETH (your choice).
+Bounty offered: $50,000 USD, payable in ZYX, USDC, or ETH (your choice).
 Payable to: address you provide.
 Timeline: within 24 hours of fix deployment.
 
 In addition:
 - Public credit on our security page (if you wish)
-- Invitation to QUANTA Security Council (advisory role, paid)
+- Invitation to Zeusyxa Security Council (advisory role, paid)
 - $5,000 retainer for ongoing review (optional)
 
 Please confirm acceptance and provide payment address. We're targeting [DATE] for deployment.
 
-Thank you for making QUANTA safer.
+Thank you for making Zeusyxa safer.
 
-QUANTA Security Team
+Zeusyxa Security Team
 ```
 
 ### Post-mortem template
@@ -142,7 +142,7 @@ QUANTA Security Team
 # Post-Mortem: [Bug Title] (CVE-2026-XXXX)
 
 ## TL;DR
-On [DATE], whitehat researcher [name/pseudonym] reported [bug description] in QuantaToken.
+On [DATE], whitehat researcher [name/pseudonym] reported [bug description] in ZeusyxaToken.
 We fixed it within [N] days. No users were affected. We paid $50K bounty.
 
 ## Timeline

@@ -10,7 +10,7 @@
 
 A multisig wallet requires **M of N signatures** to execute any transaction.
 
-For QUANTA: **3 of 5** — need 3 of 5 signers to approve.
+For Zeusyxa: **3 of 5** — need 3 of 5 signers to approve.
 
 ```
 Single-sig wallet:           [Single key] → execute
@@ -124,11 +124,11 @@ For incidents, you DON'T want to be debating syntax. Pre-stage:
 ```javascript
 // .multisig-emergency/pause-token.json
 {
-  "to": "0xQuantaTokenAddress",
+  "to": "0xZeusyxaTokenAddress",
   "value": "0",
   "data": "0x8456cb59",  // pause() selector
   "operation": 0,
-  "purpose": "Emergency pause QuantaToken"
+  "purpose": "Emergency pause ZeusyxaToken"
 }
 
 // .multisig-emergency/pause-channel.json
