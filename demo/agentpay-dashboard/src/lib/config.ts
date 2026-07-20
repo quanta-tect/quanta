@@ -5,7 +5,7 @@ export interface DemoConfig {
   agentRegistryAddress: string;
   paymentChannelAddress: string;
   marketplaceAddress: string;
-  qtaTokenAddress: string;
+  zyxTokenAddress: string;
   demoMode: boolean;
 }
 
@@ -22,7 +22,7 @@ export function loadConfig(): DemoConfig {
   const agentRegistryAddress = cleanAddress(import.meta.env.VITE_AGENT_REGISTRY_ADDRESS, '0x');
   const paymentChannelAddress = cleanAddress(import.meta.env.VITE_PAYMENT_CHANNEL_ADDRESS, '0x');
   const marketplaceAddress = cleanAddress(import.meta.env.VITE_MARKETPLACE_ADDRESS, '0x');
-  const qtaTokenAddress = cleanAddress(import.meta.env.VITE_QTA_TOKEN_ADDRESS, '0x');
+  const zyxTokenAddress = cleanAddress(import.meta.env.VITE_ZYX_TOKEN_ADDRESS, '0x');
   const demoMode = String(import.meta.env.VITE_DEMO_MODE || 'mock').toLowerCase() !== 'real';
 
   return {
@@ -32,7 +32,7 @@ export function loadConfig(): DemoConfig {
     agentRegistryAddress,
     paymentChannelAddress,
     marketplaceAddress,
-    qtaTokenAddress,
+    zyxTokenAddress,
     demoMode,
   };
 }

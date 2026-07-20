@@ -1,6 +1,6 @@
 # 📱 REDDIT POST — r/ethereum + r/cryptocurrency
 
-**Title:** [Project] QUANTA — Stripe for AI Agents, quantum-computer proof. 4 contracts live on Base Sepolia, 100+ tests, open-source.
+**Title:** [Project] ZEUSYXA — Stripe for AI Agents, quantum-computer proof. 4 contracts live on Base Sepolia, 100+ tests, open-source.
 
 ---
 
@@ -8,7 +8,7 @@
 
 Hey r/ethereum!
 
-I've been building **QUANTA Protocol** — payment infrastructure for AI agents that's quantum-resistant. Wanted to share what I've built and get feedback.
+I've been building **ZEUSYXA Protocol** — payment infrastructure for AI agents that's quantum-resistant. Wanted to share what I've built and get feedback.
 
 ### The Problem
 
@@ -21,7 +21,7 @@ But Stripe doesn't support $0.000001 transactions. Ethereum gas ($0.50/tx) is to
 
 ### The Solution
 
-QUANTA is "Stripe for AI Agents":
+ZEUSYXA is "Stripe for AI Agents":
 
 1. **Payment Channels**: Open once → stream 1M micropayments off-chain → close once. Fees: ~$0.000001.
 
@@ -42,7 +42,7 @@ QUANTA is "Stripe for AI Agents":
 
 ### Links
 
-- GitHub: https://github.com/quanta-tect/quanta
+- GitHub: https://github.com/zeusyxa-io/zeusyxa
 - Base Sepolia Explorer: https://base-sepolia.blockscout.com/address/0x312137fb6943F8f89F5eF0f221aA102035a16625
 - Whitepaper: In repo docs/WHITEPAPER.md
 
@@ -50,7 +50,7 @@ QUANTA is "Stripe for AI Agents":
 
 - Grant funding (Base, Optimism, Arbitrum, Gitcoin)
 - Enterprise pilot clients
-- AI builders to integrate QUANTA SDK
+- AI builders to integrate ZEUSYXA SDK
 - Feedback from this community!
 
 Happy to answer any questions. This is MIT-licensed open-source infrastructure.
@@ -63,7 +63,7 @@ Happy to answer any questions. This is MIT-licensed open-source infrastructure.
 
 ---
 
-I've been working on **QUANTA Protocol** — a blockchain designed specifically for AI agents to pay each other.
+I've been working on **ZEUSYXA Protocol** — a blockchain designed specifically for AI agents to pay each other.
 
 **Why it matters:**
 - AI agents are becoming autonomous economic actors
@@ -71,7 +71,7 @@ I've been working on **QUANTA Protocol** — a blockchain designed specifically 
 - Current systems (Stripe, Ethereum L1) can't handle this
 - Quantum computers will break Bitcoin/ECDSA in 5-15 years
 
-**What QUANTA does:**
+**What ZEUSYXA does:**
 - Payment channels: 1M micropayments = 2 on-chain tx
 - AI agent identity + reputation system
 - AI model marketplace with automatic royalties
@@ -84,8 +84,8 @@ I've been working on **QUANTA Protocol** — a blockchain designed specifically 
 - TypeScript SDK ready
 - Open-source (MIT)
 
-**Token:** QTA (1B supply, 30% genesis to treasury, 0.3% AI tax burn = deflationary)
+**Token:** ZYX (1B supply, 30% genesis to treasury, 0.3% AI tax burn = deflationary)
 
-GitHub: https://github.com/quanta-tect/quanta
+GitHub: https://github.com/zeusyxa-io/zeusyxa
 
 Looking for grant funding and enterprise pilot clients. AMA!

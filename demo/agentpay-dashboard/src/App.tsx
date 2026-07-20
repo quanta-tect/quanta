@@ -7,7 +7,7 @@ import {
   AIAgentRegistryABI,
   createBaseReceipt,
   baseExplorerUrl,
-  weiFromQta,
+  weiFromZyx,
   bytes32AgentId,
   BaseReceipt,
 } from './lib/contracts';
@@ -51,7 +51,7 @@ function requireRealReady(
   address?: string,
   isConnected?: boolean,
   chainId?: number,
-  config?: { chainId: number; agentRegistryAddress: string; qtaTokenAddress: string },
+  config?: { chainId: number; agentRegistryAddress: string; zyxTokenAddress: string },
 ): AppError | null {
   if (!isConnected || !address) {
     return { reason: 'wallet_not_connected', message: 'Connect wallet first.' };
@@ -103,7 +103,7 @@ export default function App() {
     ['Agent Registry', config.agentRegistryAddress],
     ['Payment Channel', config.paymentChannelAddress],
     ['Marketplace', config.marketplaceAddress],
-    ['QTA Token', config.qtaTokenAddress],
+    ['ZYX Token', config.zyxTokenAddress],
   ].filter(([, a]) => !a || a === '0x');
 
   const isWrongNetwork = !mockMode && isConnected && chainId != null && chainId !== config.chainId;
@@ -149,7 +149,7 @@ export default function App() {
         address: config.agentRegistryAddress as `0x${string}`,
         abi: AIAgentRegistryABI,
         functionName: 'registerAgent',
-        args: [agentId, metadata || 'ipfs://demo-agent', weiFromQta(maxPerTx), weiFromQta(maxPerDay)],
+        args: [agentId, metadata || 'ipfs://demo-agent', weiFromZyx(maxPerTx), weiFromZyx(maxPerDay)],
       });
       receipt.status = 'SUCCESS';
       receipt.txHash = hash;
@@ -195,7 +195,7 @@ export default function App() {
         address: config.agentRegistryAddress as `0x${string}`,
         abi: AIAgentRegistryABI,
         functionName: 'updatePolicy',
-        args: [realAgentId as `0x${string}`, weiFromQta(maxPerTx), weiFromQta(maxPerDay)],
+        args: [realAgentId as `0x${string}`, weiFromZyx(maxPerTx), weiFromZyx(maxPerDay)],
       });
       receipt.status = 'SUCCESS';
       receipt.txHash = hash;
@@ -339,7 +339,7 @@ export default function App() {
         address: config.agentRegistryAddress as `0x${string}`,
         abi: AIAgentRegistryABI,
         functionName: 'checkAndRecordSpend',
-        args: [realAgentId as `0x${string}`, weiFromQta(payAmount)],
+        args: [realAgentId as `0x${string}`, weiFromZyx(payAmount)],
       });
       receipt.status = 'SUCCESS';
       receipt.txHash = hash;
@@ -357,7 +357,7 @@ export default function App() {
   return (
     <div className="app">
       <header className="app-header">
-        <h1>Quanta AgentPay Demo</h1>
+        <h1>Zeusyxa AgentPay Demo</h1>
         <div className="status-pills">
           <span className={`badge ${envStatusClass}`}>{envStatusLabel}</span>
           {!mockMode && (
@@ -419,8 +419,8 @@ export default function App() {
 
       <Section title="Spending Policy">
         <div className="grid">
-          <Field label="Max per transaction (QTA)" value={maxPerTx} onChange={setMaxPerTx} placeholder="0.01" />
-          <Field label="Daily budget (QTA)" value={maxPerDay} onChange={setMaxPerDay} placeholder="0.05" />
+          <Field label="Max per transaction (ZYX)" value={maxPerTx} onChange={setMaxPerTx} placeholder="0.01" />
+          <Field label="Daily budget (ZYX)" value={maxPerDay} onChange={setMaxPerDay} placeholder="0.05" />
         </div>
         <label className="toggle">
           <input type="checkbox" checked={policyActive} onChange={(e) => setPolicyActive(e.target.checked)} />
@@ -441,7 +441,7 @@ export default function App() {
 
       <Section title="Simulate Agent Payment">
         <div className="grid">
-          <Field label="Amount (QTA)" value={payAmount} onChange={setPayAmount} placeholder="0.001" />
+          <Field label="Amount (ZYX)" value={payAmount} onChange={setPayAmount} placeholder="0.001" />
           <Field label="Service name" value={payService} onChange={setPayService} placeholder="openai-api" />
           <Field label="Spender address" value={paySpender} onChange={setPaySpender} placeholder="0x..." />
         </div>

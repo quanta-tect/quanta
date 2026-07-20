@@ -39,7 +39,7 @@ const app = express();
 
 app.use(express.json());
 
-const isRealMode = Boolean(process.env.QUANTA_RPC_URL?.trim());
+const isRealMode = Boolean(process.env.ZEUSYXA_RPC_URL?.trim());
 
 const MOCK_POLICY: Record<string, MockPolicy> = {
   'agent-Agent-001': {
@@ -129,10 +129,10 @@ app.post('/api/generate', async (req: express.Request, res: express.Response) =>
 
   if (isRealMode) {
     try {
-      const tokenAddress = parseEnvAddress('QUANTA_CONTRACT_TOKEN');
-      const registryAddress = parseEnvAddress('QUANTA_CONTRACT_REGISTRY');
-      const channelAddress = parseEnvAddress('QUANTA_CONTRACT_CHANNEL');
-      const marketplaceAddress = parseEnvAddress('QUANTA_CONTRACT_MARKETPLACE');
+      const tokenAddress = parseEnvAddress('ZEUSYXA_CONTRACT_TOKEN');
+      const registryAddress = parseEnvAddress('ZEUSYXA_CONTRACT_REGISTRY');
+      const channelAddress = parseEnvAddress('ZEUSYXA_CONTRACT_CHANNEL');
+      const marketplaceAddress = parseEnvAddress('ZEUSYXA_CONTRACT_MARKETPLACE');
 
       return res.status(501).json({
         error: 'Real mode is configured but not implemented in this example yet.',

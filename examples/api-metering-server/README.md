@@ -1,6 +1,6 @@
-# Quanta AgentPay API Metering Server Example
+# Zeusyxa AgentPay API Metering Server Example
 
-This example shows how an API or model provider can use Quanta to meter AI agent usage.
+This example shows how an API or model provider can use Zeusyxa to meter AI agent usage.
 
 It demonstrates the core AgentPay idea:
 
@@ -31,7 +31,7 @@ npm install
 
 ## Run mock mode
 
-Mock mode is the default when QUANTA_RPC_URL is empty.
+Mock mode is the default when ZEUSYXA_RPC_URL is empty.
 
 ```bash
 npm run build
@@ -100,12 +100,12 @@ cp .env.example .env
 Then set:
 
 ```text
-QUANTA_RPC_URL=
-QUANTA_PRIVATE_KEY=
-QUANTA_CONTRACT_TOKEN=
-QUANTA_CONTRACT_REGISTRY=
-QUANTA_CONTRACT_CHANNEL=
-QUANTA_CONTRACT_MARKETPLACE=
+ZEUSYXA_RPC_URL=
+ZEUSYXA_PRIVATE_KEY=
+ZEUSYXA_CONTRACT_TOKEN=
+ZEUSYXA_CONTRACT_REGISTRY=
+ZEUSYXA_CONTRACT_CHANNEL=
+ZEUSYXA_CONTRACT_MARKETPLACE=
 ```
 
 A production real-mode API server should:
@@ -113,7 +113,7 @@ A production real-mode API server should:
 1. Verify the agent exists in AIAgentRegistry.
 2. Check the spending policy before serving the request.
 3. Execute the upstream API or model call.
-4. Record spend through Quanta contracts.
+4. Record spend through Zeusyxa contracts.
 5. Return a transaction receipt or settlement reference.
 
 ## Security notes

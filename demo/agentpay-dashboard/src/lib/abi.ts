@@ -79,7 +79,7 @@ export const AIAgentRegistryABI = [
   },
 ] as const;
 
-export const QuantaTokenABI = [
+export const ZeusyxaTokenABI = [
   {
     inputs: [
       { internalType: 'address', name: 'spender', type: 'address' },

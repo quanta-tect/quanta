@@ -1,6 +1,6 @@
-# 🧵 LAUNCH THREAD — QUANTA reveal
+# 🧵 LAUNCH THREAD — ZEUSYXA reveal
 
-> Purpose: First thread introducing QUANTA. Post Tue/Wed, 9-11 AM ET or 7-9 PM ET (peak crypto Twitter). Tag @VitalikButerin, @balajis, @karpathy, @AnthropicAI.
+> Purpose: First thread introducing ZEUSYXA. Post Tue/Wed, 9-11 AM ET or 7-9 PM ET (peak crypto Twitter). Tag @VitalikButerin, @balajis, @karpathy, @AnthropicAI.
 
 ---
 
@@ -45,7 +45,7 @@ When a sufficiently powerful quantum computer arrives, an adversary could drain 
 
 **Tweet 4/12**
 
-Introducing QUANTA ⚛️
+Introducing ZEUSYXA ⚛️
 
 The first L1 blockchain designed from day 0 for two paradigm shifts:
 
@@ -74,7 +74,7 @@ Crypto is the only escape.
 
 **Tweet 6/12**
 
-QUANTA's killer features:
+ZEUSYXA's killer features:
 
 🔐 Dilithium-3 signatures (FIPS 204)
 🧠 Proof of Useful Work (validators run AI inference, not SHA-256)
@@ -91,13 +91,13 @@ Proof of Useful Work is my favorite idea.
 
 Bitcoin burns electricity = Argentina, just for meaningless hashing.
 
-QUANTA validators instead run:
+ZEUSYXA validators instead run:
 • LLM inference
 • Protein folding
 • Scientific compute
 • Image generation
 
-Every watt mining QUANTA = 1 watt serving humanity.
+Every watt mining ZEUSYXA = 1 watt serving humanity.
 
 ---
 
@@ -121,7 +121,7 @@ A fully autonomous economic entity. First time in history.
 **Tweet 9/12**
 
 Quick tokenomics:
-• 1B QTA hard cap
+• 1B ZYX hard cap
 • 30% genesis, 70% emission over 50 years
 • Halving every 6 years
 • 50% tx fees burned, 30% AI fees burned
@@ -153,7 +153,7 @@ We need:
 • Community builders
 • Memers (yes, srsly)
 
-GitHub: github.com/quanta-tect/quanta
+GitHub: github.com/zeusyxa-io/zeusyxa
 Discord: discord.gg/quanta (coming soon)
 
 ---
@@ -161,11 +161,11 @@ Discord: discord.gg/quanta (coming soon)
 **Tweet 12/12**
 
 The best time to migrate to post-quantum was yesterday.
-The second best time is QUANTA.
+The second best time is ZEUSYXA.
 
-📄 Whitepaper: github.com/quanta-tect/quanta/blob/main/docs/WHITEPAPER.md
-💻 Code: github.com/quanta-tect/quanta
-🐦 Follow @Quanta_Protocol
+📄 Whitepaper: github.com/zeusyxa-io/zeusyxa/blob/main/docs/WHITEPAPER.md
+💻 Code: github.com/zeusyxa-io/zeusyxa
+🐦 Follow @ZeusyxaProtocol
 
 Like + RT if you think AI needs its own bank 🤖💸
 
@@ -173,10 +173,10 @@ Like + RT if you think AI needs its own bank 🤖💸
 
 ## 📊 Distribution checklist
 
-- [ ] Post primary thread on @Quanta_Protocol
+- [ ] Post primary thread on @ZeusyxaProtocol
 - [ ] Cross-post on Farcaster (/quanta channel)
 - [ ] Mirror.xyz long-form version with diagrams
-- [ ] HackerNews "Show HN: QUANTA — quantum-safe AI-native blockchain"
+- [ ] HackerNews "Show HN: ZEUSYXA — quantum-safe AI-native blockchain"
 - [ ] r/cryptocurrency self-post (after karma check)
 - [ ] r/ethereum (research category, no shill)
 - [ ] r/MachineLearning (focus on PoUW angle)
