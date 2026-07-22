@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.24;
 
-import {IQuantaToken} from "./interfaces/IQuantaToken.sol";
+import {IZeusyxaToken} from "./interfaces/IZeusyxaToken.sol";
 
 import {EIP712} from "@openzeppelin/contracts/utils/cryptography/EIP712.sol";
 import {ECDSA} from "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
@@ -80,7 +80,7 @@ contract AIPaymentChannel is EIP712, ReentrancyGuard, Pausable, Ownable2Step {
     error InvalidPeriod();
     error StaleNonce();
 
-    constructor(IERC20 _token, IQuantaToken _quantaToken, address initialOwner)
+    constructor(IERC20 _token, IZeusyxaToken _zyxToken, address initialOwner)
         EIP712("QUANTA Payment Channel", "1")
         Ownable(initialOwner)
     {

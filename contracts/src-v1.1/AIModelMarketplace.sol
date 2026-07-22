@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.24;
 
-import {IQuantaToken} from "./interfaces/IQuantaToken.sol";
+import {IZeusyxaToken} from "./interfaces/IZeusyxaToken.sol";
 
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import {SafeERC20} from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
@@ -66,7 +66,7 @@ contract AIModelMarketplace is ReentrancyGuard, Pausable, Ownable2Step {
 
     constructor(
         IERC20 _token,
-        IQuantaToken _quantaToken,
+        IZeusyxaToken _zyxToken,
         address _treasury,
         address _validatorPool,
         address initialOwner
@@ -77,7 +77,8 @@ contract AIModelMarketplace is ReentrancyGuard, Pausable, Ownable2Step {
         if (_validatorPool == address(0)) revert ZeroAddress();
 
         token = _token;
-        quantaToken = _quantaToken;
+        zyxToken = _zyxToken;
+
         treasury = _treasury;
         validatorPool = _validatorPool;
     }

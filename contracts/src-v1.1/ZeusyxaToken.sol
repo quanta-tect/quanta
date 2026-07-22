@@ -11,8 +11,8 @@ import {Ownable2Step, Ownable} from "@openzeppelin/contracts/access/Ownable2Step
 import {Pausable} from "@openzeppelin/contracts/utils/Pausable.sol";
 
 /**
- * @title QuantaToken (QTA) v1.1 — Security-Hardened
- * @notice ERC-20 wrapped representation of QUANTA on EVM chains.
+ * @title ZeusyxaToken (ZYX) v1.1 — Security-Hardened
+ * @notice ZEUSYXA — quantum-safe token for AI agents on EVM chains.
  *
  * Security improvements over v1.0:
  *  - C-06: collectAITax can only burn from msg.sender (not arbitrary `from`)
@@ -28,7 +28,7 @@ import {Pausable} from "@openzeppelin/contracts/utils/Pausable.sol";
  *  - H-BRIDGE-02: bridgeBurn requires allowance — cannot burn from arbitrary holders
  *  - M-DEAD-01: Removed dead `from` parameter from collectAITax (Zcash-type code smell)
  */
-contract QuantaToken is ERC20, ERC20Burnable, ERC20Pausable, ERC20Permit, ERC20Votes, Ownable2Step {
+contract ZeusyxaToken is ERC20, ERC20Burnable, ERC20Pausable, ERC20Permit, ERC20Votes, Ownable2Step {
     uint256 public constant MAX_SUPPLY = 1_000_000_000 * 1e18;
     uint256 public constant GENESIS_SUPPLY = 300_000_000 * 1e18;
 
@@ -67,8 +67,8 @@ contract QuantaToken is ERC20, ERC20Burnable, ERC20Pausable, ERC20Permit, ERC20V
     error InsufficientBridgeBurnAllowance();
 
     constructor(address initialOwner)
-        ERC20("QUANTA", "QTA")
-        ERC20Permit("QUANTA")
+        ERC20("ZEUSYXA", "ZYX")
+        ERC20Permit("ZEUSYXA")
         Ownable(initialOwner)
     {
         if (initialOwner == address(0)) revert ZeroAddress();
@@ -105,7 +105,7 @@ contract QuantaToken is ERC20, ERC20Burnable, ERC20Pausable, ERC20Permit, ERC20V
         if (to == address(0)) revert ZeroAddress();
         if (totalSupply() + amount > MAX_SUPPLY) revert CapExceeded();
 
-        // H-BRIDGE-01: Rate limit — max 1M QTA per day
+        // H-BRIDGE-01: Rate limit — max 1M ZYX per day
         if (block.timestamp >= bridgeMintDayStart + 1 days) {
             bridgeMintedToday = 0;
             bridgeMintDayStart = block.timestamp;
