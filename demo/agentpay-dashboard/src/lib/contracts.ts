@@ -28,7 +28,7 @@ export function createBaseReceipt(action: string): BaseReceipt {
 }
 
 export function weiFromZyx(zyx: string): bigint {
-  const n = parseFloat(qta);
+  const n = parseFloat(zyx);
   if (!Number.isFinite(n) || n <= 0) return 0n;
   return BigInt(Math.floor(n * 1e18));
 }

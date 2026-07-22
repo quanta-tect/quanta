@@ -1,8 +1,8 @@
 <p align="center">
-  <img src="./assets/quanta-mark.svg" alt="Zeusyxa mark" width="96" height="96">
+  <img src="./assets/zeusyxa-mark.svg" alt="Zeusyxa mark" width="96" height="96">
 </p>
 
-<h1 align="center">Quanta</h1>
+<h1 align="center">Zeusyxa</h1>
 
 <p align="center">
   Open-source payment and trust layer for autonomous AI agents.
@@ -29,7 +29,7 @@ Zeusyxa is an open-source payment and trust layer for autonomous AI agents.
 
 AI agents will need to pay for APIs, tools, models, data, infrastructure, and other agents. Zeusyxa gives them wallets with rules: identity, budgets, permissions, authorized spenders, payment channels, marketplace primitives, and on-chain receipts.
 
-## Why Quanta
+## Why Zeusyxa
 
 Giving an AI agent an unrestricted wallet is unsafe.
 
@@ -104,8 +104,8 @@ Owner and deployer wallet:
 Clone the repository:
 
 ```bash
-git clone https://github.com/zeusyxa-io/zeusyxa.git
-cd quanta
+git clone https://github.com/zeusyxa-tech/Zeusxya.git
+cd zeusyxa
 ```
 
 Run contract checks:

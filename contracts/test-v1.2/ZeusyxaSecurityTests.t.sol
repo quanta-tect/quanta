@@ -8,13 +8,13 @@ import "../src-v1.2/AIPaymentChannel.sol";
 import "../src-v1.2/AIModelMarketplace.sol";
 
 /**
- * @title QuantaV12SecurityTests
+ * @title ZeusyxaV12SecurityTests
  * @notice Comprehensive security + regression tests for QUANTA v1.2
  * @dev Tests all 4 contracts with their hardened security features
  *
  * Run: forge test -vvv
  */
-contract QuantaV12SecurityTests is Test {
+contract ZeusyxaV12SecurityTests is Test {
     // ===================================================================
     // Contracts
     // ===================================================================
