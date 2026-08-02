@@ -14,7 +14,6 @@ jobs:
     defaults: { run: { working-directory: contracts } }
     steps:
       - uses: actions/checkout@v4
-        with: { submodules: recursive }
 
       - name: Install Foundry
         uses: foundry-rs/foundry-toolchain@v1
@@ -22,8 +21,8 @@ jobs:
 
       - name: Install dependencies
         run: |
-          forge install foundry-rs/forge-std
-          forge install OpenZeppelin/openzeppelin-contracts
+          forge install foundry-rs/forge-std --no-commit
+          forge install OpenZeppelin/openzeppelin-contracts --no-commit
 
       - name: Build
         run: forge build --sizes

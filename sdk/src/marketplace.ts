@@ -1,5 +1,5 @@
 import type { Address, Hex } from "viem";
-import type { ZeusyxaClient } from "./client.js";
+import type { QuantaClient } from "./client.js";
 import type { ModelInfo } from "./types.js";
 
 // v1.2 ABI
@@ -73,7 +73,7 @@ const MARKET_ABI = [
 ] as const;
 
 export class ModelMarketplace {
-  constructor(public readonly client: ZeusyxaClient) {}
+  constructor(public readonly client: QuantaClient) {}
 
   async registerModel(opts: {
     pricePerCall: bigint;

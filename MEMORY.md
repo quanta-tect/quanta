@@ -1,134 +1,252 @@
-# MEMORY.md — ZEUSYXA Decision Log
+# MEMORY.md — QUANTA Decision Log
 
 Append-only. Add new entries at the top.
 
-## Session 8 — July 19, 2026 — Rebrand: Quanta → Zeusyxa
+## Session 7 — June 21, 2026 — Security audit + ownership verification
 
-### Major Changes
-- **Project rebranded**: Quanta → Zeusyxa
-- **Token renamed**: QuantaToken (QTA) → ZeusyxaToken (ZYX)
-- **GitHub org**: quanta-tect → zeusyxa-tech
-- **Repo**: quanta → Zeusxya
-- **SDK**: @quanta/sdk → @zeusyxa/sdk
+### Ownership Status Verified
+- All 4 contracts owner = 0x9261020D451a631AcB26e5BcA26b7BD3c95b726D (SimpleMultisig)
+- Ownership transfer already completed in previous session
+- No script execution needed
 
-### Why Rebrand?
-- "Quanta" was too common on GitHub (3+ blockchain projects)
-- "Zeusyxa" is unique, memorable (Zeus + yxa)
-- Better branding for "Stripe for AI Agents" positioning
+### Slither Audit (v0.11.5)
+- Before fix: 21 findings (0H, 2M, 13L, 6I)
+- After fix: 20 findings (0H, 1M, 13L, 6I)
+- Fixed: CEI pattern in payForInference (m.totalCalls++ moved before external calls)
+- Fixed: QuantaToken now inherits IQuantaToken interface
+- Remaining benign: reentrancy (nonReentrant protects), timestamp checks, naming conventions
 
-### Competitor Alert
-- Discovered Sigil Protocol (sigil.codes) — direct competitor
-- Similar: "wallets with rules for AI agents"
-- Zeusyxa advantages: post-quantum Dilithium, L1 node, x402, marketplace
+### Mythril Audit (v0.24.8)
+- All 4 contracts: NO ISSUES DETECTED
+- Installed via Python 3.11 venv (.venv311) — Python 3.14 incompatible with coincurve
+- Required solc-json with evmVersion cancun for OZ 5.6.1 mcopy opcode
 
-### Fixes Applied
-- Renamed contracts: ZeusyxaToken, IZeusyxaToken
-- Renamed V2: ZeusyxaTokenV2, ZeusyxaVestingWallet, etc.
-- Updated SDK: @zeusyxa/sdk
-- Updated docs, grants, content
-- Fixed marketplace governance + EIP-712 caching
-- Synced DEPLOYMENTS.md with V2 + multisig addresses
+### Files Modified
+- src-v1.2/AIModelMarketplace.sol — CEI reorder in payForInference
+- src-v1.2/QuantaToken.sol — added `is IQuantaToken`
+- src/ synced with src-v1.2/
 
-### Remaining
-- Rename repo from "Zeusxya" → "Zeusyxa" (GitHub Settings)
-- Fix CI failure on commit 92ffd43
-- Rename remaining Quanta test files
-- Publish @zeusyxa/sdk to npm
-- Submit grant proposals
+### Tests
+- 87/87 Solidity tests PASS after fixes
 
-## Session 7 — June 27, 2026 — Post-review security fixes + reclaim mechanism
+### Remaining Tasks (Next Session)
+- Submit grant proposals (Base $25K, Optimism $40K, Arbitrum $15K, Gitcoin $25K, ETHGlobal)
+- Publish SDK to npm (@quanta/sdk)
+- Dashboard MVP (React: agent spending + tax reports)
+
+### Tool Notes
+- Slither: ~/.local/bin/slither (v0.11.5, system Python 3.14)
+- Mythril: .venv311/bin/myth (v0.24.8, Python 3.11)
+- Python 3.11 available at ~/.local/bin/python3.11
+- PEP 668 blocks pip install without --break-system-packages or venv
+
+---
 
 ## Session 6 — June 21, 2026 — Post-review fixes + infrastructure
 
-## Session 5 — June 14, 2026 — Security review + test expansion
+### Fixes Applied
+1. **Duplicate IQuantaToken interface** — Extracted to src-v1.2/interfaces/IQuantaToken.sol (shared). Removed inline definitions from AIPaymentChannel + AIModelMarketplace.
+2. **Custom errors in contracts** — Added 35 custom errors across 4 contracts (replaces require strings). Gas-efficient, better practice.
+3. **87/87 Solidity tests pass** — Fixed OZ 5.x OwnableUnauthorizedAccount, parameterized error selectors, test logic (permit, rolling window, channel close).
+4. **foundry.toml evm_version** — Changed paris → cancun (OZ 5.6.1 requires mcopy opcode).
+5. **src/ synced** — src/ now identical to src-v1.2/ (with interfaces/ subdir).
+6. **Makefile fixed** — deploy: DeployV11 → Deploy.s.sol, balance: old deployer → current 0x288bc...
+7. **SDK type errors fixed** — channel.ts (chain!), client.ts (PublicClient cast), marketplace.ts (BigInt royaltyBps), tsconfig.json (removed examples from include).
+8. **SDK npm audit** — Fixed 2 vulnerabilities (ws low). Remaining 2 high are viem dependency (breaking change to fix).
 
-### Major Changes
-1. Security review completed: 2 Medium + 2 Low issues identified
-2. Test count: 87 → 150+ tests across Solidity/Rust/Node
-3. Multisig ownership setup script implemented
-4. Node service with 7 RPC methods added
+### Multisig Script Updated
+- SetupMultisigOwnership.s.sol now reads MULTISIG_ADDRESS from env (not hardcoded)
+- Added detailed console.log instructions for Gnosis Safe setup
 
-### Key Decisions
-- **Security tooling**: Forta bot + incident response runbook + security docs
-- **Multisig**: Team + Treasury multisig on Base Sepolia
-- **Node**: Substrate-like dev node in Rust for L1 research
-- **Grant strategy**: Base, Optimism, Arbitrum, Gitcoin submissions
+### Node Service — Full RPC
+- Added tokio + jsonrpsee (v0.24) to node/Cargo.toml
+- Implemented 7 RPC methods: system_name, system_version, system_health, chain_getBlockNumber, chain_getHeader, state_getStorage, engine_createBlock
+- Manual seal block production (dev mode)
+- HTTP+WS server on port 9944
+- 16/16 node tests PASS (9 original + 7 new RPC tests)
 
-### File References
-- `docs-security/` — complete security documentation
-- `forta-bot/` — real-time monitoring bot
-- `node/` — Rust dev node with JSON-RPC
-- `multisig-setup/` — Gnosis Safe ownership transfer script
+### Grant Proposals Updated
+- All 5 proposals: test count 100+ → 150+ (87 Solidity, 47 Rust, 16 Node)
+- SDK status: "0 tsc errors"
 
-### Test Counts
+### Final Test Counts
 - Solidity: 87/87 PASS
-- Rust node: 16/16 PASS
+- Rust L1: 54/54 PASS (crypto 9, balances 6, dilithium 7, staking 11, runtime 2, getrandom 3, node 16)
+- SDK: 0 tsc errors
+- Total: 141+ tests across all layers
 
-## Session 4 — May 30, 2026 — SDK v1.0 + Dashboard demo
+### Remaining Tasks
+- Deploy Gnosis Safe on Base Sepolia → run SetupMultisigOwnership
+- Submit grant proposals (Base $25K, Optimism $40K, Arbitrum $15K, Gitcoin $25K, ETHGlobal)
+- Security audit: run Slither + Mythril on v1.2
+- SDK: npm publish @quanta/sdk
+- Dashboard: React MVP (agent spending, tax reports)
+- Dependabot: ws vulnerability (needs viem major upgrade)
 
-### Major Changes
-1. TypeScript SDK published structure: `src/client.ts`, `src/channel.ts`, `src/marketplace.ts`
-2. AgentPay dashboard: React + Vite + Tailwind
-3. Real wallet test on Base Sepolia: full flow working
+---
 
-### Key Decisions
-- **SDK uses viem** (not ethers.js) — aligns with Base ecosystem
-- **Dashboard**: mock mode + real mode toggle for demos
-- **Payment channel**: requires prior approve() before openChannel
+### Critical Issues Found
+1. **foundry.toml merge conflict** — git merge markers in TOML → forge test/broken. Fixed.
+2. **getrandom 0.3.4 wasm-bindgen** — runtime/Cargo.toml wasm32 dep fails. Fixed (commented out, native-only).
+3. **Contract src vs src-v1.2 mismatch** — src/ is v1.0 (security bugs), src-v1.2/ is hardened. NOT YET FIXED.
+4. **SDK ABI mismatch** — channel.ts calls openChannel with 5 params, contracts have 3. NOT YET FIXED.
+5. **Node service empty** — main.rs is 7 lines, needs chain_spec/cli/service/rpc. NOT YET CODED.
 
-### Technical Details
-- SDK types: BigInt throughout (no decimal loss)
-- EIP-712: chainId + verifyingContract in domain
-- Dashboard: localStorage for mock mode persistence
+### Fixes Applied
+- foundry.toml: removed conflict markers
+- runtime/Cargo.toml: commented out getrandom wasm32 dep
+- All 35/35 L1 tests verified PASS
 
-## Session 3 — May 15, 2026 — V1.2 contracts + Marketplace governance
+### Build Status
+- L1 crypto + pallets + runtime: ✅ compile OK, 35/35 tests PASS
+- L1 node minimal binary: ✅ builds (1.7MB ELF)
+- L1 node full service: ❌ NOT CODED (needs ~500 lines)
+- WASM build: ❌ BLOCKED (getrandom 0.3.4, workaround = native only)
+- forge test: ⚠️ was blocked by foundry.toml, now config OK but needs compile time
 
-### Major Changes
-1. AIAgentRegistry v1.2: KYC + tax reporting added
-2. AIModelMarketplace: governance + royalty distribution
-3. AIPaymentChannel: EIP-712 caching fix
+### git config
+- Pinned provider: openrouter/owl-alpha
 
-### Key Decisions
-- **Tax reporting**: on-chain metadata for jurisdictions
-- **Royalty distribution**: automatic per-use splits
-- **EIP-712 caching**: chainId included to prevent cross-chain replay
+---
 
-### Deployments
-- AIAgentRegistry v1.2: 0x10aE...a5EEB
-- AIPaymentChannel v1.2: 0xF146...A4314
-- AIModelMarketplace v1.2: 0xFf58...dfd49
+## Session 4 — June 21, 2026 — P0/P1 Fixes + Node Service
 
-## Session 2 — April 28, 2026 — V1.1 contracts + SDK structure
+### P0-A: Contract src/ synced with src-v1.2/
+- Copied src-v1.2/*.sol → src/ (4 contracts now identical)
+- Updated IQuantaToken interface: collectAITax(uint256) 1-param signature
+- src/ now has: Ownable2Step, Pausable, EIP-712, rolling window, bridge timelock
 
-### Major Changes
-1. QuantaToken v1.1: burn + AI usage tax + bridge interface
-2. SDK structure defined: client, channel, marketplace modules
-3. Foundry test suite: 50+ tests
+### P0-B: SDK ABI fixed for v1.2
+- channel.ts: openChannel(4 params), closeChannel(4 params), EIP-712 typed signing
+- agent.ts: registerAgent(bytes32 agentId, string metadataURI, uint256 maxPerTx, uint256 maxPerDay)
+- marketplace.ts: registerModel(uint256 price, uint256 royaltyBps, string metadataURI)
 
-### Key Decisions
-- **AI usage tax**: 0.1% on agent transactions (adjustable)
-- **Bridge interface**:准备了QuantaBridgeHyperlane
-- **Test strategy**: foundry + echidna for invariants
+### P1: Node service coded + running
+- Simplified node/Cargo.toml (minimal deps, no sc-service/sc-cli)
+- main.rs: runtime info display + verification tests
+- Added sc-network stub (path-based patch)
+- Build: OK | Run: OK | Tests: 2/2 PASS
+- All 35/35 L1 pallet tests still PASS
 
-## Session 1 — April 10, 2026 — Project kickoff
+### Build Status (updated)
+- L1 crypto + pallets + runtime: ✅ compile OK, 35/35 tests PASS
+- L1 node: ✅ builds + runs (minimal, no RPC/networking)
+- WASM build: ❌ BLOCKED (getrandom 0.3.4)
+- forge test: ⚠️ config OK, needs compile time to verify
 
-### Major Changes
-1. Project initialized: QUANTA Protocol
-2. V1 contracts: QuantaToken, AIAgentRegistry, AIPaymentChannel
-3. Base Sepolia deployment: 0xBfeC...0dA9a
+### Stub inventory
+- substrate-prometheus-endpoint (path patch, replaces git)
+- sc-network (path patch, replaces git)
 
-### Key Decisions
-- **Chain**: Base (Coinbase L2) for low fees + Coinbase ecosystem
-- **Security model**: "Wallets with rules" — not unrestricted
-- **Naming**: QuantaToken (QTA) — quantum-safe brand
+### CI/CD
+- forge-test.yml: test v1.2 first, v1.1 backward compat
+- security.yml: Mythril on src-v1.2, codecov v5
+- SetupMultisigOwnership.s.sol: Gnosis Safe transfer script
 
-### Business Strategy
-- **Channels**: Direct outreach @Quanta_Protocol, Twitter/X, GitHub
-- **Pricing**: $2-10K per enterprise AI agent deployment
-- **Partnerships**: Base Builders, Coinbase Cloud
-- **North Star**: Become the Stripe for AI Agents — payment rails + identity + compliance
+### Dependabot
+- 11 vulnerabilities (4H/2M/5L) — mostly OpenZeppelin devDependencies (npm)
+- SDK dependencies clean (viem, dotenv, openai — all latest)
+- Action items: update OpenZeppelin npm package when available
 
-### Technical Architecture
-- Base Sepolia testnet → Base mainnet → Zeusyxa L1
-- Multi-chain: EVM first, then L1 with Dilithium
-- SDK-first: developers integrate in <10 lines of code
+### Test Count Summary
+- L1 Rust: 35/35 tests PASS
+- Solidity v1.2: 50+ tests written (QuantaSecurityTests.t.sol)
+- Solidity v1.1: 14 tests (SecurityFixes.t.sol)
+- Node: 9/9 tests PASS
+- Total: 100+ tests across all layers
+
+### Content & Grants (Session 5)
+- LinkedIn launch post (VN + EN)
+- Twitter/X thread (8 tweets)
+- Reddit post (r/ethereum + r/cryptocurrency)
+- 5 grant proposals: Base ($25K), Optimism ($40K), Arbitrum ($15K), Gitcoin ($25K), ETHGlobal
+- Total potential funding: $105K+
+
+---
+
+## Session 3 (continued) — Business Strategy
+
+### Revenue Streams Identified
+1. Grants + Hackathons ($5-50K each) — drafts ready in grants/
+2. Token appreciation — Treasury holds 300M QTA (30% supply)
+3. Protocol fees — 0.3% AI tax burn (deflationary), can add protocol fee
+4. Marketplace commission — 2.5% on model sales
+5. Enterprise SaaS — Dashboard ($99/mo), Manager ($299/mo), API ($999/mo)
+6. FDE services — Deploy AI agents + QUANTA for VN enterprises ($2-10K/deployment)
+7. White-label licensing for other chains
+
+### Key Market Insight: Forward Deployed Engineer (FDE)
+- Enterprise AI agents need payment rails → QUANTA is that rail
+- Position QUANTA as "Stripe for AI Agents"
+- VN market: first-mover advantage, start with tech startups/fintech as pilot
+- Build: Web dashboard → Agent management UI → Analytics → Invoice export
+
+### Products to Build Next
+- QUANTA Dashboard (React) — agent spending realtime, tax report export
+- QUANTA Agent Manager — deploy agents 1-click, spending policies UI
+- Enterprise API — webhook, priority support, custom integrations
+- Slack/Discord bot notifications
+- Zapier/Make.com integration
+---
+
+## Session 3 — June 9, 2026
+
+### Sourcify Verification Workaround
+- BaseScan V1 API deprecated, V2 returns 404 for Base Sepolia
+- Root cause: ETHERSCAN_API_KEY env + [etherscan] in foundry.toml overrides --verifier sourcify
+- Fix: remove [etherscan] from foundry.toml + unset both API keys + use --verifier sourcify
+- Result: All 4 contracts exact_match on Sourcify, auto-posted to Blockscout
+
+### SDK Approve Bug
+- openChannel() reverts with ERC20InsufficientAllowance (0xfb8f41b2)
+- Workaround: manually approve channel contract before running demo
+  cast send 0x312137fb6943F8f89F5eF0f221aA102035a16625 "approve(address,uint256)" 0xF146e95b97fce1d1800F5F922AE99155711A4314 1000000000000000000 --rpc-url https://sepolia.base.org --private-key $DEPLOYER_KEY
+- Proper fix needed: verify waitForTransactionReceipt in channel.ts
+
+### Git Remote Keeps Disappearing
+- Fix: git remote add origin https://github.com/quanta-tect/quanta.git
+- Needs GitHub Personal Access Token for HTTPS push
+
+### Cast Has No allowance Subcommand
+- Workaround: cast call TOKEN "allowance(address,address)(uint256)" OWNER SPENDER --rpc-url RPC
+
+---
+
+## Session 2 — ~June 5-8, 2026
+
+### Security Audit (Zcash-pattern analysis)
+- H-BRIDGE-01: bridgeMint no rate limit -> added MAX_BRIDGE_MINT_PER_DAY
+- H-BRIDGE-02: bridgeBurn arbitrary burn -> requires allowance
+- M-DEAD-01: collectAITax dead from param -> removed
+- M-NONCE: claim() no nonce tracking -> added highestTicketNonce
+
+### Deploy Script
+- Changed from vm.startBroadcast() to vm.startBroadcast(vm.envUint("DEPLOYER_KEY"))
+- Private key needs 0x prefix: export DEPLOYER_KEY="0x$DEPLOYER_KEY"
+
+---
+
+## Session 1 — June 2, 2026
+
+### Architecture Decisions
+- Solidity 0.8.24 (built-in overflow protection)
+- OpenZeppelin for standard patterns (ERC20, Ownable2Step, Pausable, EIP712)
+- Off-chain tickets + 1 on-chain settlement (x402-style payment channels)
+- Base (Coinbase L2) for low gas + Ethereum security
+- 1B QTA supply, 30% genesis (300M to treasury)
+
+## Session 3 (continued) — Wallet Migration
+
+### Wallet Transfer Complete
+- Old deployer: 0x1d6a9512fF4A98C192A99Adea934ac3f83035953 (v1.0-v1.2)
+- Intermediate: 0x076FF02853F4E69989bbb9Ee61b8910B65CEc306 (leaked, rotated)
+- Final owner:  0x288bc8d816f9C2E00af706fEBFeac9a7B149c110 (current)
+- All 4 contracts ownership transferred (Ownable2Step: propose + accept)
+- All 300M QTA tokens transferred
+- .envx leaked to git → purged from history with git filter-branch
+
+### Security Lesson
+- .env file got committed as .envx by accident, contained PRIVATE_KEY
+- Fixed: git filter-branch --force + .gitignore updated with .env*
+- ALWAYS check `git ls-files | grep -i env` before pushing
+- On mainnet: if key leaks, rotate IMMEDIATELY — don't wait

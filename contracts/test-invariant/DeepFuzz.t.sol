@@ -3,7 +3,7 @@ pragma solidity 0.8.24;
 
 import "forge-std/Test.sol";
 import "forge-std/StdInvariant.sol";
-import "../src-v1.1/ZeusyxaToken.sol";
+import "../src-v1.1/QuantaToken.sol";
 import "../src-v1.1/AIAgentRegistry.sol";
 import "../src-v1.1/AIPaymentChannel.sol";
 import "../src-v1.1/AIModelMarketplace.sol";
@@ -32,7 +32,7 @@ import "../src-v1.1/AIModelMarketplace.sol";
 // =====================================================================
 
 contract DeepHandler is Test {
-    ZeusyxaToken public token;
+    QuantaToken public token;
     AIAgentRegistry public registry;
     AIPaymentChannel public channel;
     AIModelMarketplace public market;
@@ -55,7 +55,7 @@ contract DeepHandler is Test {
     bytes32[] public openChannelIds;
 
     constructor(
-        ZeusyxaToken _token,
+        QuantaToken _token,
         AIAgentRegistry _registry,
         AIPaymentChannel _channel,
         AIModelMarketplace _market,
@@ -227,7 +227,7 @@ contract DeepHandler is Test {
 // =====================================================================
 
 contract DeepFuzzTest is StdInvariant, Test {
-    ZeusyxaToken token;
+    QuantaToken token;
     AIAgentRegistry registry;
     AIPaymentChannel channel;
     AIModelMarketplace market;
@@ -245,11 +245,11 @@ contract DeepFuzzTest is StdInvariant, Test {
         for (uint i = 1; i <= 3; i++) attackers.push(address(uint160(0xBAD0 + i)));
 
         vm.startPrank(OWNER);
-        token = new ZeusyxaToken(OWNER);
+        token = new QuantaToken(OWNER);
         registry = new AIAgentRegistry(OWNER);
-        channel = new AIPaymentChannel(IERC20(address(token)), IZeusyxaToken(address(token)), OWNER);
+        channel = new AIPaymentChannel(IERC20(address(token)), IQuantaToken(address(token)), OWNER);
         market = new AIModelMarketplace(
-            IERC20(address(token)), IZeusyxaToken(address(token)),
+            IERC20(address(token)), IQuantaToken(address(token)),
             OWNER, OWNER, OWNER
         );
         token.setAITaxCollector(address(market), true);

@@ -8,10 +8,10 @@ import "@openzeppelin/contracts/utils/cryptography/EIP712.sol";
 import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 import "@openzeppelin/contracts/access/Ownable2Step.sol";
 import "@openzeppelin/contracts/utils/Pausable.sol";
-import "./interfaces/IZeusyxaToken.sol";
+import "./interfaces/IQuantaToken.sol";
 
 contract AIPaymentChannel is EIP712, ReentrancyGuard, Ownable2Step, Pausable {
-    using SafeERC20 for IZeusyxaToken;
+    using SafeERC20 for IQuantaToken;
     using ECDSA     for bytes32;
 
     uint256 public constant MIN_DEPOSIT       = 0.01e18;
@@ -37,7 +37,7 @@ contract AIPaymentChannel is EIP712, ReentrancyGuard, Ownable2Step, Pausable {
         ChannelState state;
     }
 
-    IZeusyxaToken public immutable token;
+    IQuantaToken public immutable token;
     mapping(bytes32 => Channel) public channels;
 
     // Custom errors
@@ -61,7 +61,7 @@ contract AIPaymentChannel is EIP712, ReentrancyGuard, Ownable2Step, Pausable {
         Ownable(_initialOwner)
     {
         require(_token != address(0), "Channel: zero token");
-        token = IZeusyxaToken(_token);
+        token = IQuantaToken(_token);
     }
 
     function openChannel(
@@ -102,7 +102,7 @@ contract AIPaymentChannel is EIP712, ReentrancyGuard, Ownable2Step, Pausable {
         uint256 amount,
         uint256 nonce,
         bytes calldata signature
-    ) external nonReentrant {
+    ) external nonReentrant whenNotPaused {
         Channel storage c = channels[channelId];
         require(c.openedAt != 0, "Channel: not found");
         require(c.state == ChannelState.Open || c.state == ChannelState.Closing, "Channel: already closed");
@@ -153,11 +153,11 @@ contract AIPaymentChannel is EIP712, ReentrancyGuard, Ownable2Step, Pausable {
         emit ForceCloseChallenged(channelId, amount);
     }
 
-    function executeForceClose(bytes32 channelId) external nonReentrant {
+    function executeForceClose(bytes32 channelId) external nonReentrant whenNotPaused {
         Channel storage c = channels[channelId];
         require(c.state == ChannelState.Closing, "Channel: not closing");
         if (msg.sender != c.payer) revert NotPayer();
-        if (block.timestamp < c.closeInitiatedAt + CHALLENGE_WINDOW) revert TimeoutActive();
+        if (block.timestamp < c.closeInitiatedAt + CHALLENGE_WINDOW + c.timeout) revert TimeoutActive();
 
         uint256 toPayee = c.settledAmount;
         uint256 toRefund = c.deposit - c.settledAmount;

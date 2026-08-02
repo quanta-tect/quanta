@@ -2,7 +2,7 @@
 pragma solidity ^0.8.24;
 
 import "forge-std/Script.sol";
-import "../src-v1.2/ZeusyxaToken.sol";
+import "../src-v1.2/QuantaToken.sol";
 import "../src-v1.2/AIAgentRegistry.sol";
 import "../src-v1.2/AIPaymentChannel.sol";
 import "../src-v1.2/AIModelMarketplace.sol";
@@ -24,8 +24,8 @@ contract DeployScript is Script {
         vm.startBroadcast();
 
         // 1. Token
-        ZeusyxaToken token = new ZeusyxaToken(treasury);
-        console.log("ZeusyxaToken:", address(token));
+        QuantaToken token = new QuantaToken(treasury);
+        console.log("QuantaToken:", address(token));
 
         // 2. Agent Registry
         AIAgentRegistry registry = new AIAgentRegistry(treasury);
@@ -56,6 +56,6 @@ contract DeployScript is Script {
         console.log("---");
         console.log("Treasury:", treasury);
         console.log("Validator Pool:", validatorPool);
-        console.log("Total Supply:", token.totalSupply() / 1e18, "ZYX");
+        console.log("Total Supply:", token.totalSupply() / 1e18, "QTA");
     }
 }

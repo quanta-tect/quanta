@@ -2,7 +2,7 @@
 pragma solidity 0.8.24;
 
 import "forge-std/Test.sol";
-import "../src-v1.1/ZeusyxaToken.sol";
+import "../src-v1.1/QuantaToken.sol";
 import "../src-v1.1/AIAgentRegistry.sol";
 import "../src-v1.1/AIPaymentChannel.sol";
 import "../src-v1.1/AIModelMarketplace.sol";
@@ -13,7 +13,7 @@ import "../src-v1.1/AIModelMarketplace.sol";
  *         Naming: test_<Severity>_<Finding>_<Behavior>
  */
 contract SecurityFixesTest is Test {
-    ZeusyxaToken token;
+    QuantaToken token;
     AIAgentRegistry registry;
     AIPaymentChannel channel;
     AIModelMarketplace market;
@@ -31,12 +31,12 @@ contract SecurityFixesTest is Test {
         aliceSigner = vm.addr(alicePk);
 
         vm.startPrank(owner);
-        token = new ZeusyxaToken(owner);
+        token = new QuantaToken(owner);
         registry = new AIAgentRegistry(owner);
-        channel = new AIPaymentChannel(IERC20(address(token)), IZeusyxaToken(address(token)), owner);
+        channel = new AIPaymentChannel(IERC20(address(token)), IQuantaToken(address(token)), owner);
         market = new AIModelMarketplace(
             IERC20(address(token)),
-            IZeusyxaToken(address(token)),
+            IQuantaToken(address(token)),
             owner,           // treasury
             owner,           // validatorPool (simplified)
             owner
@@ -101,7 +101,7 @@ contract SecurityFixesTest is Test {
 
         // Now: same signature should NOT work on another contract (simulating other chain)
         AIPaymentChannel channel2 = new AIPaymentChannel(
-            IERC20(address(token)), IZeusyxaToken(address(token)), owner
+            IERC20(address(token)), IQuantaToken(address(token)), owner
         );
         vm.prank(owner);
         token.setAITaxCollector(address(channel2), true);
@@ -164,11 +164,11 @@ contract SecurityFixesTest is Test {
 
         // Try to use bridge immediately
         vm.prank(attacker);
-        vm.expectRevert(ZeusyxaToken.OnlyBridge.selector);
+        vm.expectRevert(QuantaToken.OnlyBridge.selector);
         token.bridgeMint(attacker, 1000 ether);
 
         // Try to execute change immediately
-        vm.expectRevert(ZeusyxaToken.BridgeTimelockActive.selector);
+        vm.expectRevert(QuantaToken.BridgeTimelockActive.selector);
         token.executeBridgeChange();
 
         // Fast forward 48h
@@ -298,7 +298,7 @@ contract SecurityFixesTest is Test {
 
     function test_I05_TaxRateCannotExceedCap() public {
         vm.prank(owner);
-        vm.expectRevert(ZeusyxaToken.InvalidTaxRate.selector);
+        vm.expectRevert(QuantaToken.InvalidTaxRate.selector);
         token.setAITaxRate(101); // > MAX_TAX_BPS (100 = 1%)
 
         // 100 is OK
@@ -312,11 +312,11 @@ contract SecurityFixesTest is Test {
 
     function test_L05_ZeroAddressRejected() public {
         vm.prank(owner);
-        vm.expectRevert(ZeusyxaToken.ZeroAddress.selector);
+        vm.expectRevert(QuantaToken.ZeroAddress.selector);
         token.proposeBridge(address(0));
 
         vm.prank(owner);
-        vm.expectRevert(ZeusyxaToken.ZeroAddress.selector);
+        vm.expectRevert(QuantaToken.ZeroAddress.selector);
         token.setAITaxCollector(address(0), true);
     }
 

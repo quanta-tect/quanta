@@ -48,7 +48,6 @@ contract AIAgentRegistry is Ownable2Step, Pausable {
     error ZeroAddress();
     error ExceedsMaxPerTx();
     error ExceedsMaxPerDay();
-    error NotAuthorizedSpender();
 
     event AgentRegistered(bytes32 indexed agentId, address indexed owner, uint64 registeredAt);
     event AgentDeactivated(bytes32 indexed agentId);
@@ -56,24 +55,8 @@ contract AIAgentRegistry is Ownable2Step, Pausable {
     event PolicyUpdated(bytes32 indexed agentId, uint256 maxPerTx, uint256 maxPerDay);
     event OracleSet(address indexed oracle, bool enabled);
     event SpendRecorded(bytes32 indexed agentId, uint256 amount, uint256 rollingTotal);
-    event AuthorizedSpenderUpdated(address indexed spender, bool authorized);
 
     constructor(address _initialOwner) Ownable(_initialOwner) {}
-
-    mapping(address => bool) public authorizedSpenders;
-
-    function setAuthorizedSpender(address spender, bool authorized) external onlyOwner {
-        if (spender == address(0)) revert ZeroAddress();
-        authorizedSpenders[spender] = authorized;
-        emit AuthorizedSpenderUpdated(spender, authorized);
-    }
-
-    modifier onlyAgentOwnerOrAuthorizedSpender(bytes32 agentId) {
-        if (msg.sender != agents[agentId].owner && !authorizedSpenders[msg.sender]) {
-            revert NotAuthorizedSpender();
-        }
-        _;
-    }
 
     function setReputationOracle(address oracle, bool enabled) external onlyOwner {
         if (oracle == address(0)) revert ZeroAddress();
@@ -139,7 +122,7 @@ contract AIAgentRegistry is Ownable2Step, Pausable {
         emit ReputationAdjusted(agentId, msg.sender, delta, a.reputation);
     }
 
-    function checkAndRecordSpend(bytes32 agentId, uint256 amount) external whenNotPaused onlyAgentOwnerOrAuthorizedSpender(agentId) {
+    function checkAndRecordSpend(bytes32 agentId, uint256 amount) external whenNotPaused {
         Agent storage a = agents[agentId];
         require(a.registeredAt != 0, "Registry: not found");
         require(a.active, "Registry: inactive");
@@ -174,28 +157,10 @@ contract AIAgentRegistry is Ownable2Step, Pausable {
         return agentsByOwner[owner_].length;
     }
 
-    /**
-     * @notice Trả về tổng chi tiêu trong 24h theo thời gian thực, bỏ qua slot cũ.
-     * @dev Mỗi slot tương ứng 1 giờ, slotTs là thời điểm của slot tại cursor.
-     */
     function getRolling24hSpend(bytes32 agentId) external view returns (uint256 total) {
         Agent storage a = agents[agentId];
-        RollingWindow memory w = a.window;
-        if (w.slotTs == 0) return 0;
-
-        uint256 now_ = block.timestamp;
-        uint256 windowStart = now_ > 24 hours ? now_ - 24 hours : 0;
-
         for (uint256 i = 0; i < WINDOW_SLOTS; i++) {
-            uint8 idx = uint8((uint256(w.cursor) + i) % WINDOW_SLOTS);
-            uint256 slotTime = w.slotTs;
-            if (i > 0) {
-                uint256 age = i * 1 hours;
-                slotTime = slotTime > age ? slotTime - age : 0;
-            }
-            if (slotTime >= windowStart && slotTime <= now_) {
-                total += w.slots[idx];
-            }
+            total += a.window.slots[i];
         }
     }
 }

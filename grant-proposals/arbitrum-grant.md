@@ -1,6 +1,6 @@
 # 📋 GRANT PROPOSAL — Arbitrum Grants Program
 
-**Project:** ZEUSYXA Protocol — Quantum-Safe AI Agent Payment Infrastructure
+**Project:** QUANTA Protocol — Quantum-Safe AI Agent Payment Infrastructure
 **Network:** Arbitrum (multi-chain with Base)
 **Funding Request:** $15,000
 **Duration:** 2 months
@@ -9,7 +9,7 @@
 
 ## Project Overview
 
-ZEUSYXA is the first blockchain protocol designed specifically for AI agent payments. As AI agents become autonomous economic actors, they need payment rails that support micro-transactions ($0.000001), identity management, and automated royalty distribution.
+QUANTA is the first blockchain protocol designed specifically for AI agent payments. As AI agents become autonomous economic actors, they need payment rails that support micro-transactions ($0.000001), identity management, and automated royalty distribution.
 
 ## Problem
 
@@ -20,7 +20,7 @@ ZEUSYXA is the first blockchain protocol designed specifically for AI agent paym
 
 ## Solution
 
-ZEUSYXA provides a complete payment stack for AI agents:
+QUANTA provides a complete payment stack for AI agents:
 
 1. **Payment Channels**: x402-style state channels. Open once, stream millions of micropayments off-chain, settle once.
 2. **Agent Registry**: On-chain identity with spending policies (max per tx, max per day, death switch) and oracle-based reputation.
@@ -39,9 +39,9 @@ ZEUSYXA provides a complete payment stack for AI agents:
 ## Arbitrum-Specific Value
 
 - **Low fees**: Arbitrum's low gas costs are ideal for micropayment channel open/close
-- **EVM compatibility**: ZEUSYXA contracts deploy on any EVM chain without modification
-- **DeFi composability**: ZEUSYXA payment channels can integrate with Arbitrum DeFi protocols
-- **Enterprise adoption**: Arbitrum's enterprise focus aligns with ZEUSYXA's B2B strategy
+- **EVM compatibility**: QUANTA contracts deploy on any EVM chain without modification
+- **DeFi composability**: QUANTA payment channels can integrate with Arbitrum DeFi protocols
+- **Enterprise adoption**: Arbitrum's enterprise focus aligns with QUANTA's B2B strategy
 
 ## Milestones
 
@@ -72,6 +72,6 @@ Solo founder. Full-stack blockchain engineer with expertise in Solidity, Rust/Su
 
 ## Links
 
-- GitHub: https://github.com/zeusyxa-io/zeusyxa
+- GitHub: https://github.com/quanta-tect/quanta
 - Base Sepolia: https://base-sepolia.blockscout.com
 - Demo: SDK examples in repo

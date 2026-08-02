@@ -1,20 +1,20 @@
-# @zeusyxa/sdk
+# @quanta/sdk
 
-TypeScript SDK for ZEUSYXA blockchain — built for both human developers and AI agents.
+TypeScript SDK for QUANTA blockchain — built for both human developers and AI agents.
 
 ## 📦 Install
 
 ```bash
-npm install @zeusyxa/sdk viem
+npm install @quanta/sdk viem
 ```
 
 ## 🚀 Quick start
 
 ```ts
-import { ZeusyxaClient, AIAgent, PaymentChannel } from "@zeusyxa/sdk";
+import { QuantaClient, AIAgent, PaymentChannel } from "@quanta/sdk";
 import { parseEther } from "viem";
 
-const client = new ZeusyxaClient({
+const client = new QuantaClient({
   chain: "base-sepolia",
   privateKey: process.env.PRIVATE_KEY!,
 });
@@ -46,14 +46,14 @@ await channel.close(channel.getLastTicket()!);
 
 | File | What it shows |
 |------|---------------|
-| `examples/autonomous-agent.ts` | AI agent earns + spends ZYX autonomously |
+| `examples/autonomous-agent.ts` | AI agent earns + spends QTA autonomously |
 | `examples/micropayment.ts` | x402-style payment channel |
 | `examples/buy-inference.ts` | Buy AI inference from marketplace |
 | `examples/langchain-integration.ts` | Plug into LangChain as Tool |
 
 ## 🤖 Framework compatibility
 
-ZEUSYXA SDK is designed to be a drop-in for any AI agent framework:
+QUANTA SDK is designed to be a drop-in for any AI agent framework:
 
 | Framework | Status |
 |-----------|--------|

@@ -19,7 +19,7 @@ contract AcceptOwnershipNew is Script {
         vm.startBroadcast(vm.envUint("NEW_KEY"));
 
         msig.execute(0x312137fb6943F8f89F5eF0f221aA102035a16625, 0, data);
-        console.log("OK: ZeusyxaToken ownership accepted");
+        console.log("OK: QuantaToken ownership accepted");
 
         msig.execute(0x10aE5f83F1CF20331186Ea1aD089D8fd3EbA5EEB, 0, data);
         console.log("OK: AIAgentRegistry ownership accepted");

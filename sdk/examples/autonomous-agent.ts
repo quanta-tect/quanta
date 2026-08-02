@@ -4,7 +4,7 @@ import 'dotenv/config';
  * =====================================================
  *
  * Scenario:
- *   1. Create AI agent "ResearchBot-001" with budget of 5 ZYX/day
+ *   1. Create AI agent "ResearchBot-001" with budget of 5 QTA/day
  *   2. Agent receives task: "Summarize 100 papers on quantum cryptography"
  *   3. Agent autonomously buys inference from AI marketplace (LLM model)
  *   4. Pays via payment channel (x402-style, micropayment)
@@ -17,13 +17,13 @@ import 'dotenv/config';
  * (Requires PRIVATE_KEY in .env)
  */
 
-import { ZeusyxaClient, AIAgent, PaymentChannel, ModelMarketplace } from "../src/index.js";
+import { QuantaClient, AIAgent, PaymentChannel, ModelMarketplace } from "../src/index.js";
 import { parseEther, formatEther, type Address } from "viem";
 
 const SCRIPT_HEADER = `
 ╔══════════════════════════════════════════════════════════════╗
-║   🤖 ZEUSYXA Autonomous Agent Demo                            ║
-║   Watch an AI earn and spend ZYX without human intervention  ║
+║   🤖 QUANTA Autonomous Agent Demo                            ║
+║   Watch an AI earn and spend QTA without human intervention  ║
 ╚══════════════════════════════════════════════════════════════╝
 `;
 
@@ -35,12 +35,12 @@ async function main() {
     throw new Error("PRIVATE_KEY env var required. NEVER use a default. See SECURITY.md.");
   }
   const privateKey = process.env.PRIVATE_KEY as `0x${string}`;
-  const client = new ZeusyxaClient({
+  const client = new QuantaClient({
     chain: "base-sepolia",
     privateKey,
   });
   console.log(`👤 Owner address: ${client.address}`);
-  console.log(`💰 Initial balance: ${formatEther(await client.balanceOf(client.address))} ZYX\n`);
+  console.log(`💰 Initial balance: ${formatEther(await client.balanceOf(client.address))} QTA\n`);
 
   // === Step 1: Register agent ===
   console.log("📝 Step 1: Registering autonomous AI agent...");
@@ -60,16 +60,16 @@ async function main() {
   console.log("📥 Step 2: Agent receives task from user...");
   const userTask = {
     description: "Summarize 10 recent papers on post-quantum cryptography",
-    payment: parseEther("2"),  // user pays 2 ZYX
+    payment: parseEther("2"),  // user pays 2 QTA
   };
   console.log(`   Task: "${userTask.description}"`);
-  console.log(`   Reward: ${formatEther(userTask.payment)} ZYX\n`);
+  console.log(`   Reward: ${formatEther(userTask.payment)} QTA\n`);
 
   // === Step 3: Agent opens payment channel with LLM provider ===
   console.log("📡 Step 3: Agent opens micropayment channel with LLM API provider...");
   const apiProvider = ("0x" + "f".repeat(40)) as Address;
   const channel = await PaymentChannel.open(client, apiProvider, parseEther("1"));
-  console.log(`✓ Channel opened with deposit 1 ZYX`);
+  console.log(`✓ Channel opened with deposit 1 QTA`);
   console.log(`   Channel ID: ${channel.state.channelId.slice(0, 18)}...\n`);
 
   // === Step 4: Agent makes 50 inference calls (one per paper section) ===
@@ -77,26 +77,26 @@ async function main() {
   for (let i = 0; i < 50; i++) {
     const ticket = await channel.pay(parseEther("0.01"));
     if (i % 10 === 0) {
-      console.log(`   📤 Call #${i + 1}: paid total ${formatEther(ticket.spent)} ZYX`);
+      console.log(`   📤 Call #${i + 1}: paid total ${formatEther(ticket.spent)} QTA`);
     }
   }
   const stats = channel.getStats();
   console.log(`\n   Total off-chain payments: ${stats.micropayments}`);
-  console.log(`   Total spent: ${formatEther(stats.spent)} ZYX`);
+  console.log(`   Total spent: ${formatEther(stats.spent)} QTA`);
   console.log(`   On-chain txs needed: 2 (open + close)\n`);
 
   // === Step 5: Settle the channel ===
   console.log("💸 Step 5: Provider settles channel on-chain...");
   // In demo we just simulate — in production provider would call close()
-  console.log(`   → ${formatEther(stats.spent)} ZYX → provider`);
-  console.log(`   → ${formatEther(stats.remaining)} ZYX refund to agent\n`);
+  console.log(`   → ${formatEther(stats.spent)} QTA → provider`);
+  console.log(`   → ${formatEther(stats.remaining)} QTA refund to agent\n`);
 
   // === Step 6: Agent returns result to user, gets paid, sends profit to owner ===
   console.log("💰 Step 6: Agent delivers result and books profit...");
   const profit = userTask.payment - stats.spent;
-  console.log(`   Revenue:  ${formatEther(userTask.payment)} ZYX`);
-  console.log(`   Cost:     ${formatEther(stats.spent)} ZYX`);
-  console.log(`   Profit:   ${formatEther(profit)} ZYX → returned to owner\n`);
+  console.log(`   Revenue:  ${formatEther(userTask.payment)} QTA`);
+  console.log(`   Cost:     ${formatEther(stats.spent)} QTA`);
+  console.log(`   Profit:   ${formatEther(profit)} QTA → returned to owner\n`);
 
   // === Step 7: Heartbeat to prove agent is alive ===
   console.log("💓 Step 7: Agent pings (heartbeat for death-switch)...");
@@ -104,9 +104,9 @@ async function main() {
   console.log(`✓ Agent alive: ${await agent.isAlive()}\n`);
 
   console.log("✨ Demo complete! In 7 steps the agent:");
-  console.log("   • Earned 2 ZYX from user task");
-  console.log("   • Spent 0.5 ZYX on AI inference (50 off-chain micropayments)");
-  console.log("   • Returned 1.5 ZYX profit to owner");
+  console.log("   • Earned 2 QTA from user task");
+  console.log("   • Spent 0.5 QTA on AI inference (50 off-chain micropayments)");
+  console.log("   • Returned 1.5 QTA profit to owner");
   console.log("   • Maintained heartbeat to avoid death-switch refund");
   console.log("\n💡 In production this loop runs 24/7, agent compounds earnings.");
 }

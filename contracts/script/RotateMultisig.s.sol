@@ -3,7 +3,7 @@ pragma solidity =0.8.24;
 
 import "forge-std/Script.sol";
 import "../src/SimpleMultisig.sol";
-import "../src-v1.2/ZeusyxaToken.sol";
+import "../src-v1.2/QuantaToken.sol";
 import "../src-v1.2/AIAgentRegistry.sol";
 import "../src-v1.2/AIPaymentChannel.sol";
 import "../src-v1.2/AIModelMarketplace.sol";
@@ -35,7 +35,7 @@ contract RotateMultisig is Script {
         data = abi.encodeWithSignature("transferOwnership(address)", address(newMsig));
         OLD_MULTISIG.call(abi.encodeWithSignature("execute(address,uint256,bytes)",
             0x312137fb6943F8f89F5eF0f221aA102035a16625, 0, data));
-        console.log("OK: ZeusyxaToken ownership proposed to new multisig");
+        console.log("OK: QuantaToken ownership proposed to new multisig");
 
         data = abi.encodeWithSignature("transferOwnership(address)", address(newMsig));
         OLD_MULTISIG.call(abi.encodeWithSignature("execute(address,uint256,bytes)",

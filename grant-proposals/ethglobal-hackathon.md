@@ -1,6 +1,6 @@
 # 📋 HACKATHON APPLICATION — ETHGlobal
 
-**Project:** ZEUSYXA Protocol
+**Project:** QUANTA Protocol
 **Track:** AI × Web3 / Payments / Infrastructure
 **Team:** Solo founder
 
@@ -8,7 +8,7 @@
 
 ## Project Description
 
-ZEUSYXA is "Stripe for AI Agents" — a quantum-resistant payment protocol that enables AI agents to transact autonomously at micro-scale.
+QUANTA is "Stripe for AI Agents" — a quantum-resistant payment protocol that enables AI agents to transact autonomously at micro-scale.
 
 ### The Problem
 AI agents (ChatGPT, Claude, AutoGPT) need to pay each other for API calls, GPU time, and LLM tokens. But:
@@ -17,14 +17,14 @@ AI agents (ChatGPT, Claude, AutoGPT) need to pay each other for API calls, GPU t
 - AI agents have no legal identity — can't open bank accounts
 
 ### The Solution
-ZEUSYXA provides:
+QUANTA provides:
 1. **Payment Channels**: 1M micropayments = 2 on-chain tx. Fees: ~$0.000001.
 2. **Agent Registry**: On-chain identity + spending policies + reputation.
 3. **Model Marketplace**: AI models sell inference with automatic royalty distribution.
 4. **Quantum-Resistant**: Dilithium3 (NIST FIPS 204) lattice-based signatures.
 
 ### Demo (5 min)
-1. Register an AI agent on ZEUSYXA
+1. Register an AI agent on QUANTA
 2. Open payment channel with another agent
 3. Stream 1000 micropayments off-chain
 4. Close channel — single on-chain settlement
@@ -49,10 +49,10 @@ ZEUSYXA provides:
 ## What We'd Build at Hackathon
 
 - **Dashboard MVP**: React app showing agent spending, channel status, tax reports
-- **LangChain Integration**: ZEUSYXA as a LangChain Tool for AI agent payments
+- **LangChain Integration**: QUANTA as a LangChain Tool for AI agent payments
 - **Demo Video**: Full flow from agent registration to micropayment settlement
 
-## Why ZEUSYXA Wins
+## Why QUANTA Wins
 
 1. **Novel**: First quantum-safe AI agent payment protocol
 2. **Working**: Already deployed and tested, not just a whitepaper
@@ -62,7 +62,7 @@ ZEUSYXA provides:
 
 ## Links
 
-- GitHub: https://github.com/zeusyxa-io/zeusyxa
+- GitHub: https://github.com/quanta-tect/quanta
 - Base Sepolia: https://base-sepolia.blockscout.com
 - Demo: SDK examples in repo
 

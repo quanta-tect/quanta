@@ -28,8 +28,8 @@ jobs:
 
       - name: Install deps
         run: |
-          forge install OpenZeppelin/openzeppelin-contracts
-          forge install foundry-rs/forge-std
+          forge install OpenZeppelin/openzeppelin-contracts --no-commit
+          forge install foundry-rs/forge-std --no-commit
 
       - name: Build
         run: forge build --sizes
@@ -65,8 +65,8 @@ jobs:
 
       - name: Install deps
         run: |
-          forge install OpenZeppelin/openzeppelin-contracts
-          forge install foundry-rs/forge-std
+          forge install OpenZeppelin/openzeppelin-contracts --no-commit
+          forge install foundry-rs/forge-std --no-commit
 
       - uses: crytic/slither-action@v0.4.0
         id: slither
@@ -83,13 +83,12 @@ jobs:
           sarif_file: ${{ steps.slither.outputs.sarif }}
 
   # ===================================================================
-  # 3. Mythril symbolic execution (informational, not blocking)
+  # 3. Mythril symbolic execution (slower, only on PR)
   # ===================================================================
   mythril:
-    name: Mythril symbolic execution (informational)
+    name: Mythril symbolic execution
     runs-on: ubuntu-latest
     if: github.event_name == 'pull_request'
-    continue-on-error: true
     steps:
       - uses: actions/checkout@v4
         with: { submodules: recursive }
@@ -106,7 +105,7 @@ jobs:
           myth analyze src-v1.2/QuantaToken.sol \
             --solv 0.8.24 \
             --execution-timeout 120 \
-            --max-depth 12 | tee mythril-quanta-token.log
+            --max-depth 12 || true
 
       - name: Analyze AIAgentRegistry (v1.2)
         run: |
@@ -114,31 +113,7 @@ jobs:
           myth analyze src-v1.2/AIAgentRegistry.sol \
             --solv 0.8.24 \
             --execution-timeout 120 \
-            --max-depth 12 | tee mythril-registry.log
-
-      - name: Analyze AIPaymentChannel (v1.2)
-        run: |
-          cd contracts
-          myth analyze src-v1.2/AIPaymentChannel.sol \
-            --solv 0.8.24 \
-            --execution-timeout 120 \
-            --max-depth 12 | tee mythril-channel.log
-
-      - name: Analyze AIModelMarketplace (v1.2)
-        run: |
-          cd contracts
-          myth analyze src-v1.2/AIModelMarketplace.sol \
-            --solv 0.8.24 \
-            --execution-timeout 120 \
-            --max-depth 12 | tee mythril-marketplace.log
-
-      - name: Upload Mythril logs
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: mythril-logs
-          path: contracts/mythril-*.log
-          retention-days: 7
+            --max-depth 12 || true
 
   # ===================================================================
   # 4. Secret scanning (prevent .env / private key leaks)

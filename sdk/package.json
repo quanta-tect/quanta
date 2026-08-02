@@ -1,22 +1,11 @@
 {
-  "name": "@zeusyxa/sdk",
+  "name": "@quanta/sdk",
   "version": "0.1.0",
-  "description": "ZEUSYXA SDK — quantum-safe + AI-native blockchain client",
+  "description": "QUANTA SDK — quantum-safe + AI-native blockchain client",
   "type": "module",
-  "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
-  "exports": {
-    ".": {
-      "import": "./dist/index.js",
-      "types": "./dist/index.d.ts"
-    }
-  },
-  "files": [
-    "dist"
-  ],
+  "main": "src/index.ts",
   "scripts": {
-    "build": "tsc -p tsconfig.json",
-    "prepack": "npm run build",
+    "build": "tsc",
     "demo:agent": "tsx examples/autonomous-agent.ts",
     "demo:micropay": "tsx examples/micropayment.ts",
     "demo:marketplace": "tsx examples/buy-inference.ts"
@@ -24,8 +13,7 @@
   "dependencies": {
     "dotenv": "^17.4.2",
     "openai": "^4.70.0",
-    "viem": "^2.54.2",
-    "ws": "^8.21.0"
+    "viem": "^2.21.0"
   },
   "devDependencies": {
     "@types/node": "^22.0.0",

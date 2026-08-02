@@ -2,7 +2,7 @@
 pragma solidity 0.8.24;
 
 import "../src-v1.1/AIPaymentChannel.sol";
-import "../src-v1.1/ZeusyxaToken.sol";
+import "../src-v1.1/QuantaToken.sol";
 
 /**
  * @title AIPaymentChannelInvariants
@@ -11,7 +11,7 @@ import "../src-v1.1/ZeusyxaToken.sol";
  * If ANY of these break, funds can be stolen or locked.
  */
 contract AIPaymentChannelInvariants {
-    ZeusyxaToken public token;
+    QuantaToken public token;
     AIPaymentChannel public channel;
 
     address public constant OWNER = address(0xC0FFEE);
@@ -26,10 +26,10 @@ contract AIPaymentChannelInvariants {
     bytes32[] public openChannels;
 
     constructor() {
-        token = new ZeusyxaToken(OWNER);
+        token = new QuantaToken(OWNER);
         channel = new AIPaymentChannel(
             IERC20(address(token)),
-            IZeusyxaToken(address(token)),
+            IQuantaToken(address(token)),
             OWNER
         );
     }

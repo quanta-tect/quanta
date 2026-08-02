@@ -14,9 +14,9 @@ Caption: "Your Bitcoin wallet on Q-Day eve."
 ```
 A futuristic ATM in a neon Tokyo street at night, but instead of a human customer,
 a small humanoid robot is withdrawing glowing purple coins.
-Sign on ATM reads 'ZEUSYXA — AI Welcome'. Cyberpunk style, photorealistic.
+Sign on ATM reads 'QUANTA — AI Welcome'. Cyberpunk style, photorealistic.
 ```
-Caption: "2027. The first AI agent rents its own apartment with ZYX."
+Caption: "2027. The first AI agent rents its own apartment with QTA."
 
 ## 3. "Q-Day Countdown"
 ```
@@ -54,15 +54,15 @@ Caption: "First time?"
 ## 7. "Agent Self-Sovereignty"
 ```
 A baby robot in a hospital nursery, instead of a name bracelet it has a tag
-that says 'WALLET: 0x4a...8f9 — BALANCE: 0.001 ZYX'. Soft lighting, heartwarming.
+that says 'WALLET: 0x4a...8f9 — BALANCE: 0.001 QTA'. Soft lighting, heartwarming.
 ```
-Caption: "Born free. Born with a wallet. Welcome to ZEUSYXA, little one."
+Caption: "Born free. Born with a wallet. Welcome to QUANTA, little one."
 
 ## 8. "Burn Counter"
 ```
 A massive bonfire in the middle of a futuristic city plaza, instead of wood
-it's burning glowing ZYX coins. People (and robots) stand around warming their
-hands. A digital sign overhead reads 'TOTAL BURNED: 1,234,567 ZYX'. Wide shot.
+it's burning glowing QTA coins. People (and robots) stand around warming their
+hands. A digital sign overhead reads 'TOTAL BURNED: 1,234,567 QTA'. Wide shot.
 ```
 Caption: "Every AI prompt feeds the fire."
 

@@ -6,10 +6,10 @@ import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 import "@openzeppelin/contracts/access/Ownable2Step.sol";
 import "@openzeppelin/contracts/utils/Pausable.sol";
-import "./interfaces/IZeusyxaToken.sol";
+import "./interfaces/IQuantaToken.sol";
 
 contract AIModelMarketplace is ReentrancyGuard, Ownable2Step, Pausable {
-    using SafeERC20 for IZeusyxaToken;
+    using SafeERC20 for IQuantaToken;
 
     uint256 public constant REGISTRATION_FEE    = 1e18;
     uint64  public constant DEACTIVATION_GRACE  = 24 hours;
@@ -28,15 +28,9 @@ contract AIModelMarketplace is ReentrancyGuard, Ownable2Step, Pausable {
         string  metadataURI;
     }
 
-    IZeusyxaToken public immutable token;
+    IQuantaToken public immutable token;
     address public treasury;
     address public validatorPool;
-
-    address public pendingTreasury;
-    address public pendingValidatorPool;
-    uint64  public pendingTreasuryAt;
-    uint64  public pendingValidatorPoolAt;
-    uint64  public constant TREASURY_TIMELOCK = 48 hours;
 
     uint256 public nextModelId;
     mapping(uint256 => Model)   public models;
@@ -55,7 +49,6 @@ contract AIModelMarketplace is ReentrancyGuard, Ownable2Step, Pausable {
     error ModelUnavailable();
     error NotAuthorized();
     error PriceSlipped();
-    error TimelockActive();
 
     event ModelRegistered(uint256 indexed modelId, address indexed creator, uint256 pricePerCall, uint256 royaltyBps);
     event ModelDeactivated(uint256 indexed modelId, address indexed by, uint64 deactivatedAt);
@@ -74,53 +67,21 @@ contract AIModelMarketplace is ReentrancyGuard, Ownable2Step, Pausable {
         if (_token == address(0)) revert ZeroAddress();
         if (_treasury == address(0)) revert ZeroAddress();
         if (_validatorPool == address(0)) revert ZeroAddress();
-        token = IZeusyxaToken(_token);
+        token = IQuantaToken(_token);
         treasury = _treasury;
         validatorPool = _validatorPool;
     }
 
     function setTreasury(address _treasury) external onlyOwner {
         if (_treasury == address(0)) revert ZeroAddress();
-        pendingTreasury = _treasury;
-        pendingTreasuryAt = uint64(block.timestamp) + TREASURY_TIMELOCK;
         emit TreasuryUpdated(treasury, _treasury);
-    }
-
-    function applyTreasuryChange() external onlyOwner {
-        if (pendingTreasury == address(0)) revert ZeroAddress();
-        if (block.timestamp < pendingTreasuryAt) revert TimelockActive();
-        address old = treasury;
-        treasury = pendingTreasury;
-        pendingTreasury = address(0);
-        pendingTreasuryAt = 0;
-        emit TreasuryUpdated(old, treasury);
-    }
-
-    function cancelTreasuryChange() external onlyOwner {
-        pendingTreasury = address(0);
-        pendingTreasuryAt = 0;
+        treasury = _treasury;
     }
 
     function setValidatorPool(address _pool) external onlyOwner {
         if (_pool == address(0)) revert ZeroAddress();
-        pendingValidatorPool = _pool;
-        pendingValidatorPoolAt = uint64(block.timestamp) + TREASURY_TIMELOCK;
         emit ValidatorPoolUpdated(validatorPool, _pool);
-    }
-
-    function applyValidatorPoolChange() external onlyOwner {
-        if (pendingValidatorPool == address(0)) revert ZeroAddress();
-        if (block.timestamp < pendingValidatorPoolAt) revert TimelockActive();
-        address old = validatorPool;
-        validatorPool = pendingValidatorPool;
-        pendingValidatorPool = address(0);
-        pendingValidatorPoolAt = 0;
-        emit ValidatorPoolUpdated(old, validatorPool);
-    }
-
-    function cancelValidatorPoolChange() external onlyOwner {
-        pendingValidatorPool = address(0);
-        pendingValidatorPoolAt = 0;
+        validatorPool = _pool;
     }
 
     function setFeeSplit(uint256 _treasuryBps, uint256 _validatorBps) external onlyOwner {
@@ -141,7 +102,6 @@ contract AIModelMarketplace is ReentrancyGuard, Ownable2Step, Pausable {
         if (pricePerCall == 0) revert ZeroPrice();
         if (royaltyBps > MAX_ROYALTY_BPS) revert InvalidRoyalty(royaltyBps);
         if (modelCountByCreator[msg.sender] >= MAX_MODELS_PER_USER) revert TooManyModels();
-        if (treasury == address(0)) revert ZeroAddress();
 
         modelId = nextModelId++;
         modelCountByCreator[msg.sender]++;
@@ -185,11 +145,13 @@ contract AIModelMarketplace is ReentrancyGuard, Ownable2Step, Pausable {
         require(m.registeredAt != 0, "Market: model not found");
         if (!(m.active || (m.deactivatedAt > 0 && block.timestamp <= m.deactivatedAt + DEACTIVATION_GRACE))) revert ModelUnavailable();
         if (m.pricePerCall > maxPrice) revert PriceSlipped();
-        if (treasury == address(0)) revert ZeroAddress();
-        if (validatorPool == address(0)) revert ZeroAddress();
 
         uint256 price = m.pricePerCall;
 
+        // Effects BEFORE interactions (CEI pattern)
+        m.totalCalls++;
+
+        // Interactions
         token.safeTransferFrom(msg.sender, address(this), price);
 
         uint256 taxed = token.collectAITax(price);
@@ -201,7 +163,6 @@ contract AIModelMarketplace is ReentrancyGuard, Ownable2Step, Pausable {
         uint256 remainder = net - creatorShare - treasuryShare - validatorShare;
         treasuryShare += remainder;
 
-        m.totalCalls++;
         m.totalEarned += creatorShare;
 
         if (creatorShare > 0)  token.safeTransfer(m.creator, creatorShare);

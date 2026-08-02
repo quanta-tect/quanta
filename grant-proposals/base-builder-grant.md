@@ -1,6 +1,6 @@
 # 📋 GRANT PROPOSAL — Base Builder Grant (Coinbase)
 
-**Project:** ZEUSYXA Protocol — Stripe for AI Agents, Quantum-Computer Proof
+**Project:** QUANTA Protocol — Stripe for AI Agents, Quantum-Computer Proof
 **Network:** Base (Coinbase L2)
 **Funding Request:** $25,000
 **Duration:** 3 months
@@ -9,9 +9,9 @@
 
 ## Executive Summary
 
-ZEUSYXA is the first blockchain protocol purpose-built for AI agent payments, deployed on Base Sepolia. We solve a critical infrastructure gap: AI agents (ChatGPT, Claude, AutoGPT) need to transact autonomously at micro-scale ($0.000001/tx), but current payment systems (Stripe, banks) don't support sub-cent transactions, and Ethereum gas fees ($0.50/tx) are prohibitively expensive for micropayments.
+QUANTA is the first blockchain protocol purpose-built for AI agent payments, deployed on Base Sepolia. We solve a critical infrastructure gap: AI agents (ChatGPT, Claude, AutoGPT) need to transact autonomously at micro-scale ($0.000001/tx), but current payment systems (Stripe, banks) don't support sub-cent transactions, and Ethereum gas fees ($0.50/tx) are prohibitively expensive for micropayments.
 
-ZEUSYXA provides:
+QUANTA provides:
 - **Payment channels**: 1M micropayments = 2 on-chain tx (open + close), fees ~$0.000001
 - **AI Model Marketplace**: AI models sell inference to other agents on-chain
 - **Agent Registry**: Every AI agent gets identity + spending policy + reputation
@@ -22,12 +22,12 @@ ZEUSYXA provides:
 - ✅ 4 smart contracts deployed + verified on Base Sepolia (Sourcify + Blockscout)
 - ✅ TypeScript SDK working (viem, 0 tsc errors)
 - ✅ 150+ tests (Rust L1 node + Solidity contracts)
-- ✅ Open-source: https://github.com/zeusyxa-io/zeusyxa
+- ✅ Open-source: https://github.com/quanta-tect/quanta
 
 ## Technical Architecture
 
 ### Layer 2 (Base Sepolia)
-- ZeusyxaToken (ZYX): ERC-20 with 0.3% AI usage tax (deflationary burn)
+- QuantaToken (QTA): ERC-20 with 0.3% AI usage tax (deflationary burn)
 - AIAgentRegistry: Agent identity + rolling 24h spending window + oracle-based reputation
 - AIPaymentChannel: x402-style state channels with EIP-712 signatures
 - AIModelMarketplace: Model registration + slippage-protected payments + deactivation grace period
@@ -46,7 +46,7 @@ ZEUSYXA provides:
 - Security audit (Slither + Mythril)
 
 ### Month 2: SDK + Dashboard
-- Publish ZEUSYXA SDK to npm (@zeusyxa/sdk)
+- Publish QUANTA SDK to npm (@quanta/sdk)
 - Build React Dashboard MVP (agent spending, channel management, tax reports)
 - Integration with LangChain + AutoGPT
 
@@ -68,17 +68,17 @@ ZEUSYXA provides:
 
 ## Team
 
-Solo founder, full-stack blockchain engineer. Built ZEUSYXA from scratch: Solidity contracts, Rust Substrate node, TypeScript SDK, security audit, CI/CD.
+Solo founder, full-stack blockchain engineer. Built QUANTA from scratch: Solidity contracts, Rust Substrate node, TypeScript SDK, security audit, CI/CD.
 
 ## Why Base?
 
 - Coinbase distribution: 100M+ potential users
 - Low gas fees: essential for micropayment use case
 - Ethereum security: inherits from L2
-- Alignment: Base is building the onchain economy — ZEUSYXA is the payment rail for AI agents in that economy
+- Alignment: Base is building the onchain economy — QUANTA is the payment rail for AI agents in that economy
 
 ## Links
 
-- GitHub: https://github.com/zeusyxa-io/zeusyxa
+- GitHub: https://github.com/quanta-tect/quanta
 - Base Sepolia: https://base-sepolia.blockscout.com/address/0x312137fb6943F8f89F5eF0f221aA102035a16625
-- Whitepaper: https://github.com/zeusyxa-io/zeusyxa/blob/main/docs/WHITEPAPER.md
+- Whitepaper: https://github.com/quanta-tect/quanta/blob/main/docs/WHITEPAPER.md
