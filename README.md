@@ -91,6 +91,16 @@ cd sdk && npm install && npm run demo:agent     # AI agent demo
 open landing/index.html                         # Marketing site
 open explorer/index.html                        # Live explorer (simulated)
 open wallet-ui/index.html                       # Safe wallet with tx simulation
+
+## 🤖 AgentPay Demo
+
+A minimal dashboard demo is available in `demo/agentpay-dashboard`.
+It shows agent registration, spending policies, authorized spenders, simulated payments, and receipts.
+
+```bash
+cd demo/agentpay-dashboard
+npm install
+npm run dev
 ```
 
 ## 🗺️ Deployment roadmap
