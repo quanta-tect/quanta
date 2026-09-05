@@ -6,9 +6,11 @@
   "main": "src/index.ts",
   "scripts": {
     "build": "tsc",
+    "typecheck": "tsc --noEmit",
     "demo:agent": "tsx examples/autonomous-agent.ts",
     "demo:micropay": "tsx examples/micropayment.ts",
-    "demo:marketplace": "tsx examples/buy-inference.ts"
+    "demo:marketplace": "tsx examples/buy-inference.ts",
+    "demo:langchain": "tsx examples/langchain-integration.ts"
   },
   "dependencies": {
     "dotenv": "^17.4.2",
