@@ -88,3 +88,12 @@ TODO-private.md
 !.github/.env*
 l1/target/
 l1/vendor/
+
+# CLEANUP (added 2026-09-05): remove junk committed by mistake
+.venv*/
+*.wav
+**/flattened/
+*.bak
+*.egg-info/
+*.log
+litellm/

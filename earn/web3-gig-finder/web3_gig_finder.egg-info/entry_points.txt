@@ -1,2 +1,0 @@
-[console_scripts]
-web3gig = web3_gig_finder.cli:main
