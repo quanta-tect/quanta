@@ -33,23 +33,27 @@ contract RotateMultisig is Script {
         bytes memory data;
 
         data = abi.encodeWithSignature("transferOwnership(address)", address(newMsig));
-        OLD_MULTISIG.call(abi.encodeWithSignature("execute(address,uint256,bytes)",
+        (bool success1, ) = OLD_MULTISIG.call(abi.encodeWithSignature("execute(address,uint256,bytes)",
             0x312137fb6943F8f89F5eF0f221aA102035a16625, 0, data));
+        require(success1, "Rotate: QuantaToken call failed");
         console.log("OK: QuantaToken ownership proposed to new multisig");
 
         data = abi.encodeWithSignature("transferOwnership(address)", address(newMsig));
-        OLD_MULTISIG.call(abi.encodeWithSignature("execute(address,uint256,bytes)",
+        (bool success2, ) = OLD_MULTISIG.call(abi.encodeWithSignature("execute(address,uint256,bytes)",
             0x10aE5f83F1CF20331186Ea1aD089D8fd3EbA5EEB, 0, data));
+        require(success2, "Rotate: AIAgentRegistry call failed");
         console.log("OK: AIAgentRegistry ownership proposed to new multisig");
 
         data = abi.encodeWithSignature("transferOwnership(address)", address(newMsig));
-        OLD_MULTISIG.call(abi.encodeWithSignature("execute(address,uint256,bytes)",
+        (bool success3, ) = OLD_MULTISIG.call(abi.encodeWithSignature("execute(address,uint256,bytes)",
             0xF146e95b97fce1d1800F5F922AE99155711A4314, 0, data));
+        require(success3, "Rotate: AIPaymentChannel call failed");
         console.log("OK: AIPaymentChannel ownership proposed to new multisig");
 
         data = abi.encodeWithSignature("transferOwnership(address)", address(newMsig));
-        OLD_MULTISIG.call(abi.encodeWithSignature("execute(address,uint256,bytes)",
+        (bool success4, ) = OLD_MULTISIG.call(abi.encodeWithSignature("execute(address,uint256,bytes)",
             0xFf584b30b2D00Bf0aB694683F06dC7E701fdfd49, 0, data));
+        require(success4, "Rotate: AIModelMarketplace call failed");
         console.log("OK: AIModelMarketplace ownership proposed to new multisig");
 
         vm.stopBroadcast();

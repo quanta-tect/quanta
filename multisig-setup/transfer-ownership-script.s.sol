@@ -2,10 +2,10 @@
 pragma solidity 0.8.24;
 
 import "forge-std/Script.sol";
-import "../contracts/src-v1.1/QuantaToken.sol";
-import "../contracts/src-v1.1/AIAgentRegistry.sol";
-import "../contracts/src-v1.1/AIPaymentChannel.sol";
-import "../contracts/src-v1.1/AIModelMarketplace.sol";
+import "../contracts/src-v1.2/QuantaToken.sol";
+import "../contracts/src-v1.2/AIAgentRegistry.sol";
+import "../contracts/src-v1.2/AIPaymentChannel.sol";
+import "../contracts/src-v1.2/AIModelMarketplace.sol";
 
 /**
  * @title TransferOwnershipToMultisig
