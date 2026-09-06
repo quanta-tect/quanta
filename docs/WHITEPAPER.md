@@ -22,6 +22,20 @@ Bitcoin and Ethereum solved the problem of money and smart contracts for humans 
 
 ---
 
+## ⚠️ Current Deployment Status (2026)
+
+> **IMPORTANT**: The QUANTA L1 (Dilithium, PoUW, native AI opcodes) is **not yet live**.
+> 
+> **What IS deployed today (Base Sepolia testnet, chainId 84532):**
+> - **QuantaToken (QTA)** — ERC-20 with burn, AI usage tax, bridge mint/burn: `0x312137fb6943F8f89F5eF0f221aA102035a16625`
+> - **AIAgentRegistry** — Agent identity + spending policies: `0x10aE5f83F1CF20331186Ea1aD089D8fd3EbA5EEB`
+> - **AIPaymentChannel** — x402-style micropayments (EIP-712): `0xF146e95b97fce1d1800F5F922AE99155711A4314`
+> - **AIModelMarketplace** — AI inference marketplace with royalties: `0xFf584b30b2D00Bf0aB694683F06dC7E701fdfd49`
+> 
+> These contracts implement the **AI payment infrastructure layer** (agent wallets, micropayments, marketplace) on EVM today, while the **L1 consensus/cryptography layer** (Dilithium, PoUW) remains in active development (see ROADMAP.md).
+
+---
+
 ## 1. The Problem
 
 ### 1.1. Quantum Threat ("Q-Day")

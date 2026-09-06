@@ -5,10 +5,18 @@
 - **Symbol**: QTA
 - **Smallest unit**: 1 quark = 10⁻¹⁸ QTA (like wei)
 - **Max total supply**: 1,000,000,000 QTA (1 billion — fixed cap, no further minting)
-- **Genesis supply**: 300,000,000 QTA (30%)
-- **Remaining**: 700,000,000 QTA emitted gradually via mining/staking over 50 years
 
-## 2. Genesis Distribution (300M QTA)
+## ⚠️ Current Deployment (Base Sepolia, v1.2 contracts)
+
+> **Deployed contract values (Solidity v1.2 on Base Sepolia testnet):**
+> - **Genesis supply**: 300,000,000 QTA (30% of max) — minted to deployer at construction
+> - **Remaining**: 700,000,000 QTA — only mintable via `bridgeMint()` by authorized bridge (with 48h timelock)
+> - **AI Usage Tax**: 30 bps (0.3%) on designated collectors (e.g., marketplace, channels)
+> - **Bridge timelock**: 48 hours for bridge address changes
+>
+> The L1 emission schedule below (700M over 50 years) applies to the **future QUANTA L1 (PoUW mining)**, not the current EVM deployment.
+
+## 2. Genesis Distribution (300M QTA) — L1 Design Target
 
 | Allocation             | %    | Amount    | Vesting                                  |
 |------------------------|------|-----------|------------------------------------------|
@@ -22,7 +30,10 @@
 | Validator Bootstrap    | 10%  | 30M       | Distributed to 100 genesis validators   |
 | **Treasury (DAO)**     | 5%   | 15M       | DAO controlled                          |
 
-## 3. Emission Schedule — 700M QTA
+## 3. Emission Schedule — 700M QTA — L1 Design Target (PoUW Mining)
+
+> ⚠️ **This schedule applies to the future QUANTA L1 consensus layer (PoUW).**
+> The current Base Sepolia deployment has **no mining/emission** — the remaining 700M QTA are mintable only via authorized bridge.
 
 Half-life every 6 years (similar to Bitcoin but softer):
 

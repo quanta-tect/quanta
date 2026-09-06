@@ -7,6 +7,11 @@
 - [x] Landing page
 - [x] Tokenomics simulator
 - [x] Complete security suite (audit, war games, multisig, etc.)
+- [x] **Solidity v1.2 contracts deployed to Base Sepolia testnet (chainId 84532)**
+  - [x] QuantaToken: `0x312137fb6943F8f89F5eF0f221aA102035a16625`
+  - [x] AIAgentRegistry: `0x10aE5f83F1CF20331186Ea1aD089D8fd3EbA5EEB`
+  - [x] AIPaymentChannel: `0xF146e95b97fce1d1800F5F922AE99155711A4314`
+  - [x] AIModelMarketplace: `0xFf584b30b2D00Bf0aB694683F06dC7E701fdfd49`
 - [ ] Discord + Twitter community ignition
 - [ ] Recruit 3 lead cryptographers (Dilithium experts)
 
