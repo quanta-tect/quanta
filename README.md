@@ -1,7 +1,6 @@
 # ⚛️ QUANTA — Quantum-resistant Universal Agent Network for Transactions & AI
 
 > "Money for the future isn't just quantum-resistant — it speaks AI's language."
-
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)]()
 [![Quantum Safe](https://img.shields.io/badge/Quantum-Safe-purple.svg)]()
 [![AI Native](https://img.shields.io/badge/AI-Native-blue.svg)]()
@@ -68,8 +67,6 @@ quanta/
 │
 ├── explorer/                 # 🔍 Live block explorer mockup
 │
-├── landing/                  # 🌐 Marketing landing page
-│
 └── simulator/                # 📊 Tokenomics simulator
 ```
 
@@ -84,7 +81,6 @@ cd prototype && python3 demo.py                 # Python L1 demo
 cd simulator && python3 tokenomics_sim.py --all # 50-year tokenomics
 cd contracts && forge test                      # Solidity tests
 cd sdk && npm install && npm run demo:agent     # AI agent demo
-open landing/index.html                         # Marketing site
 open explorer/index.html                        # Live explorer (simulated)
 open wallet-ui/index.html                       # Safe wallet with tx simulation
 ```
@@ -92,7 +88,7 @@ open wallet-ui/index.html                       # Safe wallet with tx simulation
 ## 🗺️ Deployment roadmap
 
 ### ✅ Phase 0 — Now (Done in this repo)
-- Whitepaper, tokenomics, full prototype, landing page, simulator
+- Whitepaper, tokenomics, full prototype, simulator
 - Smart contracts (Solidity v1.1 with all security fixes)
 - TypeScript SDK with examples
 - Marketing content kit (launch thread + 30-day calendar)

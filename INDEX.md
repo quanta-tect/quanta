@@ -108,6 +108,12 @@
 | [wallet-ui/index.html](./wallet-ui/index.html) | Self-contained wallet with tx simulation |
 | [wallet-ui/README.md](./wallet-ui/README.md) | Production architecture guide |
 
+## 🧮 Simulator
+
+| File | Purpose |
+|------|---------|
+| [simulator/tokenomics_sim.py](./simulator/tokenomics_sim.py) | 30-year economic sim |
+
 ## 🎓 Security Training
 
 | File | Audience | Duration |
@@ -141,16 +147,6 @@
 | [sdk/src/marketplace.ts](./sdk/src/marketplace.ts) | Model marketplace |
 | [sdk/examples/autonomous-agent.ts](./sdk/examples/autonomous-agent.ts) | Viral demo |
 | [sdk/examples/langchain-integration.ts](./sdk/examples/langchain-integration.ts) | LangChain Tool |
-
-## 🌐 Frontend / Marketing
-
-| File | Purpose |
-|------|---------|
-| [landing/index.html](./landing/index.html) | Marketing landing page |
-| [explorer/index.html](./explorer/index.html) | Block explorer mock |
-| [content/twitter/launch-thread.md](./content/twitter/launch-thread.md) | 12-tweet launch |
-| [content/twitter/30-day-content-calendar.md](./content/twitter/30-day-content-calendar.md) | Daily content plan |
-| [content/memes/meme-prompts.md](./content/memes/meme-prompts.md) | Image generation prompts |
 
 ## 🧮 Simulator
 
