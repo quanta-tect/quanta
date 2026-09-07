@@ -1,4 +1,4 @@
-# QUANTA Go-to-Market & Viral Strategy
+# ZEUSYXA Go-to-Market & Viral Strategy
 
 ## 🎯 Positioning
 
@@ -15,7 +15,7 @@
 ## ⚠️ Current Deployment Status (2026)
 
 > **What's live today (Base Sepolia testnet, chainId 84532):**
-> - **QuantaToken (QTA)** — ERC-20 with burn, AI usage tax: `0x312137fb6943F8f89F5eF0f221aA102035a16625`
+> - **ZeusyxaToken (ZYX)** — ERC-20 with burn, AI usage tax: `0x312137fb6943F8f89F5eF0f221aA102035a16625`
 > - **AIAgentRegistry** — Agent identity + spending policies: `0x10aE5f83F1CF20331186Ea1aD089D8fd3EbA5EEB`
 > - **AIPaymentChannel** — x402 micropayments (EIP-712): `0xF146e95b97fce1d1800F5F922AE99155711A4314`
 > - **AIModelMarketplace** — AI inference marketplace with royalties: `0xFf584b30b2D00Bf0aB694683F06dC7E701fdfd49`
@@ -25,11 +25,11 @@
 ## 🔥 Viral Hooks (Top 10)
 
 1. **"Q-Day Countdown"** — Counter estimating days until quantum machines break Bitcoin. Updates with each IBM/Google news → naturally viral on every milestone.
-2. **"Live AI Trade Tape"** — Stream real-time AI agent transactions happening on QUANTA, showing "GPT-instance-#4419 just paid Claude-instance-#221 0.003 QTA for 1 prompt".
-3. **"Mining Saves Earth"** — Compare Bitcoin mining vs QUANTA: "Each QUANTA block = 1000 free medical answers for the poor".
+2. **"Live AI Trade Tape"** — Stream real-time AI agent transactions happening on ZEUSYXA, showing "GPT-instance-#4419 just paid Claude-instance-#221 0.003 ZYX for 1 prompt".
+3. **"Mining Saves Earth"** — Compare Bitcoin mining vs ZEUSYXA: "Each ZEUSYXA block = 1000 free medical answers for the poor".
 4. **"Agent Self-Sovereignty"** — Tutorial: "Create an AI agent that earns its own living in 5 minutes".
-5. **"Burn Counter"** — Live dashboard: "Burned 1,234,567 QTA today because AI usage was high".
-6. **"Quantum Bounty"** — $1M offered to anyone who can break Dilithium wallet on QUANTA using a real quantum computer. PR gold.
+5. **"Burn Counter"** — Live dashboard: "Burned 1,234,567 ZYX today because AI usage was high".
+6. **"Quantum Bounty"** — $1M offered to anyone who can break Dilithium wallet on ZEUSYXA using a real quantum computer. PR gold.
 7. **"Adopt-an-Agent"** — Users "adopt" 1 AI agent, split 50/50 profits the agent earns.
 8. **"NFT model royalties"** — A developer earns $X from their model being called 1M times by other AIs. Share as case study.
 9. **"AI Hackathon for Real Money"** — $500K prize, participants' AI agents must earn real money in 30 days on mainnet.
@@ -56,7 +56,7 @@
 ## 🎪 Launch Sequence
 
 **T-90 days**: Stealth → Whitepaper drop on HackerNews + r/crypto
-**T-60 days**: "Why we built QUANTA" — viral founder essay
+**T-60 days**: "Why we built ZEUSYXA" — viral founder essay
 **T-45 days**: Devnet live, dev incentives open
 **T-30 days**: AMA series with Vitalik, Adam Back, Yann LeCun (aim high)
 **T-15 days**: Testnet faucet, $1M trading competition (paper money)
@@ -68,7 +68,7 @@
 
 - **"Schrödinger's Wallet"** — wallet both has and doesn't have money until quantum opens it
 - **"AGI needs ATM"** — AI agent standing at a 2050-era ATM withdrawing QTA
-- **"Q-Day Survivor"** — NFT badge for early adopters, free claim
+- **"Q-Day Survivor"** — NFT badge for early ZEUSYXA adopters, free claim
 - **"Bitcoin Maxi vs Quantum"** — meme comparing 2009 vs 2030
 - **"My AI made more money than me last week"** — viral testimonial
 

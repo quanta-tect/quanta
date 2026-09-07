@@ -1,8 +1,8 @@
-# QUANTA Whitepaper v1.0
+# ZEUSYXA Whitepaper v1.0
 ### Quantum-resistant Universal Agent Network for Transactions & AI
 
 **Date**: 2026
-**Authors**: QUANTA Foundation
+**Authors**: ZEUSYXA Foundation
 **Version**: 1.0 (Draft)
 
 ---
@@ -14,7 +14,7 @@ Bitcoin and Ethereum solved the problem of money and smart contracts for humans 
 1. **Quantum computing** — Within 5-15 years, Shor's algorithm could break ECDSA/EdDSA, making every Bitcoin/Ethereum wallet with an exposed public key drainable within hours.
 2. **AI Agent Economy** — By 2030, billions of AI agents will transact autonomously with each other at scales of millions of transactions per second with micro-cent values. Current financial infrastructure was not built for them.
 
-**QUANTA** is a Layer-1 blockchain designed from scratch to address both:
+**ZEUSYXA** is a Layer-1 blockchain designed from scratch to address both:
 
 - Lattice-based quantum-resistant signatures (CRYSTALS-Dilithium)
 - **Proof of Useful Work (PoUW)** consensus that turns mining compute into useful AI inference
@@ -24,10 +24,10 @@ Bitcoin and Ethereum solved the problem of money and smart contracts for humans 
 
 ## ⚠️ Current Deployment Status (2026)
 
-> **IMPORTANT**: The QUANTA L1 (Dilithium, PoUW, native AI opcodes) is **not yet live**.
+> **IMPORTANT**: The ZEUSYXA L1 (Dilithium, PoUW, native AI opcodes) is **not yet live**.
 > 
 > **What IS deployed today (Base Sepolia testnet, chainId 84532):**
-> - **QuantaToken (QTA)** — ERC-20 with burn, AI usage tax, bridge mint/burn: `0x312137fb6943F8f89F5eF0f221aA102035a16625`
+> - **ZeusyxaToken (ZYX)** — ERC-20 with burn, AI usage tax, bridge mint/burn: `0x312137fb6943F8f89F5eF0f221aA102035a16625`
 > - **AIAgentRegistry** — Agent identity + spending policies: `0x10aE5f83F1CF20331186Ea1aD089D8fd3EbA5EEB`
 > - **AIPaymentChannel** — x402-style micropayments (EIP-712): `0xF146e95b97fce1d1800F5F922AE99155711A4314`
 > - **AIModelMarketplace** — AI inference marketplace with royalties: `0xFf584b30b2D00Bf0aB694683F06dC7E701fdfd49`
@@ -56,7 +56,7 @@ Bitcoin and Ethereum solved the problem of money and smart contracts for humans 
 
 ---
 
-## 2. The QUANTA Solution
+## 2. The ZEUSYXA Solution
 
 ### 2.1. Architecture Overview
 
@@ -89,7 +89,7 @@ Bitcoin and Ethereum solved the problem of money and smart contracts for humans 
 | Address hash       | Keccak256(Dilithium-PK) | -              | Creates 32-byte address              |
 | Backward compat    | Hybrid Ed25519+Dilithium| -              | Optional for compact wallets         |
 
-**Address format**: `qta1...` (Bech32m, 42 chars) — easy to distinguish from Ethereum/BTC.
+**Address format**: `zyx1...` (Bech32m, 42 chars) — easy to distinguish from Ethereum/BTC.
 
 ### 2.3. Proof of Useful Work (PoUW) Consensus
 
@@ -105,7 +105,7 @@ Instead of meaningless SHA-256, validators must:
 
 Reward = `block_reward × (stake_weight × 0.4 + work_quality_score × 0.6)`
 
-> 💡 **Core viral message**: "Every QUANTA block teaches ChatGPT a new answer. Every watt of electricity mining QUANTA serves humanity."
+> 💡 **Core viral message**: "Every ZEUSYXA block teaches ChatGPT a new answer. Every watt of electricity mining ZEUSYXA serves humanity."
 
 ### 2.4. AI-Native Infrastructure
 
@@ -126,12 +126,12 @@ Revival of the HTTP 402 standard on QUANTA:
 ```http
 GET /api/llm/inference
 → 402 Payment Required
-  X-QUANTA-Price: 0.0001 QTA
-  X-QUANTA-Receiver: qta1abc...
-  X-QUANTA-Nonce: 0x...
+  X-ZEUSYXA-Price: 0.0001 ZYX
+  X-ZEUSYXA-Receiver: zyx1abc...
+  X-ZEUSYXA-Nonce: 0x...
 
 # Client pays in header of next request
-Authorization: QUANTA <signed_payment_proof>
+Authorization: ZEUSYXA <signe...oof>
 → 200 OK { "completion": "..." }
 ```
 
@@ -145,7 +145,7 @@ Fees settled batch-wise per block (off-chain channels) → 1 million micro-tx = 
 |--------------|------------------|--------------------------------------------|
 | **Models**   | NFT-MOD          | Inference rights, royalty per use         |
 | **Datasets** | NFT-DAT          | Access rights, can be time-limited        |
-| **Compute**  | Fungible (cQTA)  | 1 cQTA = 1 GPU-hour of RTX 4090 equivalent |
+| **Compute**  | Fungible (cZYX)  | 1 cZYX = 1 GPU-hour of RTX 4090 equivalent |
 
 Royalties auto-split: model creator 70%, validator serving inference 25%, treasury 5%.
 
@@ -164,7 +164,7 @@ Royalties auto-split: model creator 70%, validator serving inference 25%, treasu
 
 ## 3. Notable Features (vs "best of breed")
 
-| Feature                      | Bitcoin | Ethereum | Solana | **QUANTA** |
+|| Feature                      | Bitcoin | Ethereum | Solana | **ZEUSYXA** ||
 |------------------------------|---------|----------|--------|------------|
 | Quantum-safe signatures      | ❌      | ❌       | ❌     | ✅         |
 | Smart contracts              | ❌      | ✅       | ✅     | ✅ (EVM+)  |
@@ -182,7 +182,7 @@ Royalties auto-split: model creator 70%, validator serving inference 25%, treasu
 
 ## 4. Governance Model
 
-- **QTA holders** vote via quadratic voting (anti-whale)
+- **ZYX holders** vote via quadratic voting (anti-whale)
 - **AI Council**: 7 AI models (open-source) trained on tokenomics/security, provide non-binding advisory on every proposal
 - **Human Council**: 7 experts (cryptographer, economist, lawyer) with 72h emergency veto
 - **Two-house system**: requires majority of holders + one of two councils to pass
@@ -193,14 +193,14 @@ Royalties auto-split: model creator 70%, validator serving inference 25%, treasu
 
 - **Crypto-agility**: protocol can swap signature algorithms via soft hard fork (each account has version byte)
 - **Slashing**: cheating validators lose 100% of stake
-- **Bug bounty**: 10M QTA permanent fund, up to 5M for critical
+- **Bug bounty**: 10M ZYX permanent fund, up to 5M for critical
 - **Audit**: 3 rounds of independent audit before mainnet
 
 ---
 
 ## 6. Conclusion
 
-QUANTA is not a Bitcoin fork with "AI" and "quantum" buzzwords. It's a primitive design for a world where:
+ZEUSYXA is not a Bitcoin fork with "AI" and "quantum" buzzwords. It's a primitive design for a world where:
 
 - Messages can't be decrypted even when commercial quantum computers appear
 - AI agents transact with each other more than humans transact with humans
@@ -208,7 +208,7 @@ QUANTA is not a Bitcoin fork with "AI" and "quantum" buzzwords. It's a primitive
 
 Our goal isn't to "beat" Bitcoin or Ethereum. Our goal is to survive when they may not.
 
-> **"The best time to migrate to post-quantum was yesterday. The second best time is QUANTA."**
+> **"The best time to migrate to post-quantum was yesterday. The second best time is ZEUSYXA."**
 
 ---
 

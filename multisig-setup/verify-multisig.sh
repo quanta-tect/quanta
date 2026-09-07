@@ -6,16 +6,16 @@ set -e
 
 : "${SAFE_ADDRESS:?SAFE_ADDRESS env var required}"
 : "${BASE_RPC:?BASE_RPC env var required (e.g., https://mainnet.base.org)}"
-: "${QUANTA_TOKEN:?QUANTA_TOKEN address required}"
-: "${QUANTA_REGISTRY:?QUANTA_REGISTRY address required}"
-: "${QUANTA_CHANNEL:?QUANTA_CHANNEL address required}"
-: "${QUANTA_MARKET:?QUANTA_MARKET address required}"
+: "${ZYX_TOKEN:?ZYX_TOKEN address required}"
+: "${ZYX_REGISTRY:?ZYX_REGISTRY address required}"
+: "${ZYX_CHANNEL:?ZYX_CHANNEL address required}"
+: "${ZYX_MARKET:?ZYX_MARKET address required}"
 
 CONTRACTS=(
-  "QuantaToken:$QUANTA_TOKEN"
-  "AIAgentRegistry:$QUANTA_REGISTRY"
-  "AIPaymentChannel:$QUANTA_CHANNEL"
-  "AIModelMarketplace:$QUANTA_MARKET"
+  "ZyxToken:$ZYX_TOKEN"
+  "AIAgentRegistry:$ZYX_REGISTRY"
+  "AIPaymentChannel:$ZYX_CHANNEL"
+  "AIModelMarketplace:$ZYX_MARKET"
 )
 
 echo "Verifying ownership transfer to Safe: $SAFE_ADDRESS"

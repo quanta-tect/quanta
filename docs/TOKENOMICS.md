@@ -1,22 +1,22 @@
-# QUANTA Tokenomics
+# ZEUSYXA Tokenomics
 
 ## 1. Supply & Symbol
 
-- **Symbol**: QTA
-- **Smallest unit**: 1 quark = 10⁻¹⁸ QTA (like wei)
-- **Max total supply**: 1,000,000,000 QTA (1 billion — fixed cap, no further minting)
+- **Symbol**: ZYX
+- **Smallest unit**: 1 quark = 10⁻¹⁸ ZYX (like wei)
+- **Max total supply**: 1,000,000,000 ZYX (1 billion — fixed cap, no further minting)
 
 ## ⚠️ Current Deployment (Base Sepolia, v1.2 contracts)
 
 > **Deployed contract values (Solidity v1.2 on Base Sepolia testnet):**
-> - **Genesis supply**: 300,000,000 QTA (30% of max) — minted to deployer at construction
-> - **Remaining**: 700,000,000 QTA — only mintable via `bridgeMint()` by authorized bridge (with 48h timelock)
+> - **Genesis supply**: 300,000,000 ZYX (30% of max) — minted to deployer at construction
+> - **Remaining**: 700,000,000 ZYX — only mintable via `bridgeMint()` by authorized bridge (with 48h timelock)
 > - **AI Usage Tax**: 30 bps (0.3%) on designated collectors (e.g., marketplace, channels)
 > - **Bridge timelock**: 48 hours for bridge address changes
 >
-> The L1 emission schedule below (700M over 50 years) applies to the **future QUANTA L1 (PoUW mining)**, not the current EVM deployment.
+> The L1 emission schedule below (700M over 50 years) applies to the **future ZEUSYXA L1 (PoUW mining)**, not the current EVM deployment.
 
-## 2. Genesis Distribution (300M QTA) — L1 Design Target
+## 2. Genesis Distribution (300M ZYX) — L1 Design Target
 
 | Allocation             | %    | Amount    | Vesting                                  |
 |------------------------|------|-----------|------------------------------------------|
@@ -30,17 +30,17 @@
 | Validator Bootstrap    | 10%  | 30M       | Distributed to 100 genesis validators   |
 | **Treasury (DAO)**     | 5%   | 15M       | DAO controlled                          |
 
-## 3. Emission Schedule — 700M QTA — L1 Design Target (PoUW Mining)
+## 3. Emission Schedule — 700M ZYX — L1 Design Target (PoUW Mining)
 
-> ⚠️ **This schedule applies to the future QUANTA L1 consensus layer (PoUW).**
-> The current Base Sepolia deployment has **no mining/emission** — the remaining 700M QTA are mintable only via authorized bridge.
+> ⚠️ **This schedule applies to the future ZEUSYXA L1 consensus layer (PoUW).**
+> The current Base Sepolia deployment has **no mining/emission** — the remaining 700M ZYX are mintable only via authorized bridge.
 
 Half-life every 6 years (similar to Bitcoin but softer):
 
 ```
-Year 1-6:    100M QTA (16.67M/year)
-Year 7-12:    50M QTA
-Year 13-18:   25M QTA
+Year 1-6:    100M ZYX (16.67M/year)
+Year 7-12:    50M ZYX
+Year 13-18:   25M ZYX
 ...
 Total to year 50 ≈ 700M
 ```
@@ -53,24 +53,24 @@ Distribution per block reward:
 
 ## 4. Burn Mechanism (Deflationary)
 
-QTA is **deflationary** through multiple mechanisms:
+ZYX is **deflationary** through multiple mechanisms:
 
 1. **Base fee burn**: 50% of transaction fees burned (EIP-1559 style)
 2. **AI inference fee**: 30% of inference fees on marketplace burned
 3. **Slashing burn**: 100% of slashed stake → burned
-4. **Naming burn**: registering `.qta` names burns lifetime fee
+4. **Naming burn**: registering `.zyx` names burns lifetime fee
 
-**Simulation**: When network reaches 1M tx/day + 10M AI inference/day, expected burn ~50K QTA/day, exceeding emission by year 8 → net deflationary.
+**Simulation**: When network reaches 1M tx/day + 10M AI inference/day, expected burn ~50K ZYX/day, exceeding emission by year 8 → net deflationary.
 
 ## 5. Staking & Yield
 
-| Role                 | Target APY    | Requirements                     |
-|----------------------|---------------|----------------------------------|
-| Solo validator       | 12-18%        | 10,000 QTA + GPU ≥ RTX 4090      |
-| Delegator            | 6-9%          | Any amount                       |
-| Liquid staking (qQTA)| 5-7%          | Receive qQTA usable in DeFi      |
-| AI Compute Provider  | 15-25%        | Stake + provide GPU 24/7         |
-| Long-term lock 4 years| +50% boost  | Locked, no withdrawal           |
+|| Role                       | Target APY    | Requirements                        ||
+|----------------------------|---------------|-------------------------------------|
+| Solo validator             | 12-18%        | 10,000 ZYX + GPU ≥ RTX 4090         |
+| Delegator                  | 6-9%          | Any amount                          |
+| Liquid staking (qZYX)      | 5-7%          | Receive qZYX usable in DeFi         |
+| AI Compute Provider        | 15-25%        | Stake + provide GPU 24/7            |
+| Long-term lock 4 years     | +50% boost    | Locked, no withdrawal               |
 
 Effective inflation ≈ 3-5%/year, after burn ≈ 0% to -2%/year when network matures.
 
@@ -87,7 +87,7 @@ compute_fee  : if calling AI opcode (LLM_INFER, IMAGE_GEN, ZK_VERIFY)
 
 Example real-world costs (estimated at steady state):
 
-| Action                          | Fee (QTA)   | Fee ($) @ $1/QTA |
+|| Action                          | Fee (ZYX)   | Fee ($) @ $1/ZYX ||
 |---------------------------------|-------------|-------------------|
 | Standard transfer               | 0.001       | $0.001            |
 | Smart contract call             | 0.005       | $0.005            |
@@ -95,14 +95,14 @@ Example real-world costs (estimated at steady state):
 | Mint NFT model                  | 0.5         | $0.50             |
 | Micropayment channel (off-chain)| 0.000001    | $0.000001         |
 
-## 7. Use Cases Driving QTA Demand
+## 7. Use Cases Driving ZYX Demand
 
 1. **Gas** for every transaction
 2. **Stake** to run validator or delegate
 3. **Pay-per-inference** on AI marketplace
-4. **Buy compute** (cQTA) to train models
+4. **Buy compute** (cZYX) to train models
 5. **Governance voting** (quadratic, requires token lock)
-6. **Naming service** (qns: `vinh.qta`, `gpt5.qta`)
+6. **Naming service** (zns: `vinh.zyx`, `gpt5.zyx`)
 7. **Insurance pool** for AI agents (slashing protection)
 8. **Bridge collateral** for cross-chain assets
 
@@ -121,7 +121,7 @@ Projections (optimistic adoption assumption):
 
 ## 9. Tokenomics Comparison
 
-|                      | BTC      | ETH       | SOL    | **QTA**       |
+||                      | BTC      | ETH       | SOL    | **ZYX**       ||
 |----------------------|----------|-----------|--------|---------------|
 | Max supply           | 21M      | ∞         | ∞      | 1B            |
 | Current inflation    | 1.7%     | -0.5%     | 5%     | -2% (target)  |

@@ -1,12 +1,12 @@
-# 📚 QUANTA — Master Index
+# 📚 ZEUSYXA — Master Index
 
 > Complete project map. Everything in one place.
 
 ## 🚀 Start Here
 
-| File | Purpose |
+|| File | Purpose ||
 |------|---------|
-| [README.md](./README.md) | Project overview, what is QUANTA |
+| [README.md](./README.md) | Project overview, what is ZEUSYXA |
 | [LAUNCH_GUIDE_7_DAYS.md](./LAUNCH_GUIDE_7_DAYS.md) | Day-by-day launch plan ($0 budget) |
 | [CHECKLIST_7_DAYS.md](./CHECKLIST_7_DAYS.md) | Print + tick checklist for launch |
 

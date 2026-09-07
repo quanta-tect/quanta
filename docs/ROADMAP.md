@@ -1,4 +1,4 @@
-# QUANTA Roadmap
+# ZEUSYXA Roadmap
 
 ## 🌱 Phase 0 — Genesis (Q1 2026) — DONE in this repo
 - [x] Whitepaper v1.0
@@ -8,7 +8,7 @@
 - [x] Tokenomics simulator
 - [x] Complete security suite (audit, war games, multisig, etc.)
 - [x] **Solidity v1.2 contracts deployed to Base Sepolia testnet (chainId 84532)**
-  - [x] QuantaToken: `0x312137fb6943F8f89F5eF0f221aA102035a16625`
+  - [x] ZeusyxaToken: `0x312137fb6943F8f89F5eF0f221aA102035a16625`
   - [x] AIAgentRegistry: `0x10aE5f83F1CF20331186Ea1aD089D8fd3EbA5EEB`
   - [x] AIPaymentChannel: `0xF146e95b97fce1d1800F5F922AE99155711A4314`
   - [x] AIModelMarketplace: `0xFf584b30b2D00Bf0aB694683F06dC7E701fdfd49`
@@ -18,9 +18,9 @@
 ## 🔬 Phase 1 — Devnet (Q2-Q3 2026)
 - [ ] Rust implementation (substrate-fork or scratch)
 - [ ] Single-node devnet with Dilithium signatures
-- [ ] QVM (Quanta VM) — fork EVM + add 8 AI opcodes:
+- [ ] ZVM (Zeusyxa VM) — fork EVM + add 8 AI opcodes:
   - `LLM_INFER`, `IMAGE_GEN`, `ZK_VERIFY`, `INTENT_RESOLVE`, `AGENT_AUTH`, `STREAM_PAY`, `ORACLE_AI`, `MODEL_REGISTRY`
-- [ ] CLI wallet `quanta-cli`
+- [ ] CLI wallet `zeusyxa-cli`
 - [ ] Block explorer
 - [ ] Bug bounty $100K opens
 
@@ -41,7 +41,7 @@
 - [ ] Security audit #2 (Halborn) + #3 (OpenZeppelin)
 
 ## 🌐 Phase 4 — Ecosystem (Q2-Q4 2027)
-- [ ] zk-rollup launches (Quanta Layer-2)
+- [ ] zk-rollup launches (Zeusyxa Layer-2)
 - [ ] Cross-chain bridges (Ethereum, Solana, Cosmos) with PQ-security
 - [ ] Mobile wallet (iOS, Android)
 - [ ] Hardware wallet support (Ledger, Trezor)
@@ -59,7 +59,7 @@
 
 ## 📅 Hype Timeline Milestones
 
-| Date         | Event                                 | Marketing angle                       |
+|| Date         | Event                                 | Marketing angle                       ||
 |--------------|---------------------------------------|----------------------------------------|
 | 2026-Q1      | Whitepaper drop                       | "The first AI-quantum coin"           |
 | 2026-Q2      | Devnet live                           | Code is law (open source)              |

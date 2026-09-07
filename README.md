@@ -1,4 +1,4 @@
-# ⚛️ QUANTA — Quantum-resistant Universal Agent Network for Transactions & AI
+# ⚛️ ZEUSYXA — Quantum-resistant Universal Agent Network for Transactions & AI
 
 > "Money for the future isn't just quantum-resistant — it speaks AI's language."
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)]()
@@ -10,7 +10,7 @@
 
 ## 🎯 Summary
 
-**QUANTA** is a next-generation Layer-1 blockchain designed from the ground up for the post-quantum era and the AI agent economy:
+**ZEUSYXA** is a next-generation Layer-1 blockchain designed from the ground up for the post-quantum era and the AI agent economy:
 
 - 🔐 **Quantum-Safe**: CRYSTALS-Dilithium signatures (NIST FIPS 204)
 - 🧠 **Proof of Useful Work**: AI inference instead of meaningless hashing
@@ -22,7 +22,7 @@
 ## 📦 Project structure
 
 ```
-quanta/
+zeusyxa/
 ├── README.md
 ├── INDEX.md                  # Master file map (read this!)
 ├── LAUNCH_GUIDE_7_DAYS.md    # Day-by-day launch plan
@@ -126,7 +126,7 @@ open wallet-ui/index.html                       # Safe wallet with tx simulation
 
 ## 📊 Key numbers
 
-- **1B QTA** hard cap
+- **1B ZYX** hard cap
 - **70%** royalty to model creators (highest in industry)
 - **50%** tx fee burned + **30%** AI fee burned
 - **Net deflation** from year 7 (base case scenario)
@@ -166,7 +166,7 @@ Not investment advice. Audit before deploying to mainnet with real value.
 
 ## 📜 License
 
-MIT © QUANTA Foundation
+MIT © ZEUSYXA Foundation
 
 All funds go toward:
 - 🔐 Smart contract audits

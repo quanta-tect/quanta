@@ -1,6 +1,6 @@
 # 🔐 Hardware Wallet Key Ceremony — Step by Step
 
-> **Goal**: Generate 5 hardware wallets for QUANTA multisig signers in a way that proves no one had unilateral control.
+> **Goal**: Generate 5 hardware wallets for ZEUSYXA multisig signers in a way that proves no one had unilateral control.
 >
 > **Duration**: 2-3 hours per signer (in parallel = 1 day total)
 > **Cost**: ~$130 per signer (hardware wallet) + $20 (steel backup) = ~$750 total
@@ -173,7 +173,7 @@
 ## 📋 Attestation template
 
 ```
-QUANTA MULTISIG KEY CEREMONY ATTESTATION
+ZEUSYXA MULTISIG KEY CEREMONY ATTESTATION
 =========================================
 
 Ceremony date: 2026-MM-DD
@@ -325,5 +325,5 @@ cast call $SAFE_ADDRESS "getThreshold()(uint256)" --rpc-url $BASE_RPC
 
 ---
 
-**The ceremony you're about to do will be the foundation of QUANTA's security forever.**
+**The ceremony you're about to do will be the foundation of ZEUSYXA's security forever.**
 **Take it seriously. Don't rush. Get it right the first time.**
