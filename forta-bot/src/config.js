@@ -1,5 +1,5 @@
 /**
- * QUANTA Forta Bot Configuration
+ * ZEUSYXA Forta Bot Configuration
  *
  * UPDATE THESE addresses after deploying contracts on each chain.
  * Bot will monitor across all configured chains automatically.
@@ -13,12 +13,13 @@ const CHAINS = {
 };
 
 // Map chainId → contract addresses
+// Base Sepolia v1.2 (QUANTA) contracts - UPDATE when v1.3 deployed
 const DEPLOYMENTS = {
   [CHAINS.BASE_SEPOLIA]: {
-    token:    "0x0000000000000000000000000000000000000000", // ← UPDATE
-    registry: "0x0000000000000000000000000000000000000000", // ← UPDATE
-    channel:  "0x0000000000000000000000000000000000000000", // ← UPDATE
-    market:   "0x0000000000000000000000000000000000000000", // ← UPDATE
+    token:    "0x312137fb6943F8f89F5eF0f221aA102035a16625",
+    registry: "0x10aE5f83F1CF20331186Ea1aD089D8fd3EbA5EEB",
+    channel:  "0xF146e95b97fce1d1800F5F922AE99155711A4314",
+    market:   "0xFf584b30b2D00Bf0aB694683F06dC7E701fdfd49",
   },
   [CHAINS.BASE_MAINNET]: {
     token:    "0x0000000000000000000000000000000000000000",
@@ -31,13 +32,13 @@ const DEPLOYMENTS = {
 // Anomaly thresholds (tune based on historical data)
 const THRESHOLDS = {
   // Token transfers
-  WHALE_TRANSFER: "1000000",        // 1M QTA
-  LARGE_BURN: "10000",              // 10K QTA
-  HUGE_MINT: "100000",              // 100K QTA via bridge
+  WHALE_TRANSFER: "1000000",        // 1M ZYX
+  LARGE_BURN: "10000",              // 10K ZYX
+  HUGE_MINT: "100000",              // 100K ZYX via bridge
   MINT_SPIKE_MULTIPLIER: 5,         // current > 5× rolling 24h avg
 
   // Payment channels
-  LARGE_CHANNEL_DEPOSIT: "100000",  // 100K QTA
+  LARGE_CHANNEL_DEPOSIT: "100000",  // 100K ZYX
   RAPID_CHANNEL_OPENS: 10,          // 10 channels/min from same address
   FORCE_CLOSE_LARGE: "10000",       // force close > 10K refund
 
