@@ -10,7 +10,7 @@ import {
 import { privateKeyToAccount } from "viem/accounts";
 import { base, baseSepolia } from "viem/chains";
 import type { QuantaContracts } from "./types.js";
-import { QUANTA_CONTRACTS } from "./types.js";
+import { ZEUSYXA_CONTRACTS } from "./types.js";
 
 const CHAINS = { base, "base-sepolia": baseSepolia };
 
@@ -46,7 +46,7 @@ export class QuantaClient {
     });
 
     this.contracts = {
-      ...QUANTA_CONTRACTS[opts.chain],
+      ...ZEUSYXA_CONTRACTS[opts.chain],
       ...opts.contracts,
     };
 
@@ -57,7 +57,7 @@ export class QuantaClient {
       this.contracts.registry === zeroAddr
     ) {
       console.warn(
-        `[QUANTA] Chain "${opts.chain}" has placeholder addresses. Contracts not deployed to mainnet yet.`
+        `[ZEUSYXA] Chain "${opts.chain}" has placeholder addresses. Contracts not deployed to mainnet yet.`
       );
     }
   }

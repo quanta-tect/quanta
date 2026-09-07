@@ -1,7 +1,7 @@
 /**
- * @quanta/sdk — TypeScript client for QUANTA blockchain
+ * @zeusyxa/sdk — TypeScript client for ZEUSYXA blockchain
  *
- * Enables both developers (humans) and AI agents to interact with QUANTA:
+ * Enables both developers (humans) and AI agents to interact with ZEUSYXA:
  *   - Create wallets (EVM or quantum-safe L1)
  *   - Register AI agents with spending policies
  *   - Open payment channels for micropayments

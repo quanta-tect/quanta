@@ -4,7 +4,7 @@ import 'dotenv/config';
  * =====================================================
  *
  * Scenario:
- *   1. Create AI agent "ResearchBot-001" with budget of 5 QTA/day
+ *   1. Create AI agent "ResearchBot-001" with budget of 5 ZYX/day
  *   2. Agent receives task: "Summarize 100 papers on quantum cryptography"
  *   3. Agent autonomously buys inference from AI marketplace (LLM model)
  *   4. Pays via payment channel (x402-style, micropayment)
@@ -88,15 +88,15 @@ async function main() {
   // === Step 5: Settle the channel ===
   console.log("💸 Step 5: Provider settles channel on-chain...");
   // In demo we just simulate — in production provider would call close()
-  console.log(`   → ${formatEther(stats.spent)} QTA → provider`);
-  console.log(`   → ${formatEther(stats.remaining)} QTA refund to agent\n`);
+  console.log(`   → ${formatEther(stats.spent)} ZYX → provider`);
+  console.log(`   → ${formatEther(stats.remaining)} ZYX refund to agent\n`);
 
   // === Step 6: Agent returns result to user, gets paid, sends profit to owner ===
   console.log("💰 Step 6: Agent delivers result and books profit...");
   const profit = userTask.payment - stats.spent;
-  console.log(`   Revenue:  ${formatEther(userTask.payment)} QTA`);
-  console.log(`   Cost:     ${formatEther(stats.spent)} QTA`);
-  console.log(`   Profit:   ${formatEther(profit)} QTA → returned to owner\n`);
+  console.log(`   Revenue:  ${formatEther(userTask.payment)} ZYX`);
+  console.log(`   Cost:     ${formatEther(stats.spent)} ZYX`);
+  console.log(`   Profit:   ${formatEther(profit)} ZYX → returned to owner\n`);
 
   // === Step 7: Heartbeat to prove agent is alive ===
   console.log("💓 Step 7: Agent pings (heartbeat for death-switch)...");
@@ -104,9 +104,9 @@ async function main() {
   console.log(`✓ Agent alive: ${await agent.isAlive()}\n`);
 
   console.log("✨ Demo complete! In 7 steps the agent:");
-  console.log("   • Earned 2 QTA from user task");
-  console.log("   • Spent 0.5 QTA on AI inference (50 off-chain micropayments)");
-  console.log("   • Returned 1.5 QTA profit to owner");
+  console.log("   • Earned 2 ZYX from user task");
+  console.log("   • Spent 0.5 ZYX on AI inference (50 off-chain micropayments)");
+  console.log("   • Returned 1.5 ZYX profit to owner");
   console.log("   • Maintained heartbeat to avoid death-switch refund");
   console.log("\n💡 In production this loop runs 24/7, agent compounds earnings.");
 }

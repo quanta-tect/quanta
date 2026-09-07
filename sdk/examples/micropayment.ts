@@ -1,6 +1,6 @@
 import 'dotenv/config';
 /**
- * 💸 QUANTA Micropayment Channel Demo
+ * 💸 ZEUSYXA Micropayment Channel Demo
  * ==================================
  * Opens an x402-style state channel, makes a series of off-chain signed
  * micropayments (no per-call on-chain tx), then settles on-chain once.
@@ -14,7 +14,7 @@ import { parseEther, formatEther, type Address } from "viem";
 
 async function main() {
   console.log("╔══════════════════════════════════════════════════════════╗");
-  console.log("║  💸 QUANTA Micropayment Channel Demo                     ║");
+  console.log("║  💸 ZEUSYXA Micropayment Channel Demo                     ║");
   console.log("╚══════════════════════════════════════════════════════════╝");
 
   if (!process.env.PRIVATE_KEY) {
@@ -31,21 +31,21 @@ async function main() {
   console.log("\n📡 Opening channel...");
   const channel = await PaymentChannel.open(client, provider, deposit);
   console.log(`✓ Channel: ${channel.state.channelId.slice(0, 18)}…`);
-  console.log(`  Deposit: ${formatEther(deposit)} QTA`);
+  console.log(`  Deposit: ${formatEther(deposit)} ZYX`);
 
   console.log("\n⚡ Streaming 20 off-chain micropayments...");
   for (let i = 0; i < 20; i++) {
     const ticket = await channel.pay(parseEther("0.01"));
     if (i % 5 === 0) {
-      console.log(`  • #${i + 1} signed ticket, total ${formatEther(ticket.spent)} QTA`);
+      console.log(`  • #${i + 1} signed ticket, total ${formatEther(ticket.spent)} ZYX`);
     }
   }
 
   const stats = channel.getStats();
   console.log("\n📊 Channel stats:");
   console.log(`  Micropayments:  ${stats.micropayments}`);
-  console.log(`  Spent:          ${formatEther(stats.spent)} QTA`);
-  console.log(`  Remaining:      ${formatEther(stats.remaining)} QTA`);
+  console.log(`  Spent:          ${formatEther(stats.spent)} ZYX`);
+  console.log(`  Remaining:      ${formatEther(stats.remaining)} ZYX`);
   console.log(`  On-chain txs:   2 (open + close) instead of ${stats.micropayments}`);
 
   console.log("\n💸 Settling on-chain (provider closes with last signed ticket)...");

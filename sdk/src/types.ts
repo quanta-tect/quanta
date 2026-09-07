@@ -42,7 +42,7 @@ export interface QuantaContracts {
   marketplace: Address;
 }
 
-export const QUANTA_CONTRACTS: Record<string, QuantaContracts> = {
+export const ZEUSYXA_CONTRACTS: Record<string, QuantaContracts> = {
   "base-sepolia": {
     token: "0x312137fb6943F8f89F5eF0f221aA102035a16625",
     registry: "0x10aE5f83F1CF20331186Ea1aD089D8fd3EbA5EEB",

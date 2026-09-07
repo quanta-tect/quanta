@@ -1,17 +1,17 @@
-# @quanta/sdk
+# @zeusyxa/sdk
 
-TypeScript SDK for QUANTA blockchain — built for both human developers and AI agents.
+TypeScript SDK for ZEUSYXA blockchain — built for both human developers and AI agents.
 
 ## 📦 Install
 
 ```bash
-npm install @quanta/sdk viem
+npm install @zeusyxa/sdk viem
 ```
 
 ## 🚀 Quick start
 
 ```ts
-import { QuantaClient, AIAgent, PaymentChannel } from "@quanta/sdk";
+import { QuantaClient, AIAgent, PaymentChannel } from "@zeusyxa/sdk";
 import { parseEther } from "viem";
 
 const client = new QuantaClient({

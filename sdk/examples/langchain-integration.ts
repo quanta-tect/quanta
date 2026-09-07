@@ -2,13 +2,13 @@
  * 🔗 LangChain Integration Example
  * ================================
  *
- * Integrate QUANTA as a "Tool" in LangChain agent:
+ * Integrate ZEUSYXA as a "Tool" in LangChain agent:
  *   - LLM can call `payForData` tool to buy datasets
  *   - LLM can call `payForInference` to use other models
  *   - All transactions respect spending policy
  *
  * This pattern allows any LangChain agent (GPT-4, Claude, Llama)
- * to participate in the QUANTA economy without custom code.
+ * to participate in the ZEUSYXA economy without custom code.
  *
  * pip install langchain langchain-openai
  * tsx examples/langchain-integration.ts
@@ -30,8 +30,8 @@ function createQuantaTools(client: QuantaClient, agent: AIAgent): Tool[] {
 
   return [
     {
-      name: "quanta_pay_for_inference",
-      description: "Pay QTA to use an AI model on QUANTA marketplace. " +
+      name: "zeusyxa_pay_for_inference",
+      description: "Pay ZYX to use an AI model on ZEUSYXA marketplace. " +
                     "Use when you need specialized capability (vision, audio, code, etc).",
       schema: {
         modelId: { type: "string", description: "On-chain model ID" },
@@ -39,21 +39,21 @@ function createQuantaTools(client: QuantaClient, agent: AIAgent): Tool[] {
       async execute({ modelId }) {
         const info = await marketplace.getModel(BigInt(modelId));
         const tx = await marketplace.payForInference(BigInt(modelId));
-        return `Paid ${formatEther(info.pricePerCall)} QTA for model ${modelId}. ` +
+        return `Paid ${formatEther(info.pricePerCall)} ZYX for model ${modelId}. ` +
                 `TX: ${tx}. Now you can call the inference endpoint with this proof.`;
       },
     },
     {
-      name: "quanta_check_balance",
-      description: "Check current QTA balance of the agent.",
+      name: "zeusyxa_check_balance",
+      description: "Check current ZYX balance of the agent.",
       schema: {},
       async execute() {
         const bal = await client.balanceOf(client.address);
-        return `Current balance: ${formatEther(bal)} QTA`;
+        return `Current balance: ${formatEther(bal)} ZYX`;
       },
     },
     {
-      name: "quanta_heartbeat",
+      name: "zeusyxa_heartbeat",
       description: "Ping the agent registry to prove agent is still alive. " +
                     "Call this every few hours to avoid death-switch refund.",
       schema: {},
@@ -66,7 +66,7 @@ function createQuantaTools(client: QuantaClient, agent: AIAgent): Tool[] {
 }
 
 async function demo() {
-  console.log("🔗 LangChain × QUANTA Integration\n");
+  console.log("🔗 LangChain × ZEUSYXA Integration\n");
 
   // Pseudocode — actual LangChain setup:
   /*
@@ -99,7 +99,7 @@ async function demo() {
   ✓ OpenAI Assistants API
   ✓ Anthropic Model Context Protocol (MCP)
 
-QUANTA tools become first-class citizens in any AI agent framework.
+ZEUSYXA tools become first-class citizens in any AI agent framework.
 This is the path to AI economic agency at scale.`);
 }
 

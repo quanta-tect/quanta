@@ -142,6 +142,23 @@ export class AIAgent {
     })) as bigint;
   }
 
+  /** Ping the registry to prove agent is alive (death-switch heartbeat) */
+  async ping(): Promise<Hex> {
+    // In v1.2, we use updatePolicy with same values as a no-op ping
+    return await this.updatePolicy(this.config.policy.maxPerTx, this.config.policy.maxPerDay);
+  }
+
+  /** Check if agent is still active (not deactivated by death-switch) */
+  async isAlive(): Promise<boolean> {
+    const agent = await this.client.publicClient.readContract({
+      address: this.client.contracts.registry,
+      abi: REGISTRY_ABI,
+      functionName: "agents",
+      args: [this.agentId],
+    }) as readonly [Address, bigint, string, bigint, boolean];
+    return agent[4]; // active field
+  }
+
   /** Helper: create default policy for an agent "research assistant" */
   static defaultResearchPolicy(): SpendingPolicy {
     return {

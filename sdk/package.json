@@ -1,7 +1,7 @@
 {
-  "name": "@quanta/sdk",
+  "name": "@zeusyxa/sdk",
   "version": "0.1.0",
-  "description": "QUANTA SDK — quantum-safe + AI-native blockchain client",
+  "description": "ZEUSYXA SDK — quantum-safe + AI-native blockchain client",
   "type": "module",
   "main": "src/index.ts",
   "scripts": {
